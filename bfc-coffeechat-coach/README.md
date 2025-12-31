@@ -22,7 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Environment
 
-Copy `bfc-coffeechat-coach/.env.example` to `bfc-coffeechat-coach/.env.local` and fill in your values. For Google OAuth, set `NEXTAUTH_URL` to your deployed URL (e.g. `https://YOURPROJECT.vercel.app`) and register the redirect URI:
+Copy `bfc-coffeechat-coach/.env.example` to `bfc-coffeechat-coach/.env.local` and fill in your values. Use `ALLOWED_EMAILS` as a comma-separated allowlist. For Google OAuth, set `NEXTAUTH_URL` to your deployed URL (e.g. `https://YOURPROJECT.vercel.app`) and register the redirect URI:
 
 ```
 https://YOURPROJECT.vercel.app/api/auth/callback/google
