@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import {
   OpenAIRealtimeWebRTC,
@@ -89,6 +89,13 @@ export default function PracticeClient() {
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [feedback, setFeedback] = useState<FeedbackItem[]>([]);
   const [lastScore, setLastScore] = useState<number | null>(null);
+  const debugRealtime = process.env.NEXT_PUBLIC_DEBUG_REALTIME === "true";
+
+  useEffect(() => {
+    if (debugRealtime) {
+      console.log("[realtime] connected:", connected);
+    }
+  }, [connected, debugRealtime]);
 
   const panelFeedbackTool = useMemo(() => {
     return tool({
@@ -134,7 +141,7 @@ export default function PracticeClient() {
       return new RealtimeAgent({
         name: "CoffeeChatCoach",
         instructions,
-        voice: "alloy",
+        voice: "marin",
         tools: [panelFeedbackTool],
       });
     },
@@ -172,6 +179,8 @@ export default function PracticeClient() {
       if (!audioElementRef.current) {
         const audioEl = document.createElement("audio");
         audioEl.autoplay = true;
+        audioEl.muted = false;
+        audioEl.volume = 1;
         audioEl.setAttribute("playsinline", "");
         audioEl.style.display = "none";
         audioEl.addEventListener("loadedmetadata", () => {
@@ -212,24 +221,44 @@ export default function PracticeClient() {
       sessionRef.current = session;
 
       // Useful lifecycle events
-      transport.on("connected", () => setConnected(true));
-      transport.on("disconnected", () => setConnected(false));
+      transport.on("connected", () => {
+        if (debugRealtime) {
+          console.log("[realtime] transport connected");
+        }
+        setConnected(true);
+        audioEl.play().catch(() => undefined);
+      });
+      transport.on("disconnected", () => {
+        if (debugRealtime) {
+          console.log("[realtime] transport disconnected");
+        }
+        setConnected(false);
+      });
 
       // 5) Connect
       await session.connect({ apiKey: ephemeralKey });
       await audioEl.play().catch(() => undefined);
 
       // Optional: initial “kick off”
-      await session.sendMessage(
-        "Start the coffee chat now. Begin with a realistic greeting and 1 opening question."
-      );
+      try {
+        await session.sendMessage(
+          "Start the coffee chat now. Begin with a realistic greeting and 1 opening question."
+        );
+        if (debugRealtime) {
+          console.log("[realtime] kickoff message sent");
+        }
+      } catch (err) {
+        if (debugRealtime) {
+          console.error("[realtime] kickoff message failed", err);
+        }
+      }
     } catch (e) {
       console.error(e);
       setConnected(false);
     } finally {
       setStarting(false);
     }
-  }, [starting, connected, track, makeAgent]);
+  }, [starting, connected, track, makeAgent, debugRealtime]);
 
   const stop = useCallback(() => {
     try {
@@ -260,6 +289,19 @@ export default function PracticeClient() {
       "Coach now: give a 20–25 second spoken debrief focused on the single biggest improvement to increase referral probability, then return to the chat."
     );
   }, []);
+
+  const testAudio = useCallback(async () => {
+    const s = sessionRef.current;
+    if (!s) return;
+    try {
+      await s.sendMessage('Say out loud: "Audio test: I can hear you."');
+      if (debugRealtime) {
+        console.log("[realtime] test audio sent");
+      }
+    } catch (err) {
+      console.error("[realtime] test audio failed", err);
+    }
+  }, [debugRealtime]);
 
   const rerollScenarioOnly = useCallback(() => {
     const sc = generateScenario(track);
@@ -336,6 +378,9 @@ export default function PracticeClient() {
                 <button className="rounded-md border px-4 py-2" onClick={coachNow}>
                   Coach now
                 </button>
+                <button className="rounded-md border px-4 py-2" onClick={testAudio}>
+                  Test audio
+                </button>
                 <button className="rounded-md bg-red-600 px-4 py-2 text-white" onClick={stop}>
                   End call
                 </button>
@@ -356,16 +401,18 @@ export default function PracticeClient() {
           </div>
 
           {/* Scenario preview */}
-          <div className="mt-4 rounded-lg bg-gray-50 p-3 text-sm">
+          <div className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-900">
             <div className="font-semibold">Scenario</div>
-            <div className="mt-1">
+            <div className="mt-1 text-slate-900">
               <span className="font-medium">{scenario.person.title}</span> ({scenario.person.yearsExp}{" "}
-              yrs) • {scenario.firmType} • {scenario.group} • vibe:{" "}
-              <span className="font-medium">{scenario.person.vibe}</span>
+              yrs) • {scenario.firmType} • {scenario.group} •{" "}
+              <span className="text-slate-600">vibe:</span>{" "}
+              <span className="font-medium text-slate-900">{scenario.person.vibe}</span>
             </div>
-            <div className="mt-1 text-gray-700">{scenario.twist}</div>
-            <div className="mt-1">
-              Goal: <span className="font-semibold">Referral</span>
+            <div className="mt-1 text-slate-900">{scenario.twist}</div>
+            <div className="mt-1 text-slate-900">
+              <span className="text-slate-600">Goal:</span>{" "}
+              <span className="font-semibold text-slate-900">Referral</span>
             </div>
           </div>
         </div>

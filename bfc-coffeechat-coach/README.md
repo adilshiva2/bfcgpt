@@ -20,6 +20,16 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment
+
+Copy `bfc-coffeechat-coach/.env.example` to `bfc-coffeechat-coach/.env.local` and fill in your values. For Google OAuth, set `NEXTAUTH_URL` to your deployed URL (e.g. `https://YOURPROJECT.vercel.app`) and register the redirect URI:
+
+```
+https://YOURPROJECT.vercel.app/api/auth/callback/google
+```
+
+To enable realtime debug logging in the browser, set `NEXT_PUBLIC_DEBUG_REALTIME=true`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -15,7 +15,7 @@ export async function GET() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      session: { type: "realtime", model: "gpt-realtime" },
+      session: { type: "realtime", model: "gpt-realtime", voice: "marin" },
     }),
   });
 
