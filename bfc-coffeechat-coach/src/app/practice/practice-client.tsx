@@ -72,6 +72,7 @@ export default function PracticeClient() {
 
   const [connected, setConnected] = useState(false);
   const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
 
   const [track, setTrack] = useState<RoleTrack>("Investment Banking");
   const [coachingStyle, setCoachingStyle] = useState<CoachingStyle>("Balanced");
@@ -152,6 +153,7 @@ export default function PracticeClient() {
     if (starting || connected) return;
 
     setStarting(true);
+    setStartError(null);
     setFeedback([]);
     setLastScore(null);
     feedbackIdRef.current = 0;
@@ -160,7 +162,12 @@ export default function PracticeClient() {
     setScenario(newScenario);
 
     try {
-      // 1) Fetch ephemeral client key from your server endpoint
+      // 1) Create (or reuse) a mic stream so the browser prompts immediately
+      if (!mediaStreamRef.current) {
+        mediaStreamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
+
+      // 2) Fetch ephemeral client key from your server endpoint
       const tokenRes = await fetch(TOKEN_ENDPOINT);
       if (!tokenRes.ok) throw new Error(`Token endpoint failed: ${tokenRes.status}`);
       // Expecting { value: "ek_..." } (common pattern)
@@ -168,11 +175,6 @@ export default function PracticeClient() {
       const ephemeralKey = tokenJson?.value || tokenJson?.apiKey || tokenJson?.token;
       if (!ephemeralKey) {
         throw new Error("Could not find ephemeral key in token response. Check /api/realtime/token.");
-      }
-
-      // 2) Create (or reuse) a mic stream so you can later add your own analysis
-      if (!mediaStreamRef.current) {
-        mediaStreamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
       }
 
       // 3) Ensure a DOM audio element for reliable playback
@@ -254,6 +256,7 @@ export default function PracticeClient() {
       }
     } catch (e) {
       console.error(e);
+      setStartError(e instanceof Error ? e.message : "Unable to start call.");
       setConnected(false);
     } finally {
       setStarting(false);
@@ -399,6 +402,9 @@ export default function PracticeClient() {
               ) : null}
             </div>
           </div>
+          {startError ? (
+            <div className="mt-3 text-sm text-red-600">{startError}</div>
+          ) : null}
 
           {/* Scenario preview */}
           <div className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-900">
