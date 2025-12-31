@@ -105,7 +105,8 @@ export async function POST(req: Request) {
   }
 
   const payload = {
-    model: "gpt-4o-mini",
+    model: "gpt-5",
+    reasoning: { effort: "low" },
     max_output_tokens: 400,
     input: [
       {
