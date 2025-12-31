@@ -25,7 +25,7 @@ type FeedbackItem = {
   items: Array<{
     category: "tone" | "structure" | "content" | "rapport" | "referral";
     severity: 1 | 2 | 3 | 4 | 5;
-    quote: string | null;
+    quote?: string;
     issue: string;
     better: string;
   }>;
@@ -108,7 +108,7 @@ export default function PracticeClient() {
           items: parsed.items.map((x) => ({
             category: x.category,
             severity: x.severity as 1 | 2 | 3 | 4 | 5,
-            quote: x.quote,
+            quote: x.quote ?? undefined,
             issue: x.issue,
             better: x.better,
           })),
@@ -172,6 +172,7 @@ export default function PracticeClient() {
       if (!audioElementRef.current) {
         const audioEl = document.createElement("audio");
         audioEl.autoplay = true;
+        audioEl.setAttribute("playsinline", "");
         audioEl.style.display = "none";
         audioEl.addEventListener("loadedmetadata", () => {
           audioEl.play().catch(() => undefined);
