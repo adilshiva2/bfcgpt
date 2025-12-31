@@ -21,7 +21,7 @@ export type Scenario = {
   userGoal: "referral";
 };
 
-const firmTypesByTrack: Record<RoleTrack, string[]> = {
+export const firmTypesByTrack: Record<RoleTrack, string[]> = {
   "Investment Banking": ["Bulge Bracket", "Elite Boutique", "Middle Market"],
   "Private Equity": ["Mega-fund", "Upper Middle Market", "Growth Equity"],
   "Equity Research": ["Large Bank ER", "Boutique Research", "Independent Research"],
@@ -30,7 +30,7 @@ const firmTypesByTrack: Record<RoleTrack, string[]> = {
   "Corporate Development": ["Big Tech Corp Dev", "Public Co. Corp Dev", "Strategic M&A Team"],
 };
 
-const groupsByTrack: Record<RoleTrack, string[]> = {
+export const groupsByTrack: Record<RoleTrack, string[]> = {
   "Investment Banking": ["TMT", "Healthcare", "Industrials", "FIG", "Consumer/Retail"],
   "Private Equity": ["Software", "Healthcare Services", "Industrials", "Consumer", "Business Services"],
   "Equity Research": ["Semis", "Internet", "Payments/FinTech", "Healthcare", "Industrials"],
@@ -45,7 +45,14 @@ const titles = [
   { title: "VP", years: [5, 6, 7, 8] },
 ];
 
-const vibes: Scenario["person"]["vibe"][] = ["warm", "neutral", "bored", "rushed", "skeptical", "annoyed"];
+export const vibes: Scenario["person"]["vibe"][] = [
+  "warm",
+  "neutral",
+  "bored",
+  "rushed",
+  "skeptical",
+  "annoyed",
+];
 
 const twists = [
   "They only have 12 minutes.",

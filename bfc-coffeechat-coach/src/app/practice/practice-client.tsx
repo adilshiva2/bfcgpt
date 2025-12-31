@@ -1,7 +1,19 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { generateScenario, RoleTrack, Scenario } from "@/lib/networking-scenarios";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  firmTypesByTrack,
+  generateScenario,
+  groupsByTrack,
+  RoleTrack,
+  Scenario,
+  vibes,
+} from "@/lib/networking-scenarios";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Select } from "@/components/ui/select";
 
 type CoachScenario = {
   track: string;
@@ -38,7 +50,6 @@ function getSpeechRecognition(): SpeechRecognition | null {
 
 export default function PracticeClient() {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const [track, setTrack] = useState<RoleTrack>("Investment Banking");
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
 
   const [speechSupported, setSpeechSupported] = useState(true);
@@ -50,6 +61,19 @@ export default function PracticeClient() {
   const [feedback, setFeedback] = useState<string>("");
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
   const [fetchingFeedback, setFetchingFeedback] = useState(false);
+
+  const firmTypeOptions = useMemo(
+    () => firmTypesByTrack[scenario.track].map((value) => ({ value, label: value })),
+    [scenario.track]
+  );
+  const groupOptions = useMemo(
+    () => groupsByTrack[scenario.track].map((value) => ({ value, label: value })),
+    [scenario.track]
+  );
+  const vibeOptions = useMemo(
+    () => vibes.map((value) => ({ value, label: value })),
+    []
+  );
 
   useEffect(() => {
     setSpeechSupported(
@@ -133,9 +157,9 @@ export default function PracticeClient() {
   }, []);
 
   const rerollScenarioOnly = useCallback(() => {
-    const sc = generateScenario(track);
+    const sc = generateScenario(scenario.track);
     setScenario(sc);
-  }, [track]);
+  }, [scenario.track]);
 
   const getFeedback = useCallback(async () => {
     const trimmedTranscript = transcript.trim();
@@ -174,106 +198,185 @@ export default function PracticeClient() {
     }
   }, [fetchingFeedback, scenario, transcript]);
 
-  const transcriptText = [transcript, interimTranscript].filter(Boolean).join(" ");
+  const statusLabel = fetchingFeedback ? "Generating..." : isListening ? "Listening..." : "Ready";
+  const statusTone = fetchingFeedback ? "warning" : isListening ? "success" : "neutral";
+  const nextBestQuestion = useMemo(() => {
+    if (!feedback) return "Review feedback to get your next best question.";
+    const match = feedback.match(/next best question[:\-]\s*(.*)/i);
+    return match?.[1]?.trim() || "Ask for role-specific advice tied to the team’s priorities.";
+  }, [feedback]);
 
   return (
-    <div className="flex h-[calc(100vh-6rem)] w-full gap-4">
-      <div className="flex flex-1 flex-col gap-4">
-        <div className="rounded-xl border p-4">
-          <div className="flex flex-wrap items-end gap-3">
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium">Track</label>
-              <select
-                className="rounded-md border px-3 py-2"
-                value={track}
-                onChange={(e) => setTrack(e.target.value as RoleTrack)}
+    <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10">
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="flex flex-col gap-6">
+          <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="p-6">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Scenario Builder
+                </div>
+                <div className="mt-1 text-lg font-semibold text-slate-900">
+                  Configure your next coffee chat
+                </div>
+              </div>
+              <Button variant="secondary" onClick={rerollScenarioOnly} type="button">
+                Randomize
+              </Button>
+            </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <Select
+                label="Track"
+                value={scenario.track}
+                options={roleTracks.map((value) => ({ value, label: value }))}
+                onChange={(value) => {
+                  const nextTrack = value as RoleTrack;
+                  const nextFirmType = firmTypesByTrack[nextTrack][0];
+                  const nextGroup = groupsByTrack[nextTrack][0];
+                  setScenario((prev) => ({
+                    ...prev,
+                    track: nextTrack,
+                    firmType: nextFirmType ?? prev.firmType,
+                    group: nextGroup ?? prev.group,
+                  }));
+                }}
+              />
+              <Select
+                label="Firm type"
+                value={scenario.firmType}
+                options={firmTypeOptions}
+                onChange={(value) => setScenario((prev) => ({ ...prev, firmType: value }))}
+              />
+              <Select
+                label="Group"
+                value={scenario.group}
+                options={groupOptions}
+                onChange={(value) => setScenario((prev) => ({ ...prev, group: value }))}
+              />
+              <Select
+                label="Interviewer vibe"
+                value={scenario.person.vibe}
+                options={vibeOptions}
+                onChange={(value) =>
+                  setScenario((prev) => ({
+                    ...prev,
+                    person: { ...prev.person, vibe: value as Scenario["person"]["vibe"] },
+                  }))
+                }
+              />
+            </div>
+            <div className="mt-6 rounded-lg border border-slate-100 bg-slate-50 p-4 text-sm text-slate-900">
+              <div className="font-semibold">Scenario preview</div>
+              <div className="mt-2 text-slate-900">
+                <span className="font-medium">{scenario.person.title}</span> ({scenario.person.yearsExp} yrs) •{" "}
+                {scenario.firmType} • {scenario.group} •{" "}
+                <span className="text-slate-600">vibe:</span>{" "}
+                <span className="font-medium text-slate-900">{scenario.person.vibe}</span>
+              </div>
+              <div className="mt-2 text-slate-900">{scenario.twist}</div>
+              <div className="mt-2 text-slate-900">
+                <span className="text-slate-600">Goal:</span>{" "}
+                <span className="font-semibold text-slate-900">Referral</span>
+              </div>
+            </div>
+            </Card>
+          </motion.div>
+
+          <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="p-6">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Session Controls
+                </div>
+                <div className="mt-1 text-lg font-semibold text-slate-900">Run your mock chat</div>
+              </div>
+              <Badge tone={statusTone}>{statusLabel}</Badge>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {!isListening ? (
+                <Button onClick={startListening} type="button">
+                  Start Listening
+                </Button>
+              ) : (
+                <Button variant="secondary" onClick={stopListening} type="button">
+                  Stop Listening
+                </Button>
+              )}
+              <Button
+                variant="secondary"
+                onClick={getFeedback}
+                disabled={!transcript.trim() || fetchingFeedback}
+                type="button"
               >
-                {roleTracks.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
+                {fetchingFeedback ? "Generating..." : "Get Feedback"}
+              </Button>
             </div>
-
-            <button
-              className="rounded-md border px-4 py-2"
-              onClick={rerollScenarioOnly}
-              title="Preview a scenario before starting"
-            >
-              Randomize scenario
-            </button>
-
-            {!isListening ? (
-              <button
-                className="rounded-md bg-black px-4 py-2 text-white disabled:opacity-60"
-                onClick={startListening}
-              >
-                Start Listening
-              </button>
-            ) : (
-              <button className="rounded-md bg-red-600 px-4 py-2 text-white" onClick={stopListening}>
-                Stop Listening
-              </button>
-            )}
-
-            <button
-              className="rounded-md border px-4 py-2 disabled:opacity-60"
-              onClick={getFeedback}
-              disabled={!transcript.trim() || fetchingFeedback}
-            >
-              {fetchingFeedback ? "Getting feedback..." : "Get Feedback"}
-            </button>
-
-            <div className="ml-auto text-sm">
-              Status: <span className="font-semibold">{isListening ? "Listening" : "Idle"}</span>
+            <div className="mt-4 text-sm text-slate-700">
+              Speak naturally. We transcribe your response and generate coaching feedback.
             </div>
-          </div>
+            {speechError ? <div className="mt-3 text-sm text-red-600">{speechError}</div> : null}
+            {feedbackError ? <div className="mt-2 text-sm text-red-600">{feedbackError}</div> : null}
 
-          {speechError ? <div className="mt-3 text-sm text-red-600">{speechError}</div> : null}
-          {feedbackError ? <div className="mt-2 text-sm text-red-600">{feedbackError}</div> : null}
+            {!speechSupported ? (
+              <div className="mt-3 text-sm text-amber-700">
+                Speech recognition not supported—use Chrome or enable fallback.
+              </div>
+            ) : null}
+            </Card>
+          </motion.div>
 
-          {!speechSupported ? (
-            <div className="mt-3 text-sm text-amber-700">
-              Speech recognition not supported—use Chrome or enable fallback
+          <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="text-base font-semibold text-slate-900">Transcript</div>
+              {isListening ? <Badge tone="success">Listening…</Badge> : <Badge>Idle</Badge>}
             </div>
-          ) : null}
-
-          <div className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-900">
-            <div className="font-semibold">Scenario</div>
-            <div className="mt-1 text-slate-900">
-              <span className="font-medium">{scenario.person.title}</span> ({scenario.person.yearsExp} yrs) •{" "}
-              {scenario.firmType} • {scenario.group} • <span className="text-slate-600">vibe:</span>{" "}
-              <span className="font-medium text-slate-900">{scenario.person.vibe}</span>
+            <div className="mt-3 min-h-[160px] whitespace-pre-wrap text-sm text-slate-800">
+              {transcript || interimTranscript ? (
+                <>
+                  {transcript ? <span>{transcript}</span> : null}
+                  {interimTranscript ? (
+                    <span className="text-slate-500"> {interimTranscript}</span>
+                  ) : null}
+                </>
+              ) : (
+                "Start listening to capture your response."
+              )}
             </div>
-            <div className="mt-1 text-slate-900">{scenario.twist}</div>
-            <div className="mt-1 text-slate-900">
-              <span className="text-slate-600">Goal:</span>{" "}
-              <span className="font-semibold text-slate-900">Referral</span>
-            </div>
-          </div>
+          </Card>
+          </motion.div>
         </div>
 
-        <div className="rounded-xl border p-4">
-          <div className="text-sm text-gray-700">
-            Talk normally. Your speech is transcribed live and used for coaching feedback.
-          </div>
-        </div>
-
-        <div className="rounded-xl border p-4">
-          <div className="text-base font-semibold">Transcript</div>
-          <div className="mt-2 min-h-[140px] whitespace-pre-wrap text-sm text-gray-800">
-            {transcriptText || "Start listening to capture your response."}
-          </div>
-        </div>
-      </div>
-
-      <div className="w-[420px] shrink-0 rounded-xl border p-4 overflow-y-auto">
-        <div className="flex items-center justify-between">
-          <div className="text-base font-semibold">Coach feedback</div>
-        </div>
-        <div className="mt-4 min-h-[200px] whitespace-pre-wrap text-sm text-gray-800">
-          {feedback || "Feedback will appear here after you click Get Feedback."}
+        <div className="flex flex-col gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="text-base font-semibold text-slate-900">Coaching panel</div>
+                <Badge tone="neutral">Live</Badge>
+              </div>
+              <div className="mt-4 rounded-lg border border-slate-100 bg-slate-50 p-4 text-sm text-slate-900">
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Next best question
+                </div>
+                <div className="mt-2 font-medium text-slate-900">{nextBestQuestion}</div>
+              </div>
+              <div className="mt-4">
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Feedback
+                </div>
+                <div className="mt-2 min-h-[220px] whitespace-pre-wrap text-sm text-slate-800">
+                  {feedback || "Feedback will appear here after you click Get Feedback."}
+                </div>
+              </div>
+            </Card>
+          </motion.div>
         </div>
       </div>
     </div>
