@@ -169,7 +169,12 @@ export default function PracticeClient() {
 
       // 2) Fetch ephemeral client key from your server endpoint
       const tokenRes = await fetch(TOKEN_ENDPOINT);
-      if (!tokenRes.ok) throw new Error(`Token endpoint failed: ${tokenRes.status}`);
+      if (!tokenRes.ok) {
+        const errorText = await tokenRes.text();
+        throw new Error(
+          `Token endpoint failed (${tokenRes.status}): ${errorText || tokenRes.statusText}`
+        );
+      }
       // Expecting { value: "ek_..." } (common pattern)
       const tokenJson = await tokenRes.json();
       const ephemeralKey = tokenJson?.value || tokenJson?.apiKey || tokenJson?.token;
