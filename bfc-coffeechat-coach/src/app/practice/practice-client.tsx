@@ -215,7 +215,7 @@ export default function PracticeClient() {
           process.env.NEXT_PUBLIC_DEBUG_COACH === "true"
             ? ` Debug keys: ${Object.keys(payload).join(", ") || "none"}.`
             : "";
-        setFeedback("No feedback returned." + debugKeys);
+        setFeedback(`Empty feedback returned.${debugKeys}`);
         return;
       }
       setFeedback(feedbackText);

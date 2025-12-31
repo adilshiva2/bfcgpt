@@ -119,8 +119,8 @@ export async function POST(req: Request) {
   };
 
   let response: Response | null = null;
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    try {
+  try {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
       response = await fetchWithTimeout(
         "https://api.openai.com/v1/responses",
         {
@@ -138,15 +138,12 @@ export async function POST(req: Request) {
         continue;
       }
       break;
-    } catch {
-      if (attempt === 0) {
-        continue;
-      }
-      return NextResponse.json(
-        { error: "Upstream request failed.", requestId },
-        { status: 502 }
-      );
     }
+  } catch {
+    return NextResponse.json(
+      { error: "Upstream request failed.", requestId },
+      { status: 502 }
+    );
   }
 
   if (!response) {
@@ -169,8 +166,11 @@ export async function POST(req: Request) {
     "";
 
   if (!outputText) {
-    return NextResponse.json({ error: "No feedback returned", requestId }, { status: 502 });
+    if (process.env.COACH_DEBUG === "true") {
+      console.info(`[coach] empty output ${requestId} keys=${Object.keys(data || {}).join(",")}`);
+    }
+    return NextResponse.json({ error: "Empty model output", requestId }, { status: 502 });
   }
 
-  return NextResponse.json({ feedback: outputText.trim() });
+  return NextResponse.json({ feedback: outputText.trim(), requestId });
 }
