@@ -30,6 +30,8 @@ https://YOURPROJECT.vercel.app/api/auth/callback/google
 
 To enable realtime debug logging in the browser, set `NEXT_PUBLIC_DEBUG_REALTIME=true`.
 
+To debug coaching responses in the browser, set `NEXT_PUBLIC_DEBUG_COACH=true`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

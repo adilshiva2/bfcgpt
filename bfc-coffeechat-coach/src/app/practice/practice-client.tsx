@@ -184,13 +184,41 @@ export default function PracticeClient() {
         body: JSON.stringify({ transcript: trimmedTranscript, scenario: scenarioPayload }),
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || res.statusText);
+      const text = await res.text();
+      let payload: Record<string, unknown> = {};
+      try {
+        payload = text ? (JSON.parse(text) as Record<string, unknown>) : {};
+      } catch {
+        payload = {};
       }
 
-      const data = await res.json();
-      setFeedback(data?.feedback || "");
+      if (!res.ok) {
+        const errorMessage =
+          (payload.error as string) ||
+          (text && text.length < 240 ? text : "") ||
+          res.statusText;
+        const requestId = payload.requestId as string | undefined;
+        let friendly = errorMessage || "Unable to get feedback.";
+        if (res.status === 401) friendly = "Please sign in to get feedback.";
+        if (res.status === 402) friendly = "Billing issue. Try again later or contact support.";
+        if (res.status === 429) friendly = errorMessage || "Rate limit exceeded. Try again shortly.";
+        if (res.status === 413) friendly = errorMessage || "Transcript too long. Shorten your response.";
+        if (requestId) {
+          friendly = `${friendly} (Request ID: ${requestId})`;
+        }
+        throw new Error(friendly);
+      }
+
+      const feedbackText = typeof payload.feedback === "string" ? payload.feedback : "";
+      if (!feedbackText) {
+        const debugKeys =
+          process.env.NEXT_PUBLIC_DEBUG_COACH === "true"
+            ? ` Debug keys: ${Object.keys(payload).join(", ") || "none"}.`
+            : "";
+        setFeedback("No feedback returned." + debugKeys);
+        return;
+      }
+      setFeedback(feedbackText);
     } catch (err) {
       setFeedbackError(err instanceof Error ? err.message : "Failed to fetch feedback.");
     } finally {
@@ -201,7 +229,9 @@ export default function PracticeClient() {
   const statusLabel = fetchingFeedback ? "Generating..." : isListening ? "Listening..." : "Ready";
   const statusTone = fetchingFeedback ? "warning" : isListening ? "success" : "neutral";
   const nextBestQuestion = useMemo(() => {
-    if (!feedback) return "Review feedback to get your next best question.";
+    if (!feedback || feedback.startsWith("No feedback returned")) {
+      return "Review feedback to get your next best question.";
+    }
     const match = feedback.match(/next best question[:\-]\s*(.*)/i);
     return match?.[1]?.trim() || "Ask for role-specific advice tied to the team’s priorities.";
   }, [feedback]);
@@ -316,8 +346,16 @@ export default function PracticeClient() {
             <div className="mt-4 text-sm text-slate-700">
               Speak naturally. We transcribe your response and generate coaching feedback.
             </div>
-            {speechError ? <div className="mt-3 text-sm text-red-600">{speechError}</div> : null}
-            {feedbackError ? <div className="mt-2 text-sm text-red-600">{feedbackError}</div> : null}
+            {speechError ? (
+              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                {speechError}
+              </div>
+            ) : null}
+            {feedbackError ? (
+              <div className="mt-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                {feedbackError}
+              </div>
+            ) : null}
 
             {!speechSupported ? (
               <div className="mt-3 text-sm text-amber-700">

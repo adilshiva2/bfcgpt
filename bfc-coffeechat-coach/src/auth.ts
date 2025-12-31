@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { isAllowedEmail } from "@/lib/auth-allowlist";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -10,14 +11,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      const email = (user.email || "").toLowerCase();
-      const allowed =
-        (process.env.ALLOWED_EMAILS || "")
-          .split(",")
-          .map((s) => s.trim().toLowerCase())
-          .filter(Boolean);
-
-      return allowed.includes(email);
+      return isAllowedEmail(user.email);
     },
   },
 };
