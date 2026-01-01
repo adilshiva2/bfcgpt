@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   firmTypesByTrack,
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 
-type CallState = "idle" | "requesting_mic" | "connecting" | "live" | "ending";
+type CallState = "idle" | "requesting_mic" | "connecting" | "live" | "error";
 
 const roleTracks: RoleTrack[] = [
   "Investment Banking",
@@ -44,7 +44,7 @@ const ICE_SERVERS: RTCIceServer[] = [{ urls: "stun:stun.l.google.com:19302" }];
 export default function PracticeClient() {
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const dataChannelRef = useRef<RTCDataChannel | null>(null);
-  const localStreamRef = useRef<MediaStream | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
@@ -57,11 +57,21 @@ export default function PracticeClient() {
   const [remoteAudio, setRemoteAudio] = useState(false);
   const [debugOpen, setDebugOpen] = useState(false);
   const [eventLog, setEventLog] = useState<string[]>([]);
+  const [permissionsState, setPermissionsState] = useState<string>("unknown");
+  const [micTrackInfo, setMicTrackInfo] = useState<string>("none");
+  const [transitionTimes, setTransitionTimes] = useState<Record<CallState, string | null>>({
+    idle: null,
+    requesting_mic: null,
+    connecting: null,
+    live: null,
+    error: null,
+  });
 
   const [userTranscript, setUserTranscript] = useState("");
   const [userInterim, setUserInterim] = useState("");
   const [aiTranscript, setAiTranscript] = useState("");
   const [pushToTalk, setPushToTalk] = useState(false);
+  const debugRealtime = process.env.NEXT_PUBLIC_DEBUG_REALTIME === "true";
 
   const firmTypeOptions = useMemo(
     () => firmTypesByTrack[scenario.track].map((value) => ({ value, label: value })),
@@ -77,6 +87,17 @@ export default function PracticeClient() {
     setEventLog((prev) => [`${new Date().toLocaleTimeString()} ${entry}`, ...prev].slice(0, 20));
   }, []);
 
+  const setState = useCallback(
+    (state: CallState) => {
+      setCallState(state);
+      setTransitionTimes((prev) => ({ ...prev, [state]: new Date().toLocaleTimeString() }));
+      if (debugRealtime) {
+        console.log(`[realtime] state -> ${state}`);
+      }
+    },
+    [debugRealtime]
+  );
+
   const ensureAudioElement = useCallback(() => {
     if (!audioElementRef.current) {
       const audioEl = document.createElement("audio");
@@ -90,13 +111,12 @@ export default function PracticeClient() {
   }, []);
 
   const setMicEnabled = useCallback((enabled: boolean) => {
-    localStreamRef.current?.getAudioTracks().forEach((track) => {
+    mediaStreamRef.current?.getAudioTracks().forEach((track) => {
       track.enabled = enabled;
     });
   }, []);
 
-  const closeConnection = useCallback(() => {
-    setCallState("ending");
+  const closeConnection = useCallback((nextState: CallState = "idle") => {
     dataChannelRef.current?.close();
     dataChannelRef.current = null;
 
@@ -106,8 +126,8 @@ export default function PracticeClient() {
     pcRef.current?.close();
     pcRef.current = null;
 
-    localStreamRef.current?.getTracks().forEach((track) => track.stop());
-    localStreamRef.current = null;
+    mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+    mediaStreamRef.current = null;
 
     if (audioElementRef.current) {
       audioElementRef.current.srcObject = null;
@@ -115,8 +135,108 @@ export default function PracticeClient() {
 
     setConnected(false);
     setRemoteAudio(false);
-    setCallState("idle");
+    setState(nextState);
+  }, [setState]);
+
+  const refreshMicDiagnostics = useCallback(() => {
+    const track = mediaStreamRef.current?.getAudioTracks()[0];
+    if (!track) {
+      setMicTrackInfo("none");
+      return;
+    }
+    setMicTrackInfo(
+      `enabled=${track.enabled} muted=${track.muted} readyState=${track.readyState} label=${track.label || "unknown"}`
+    );
   }, []);
+
+  const acquireMic = useCallback(async () => {
+    setErrorMessage(null);
+    setState("requesting_mic");
+
+    let acquired = false;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => {
+        reject(new Error("Mic permission pending—check the browser prompt or site settings."));
+      }, 8000);
+    });
+
+    try {
+      const stream = (await Promise.race([
+        navigator.mediaDevices.getUserMedia({ audio: true }),
+        timeoutPromise,
+      ])) as MediaStream;
+
+      mediaStreamRef.current = stream;
+      acquired = true;
+      setMicStatus("granted");
+      refreshMicDiagnostics();
+      setState("connecting");
+      return stream;
+    } catch (err) {
+      const error = err as { name?: string; message?: string };
+      if (error?.name === "NotAllowedError") {
+        setErrorMessage("Microphone blocked. Click the lock icon → allow microphone → reload.");
+        setMicStatus("denied");
+      } else if (error?.name === "NotFoundError") {
+        setErrorMessage("No microphone found.");
+      } else if (error?.name === "NotReadableError") {
+        setErrorMessage("Microphone is in use by another app.");
+      } else {
+        setErrorMessage(error?.message || "Unable to access microphone.");
+      }
+      if (debugRealtime) {
+        console.log("[realtime] mic_error", error);
+      }
+      setState("error");
+      return null;
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+      setCallState((prev) => {
+        if (!acquired && prev === "requesting_mic") {
+          setTransitionTimes((times) => ({
+            ...times,
+            error: new Date().toLocaleTimeString(),
+          }));
+          if (debugRealtime) {
+            console.log("[realtime] state -> error (requesting_mic timeout)");
+          }
+          return "error";
+        }
+        return prev;
+      });
+    }
+  }, [debugRealtime, refreshMicDiagnostics, setState]);
+
+  const retryMic = useCallback(async () => {
+    mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+    mediaStreamRef.current = null;
+    await acquireMic();
+  }, [acquireMic]);
+
+  useEffect(() => {
+    if (!debugRealtime) return;
+    if (typeof navigator === "undefined" || !navigator.mediaDevices) {
+      setPermissionsState("mediaDevices unavailable");
+      return;
+    }
+    if (!navigator.permissions?.query) {
+      setPermissionsState("permissions API unavailable");
+      return;
+    }
+    navigator.permissions
+      .query({ name: "microphone" as PermissionName })
+      .then((result) => {
+        setPermissionsState(result.state);
+      })
+      .catch(() => setPermissionsState("unknown"));
+  }, [debugRealtime]);
+
+  useEffect(() => {
+    return () => {
+      closeConnection("idle");
+    };
+  }, [closeConnection]);
 
   const handleDataMessage = useCallback(
     (event: MessageEvent) => {
@@ -163,7 +283,7 @@ export default function PracticeClient() {
   );
 
   const startCall = useCallback(async () => {
-    if (callState !== "idle") return;
+    if (callState !== "idle" && callState !== "error") return;
 
     setErrorMessage(null);
     setUserTranscript("");
@@ -171,17 +291,12 @@ export default function PracticeClient() {
     setAiTranscript("");
     setEventLog([]);
 
-    setCallState("requesting_mic");
-
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      localStreamRef.current = stream;
-      setMicStatus("granted");
+      const stream = await acquireMic();
+      if (!stream) return;
 
       const audioEl = ensureAudioElement();
       await audioEl.play().catch(() => undefined);
-
-      setCallState("connecting");
 
       const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
       pcRef.current = pc;
@@ -259,7 +374,7 @@ export default function PracticeClient() {
       const answerSdp = await sdpResponse.text();
       await pc.setRemoteDescription({ type: "answer", sdp: answerSdp });
 
-      setCallState("live");
+      setState("live");
       sendEvent({
         type: "response.create",
         response: {
@@ -268,27 +383,30 @@ export default function PracticeClient() {
         },
       });
     } catch (err) {
-      setMicStatus(err instanceof Error && err.message.includes("permission") ? "denied" : micStatus);
       setErrorMessage(err instanceof Error ? err.message : "Unable to start call.");
-      closeConnection();
-      setCallState("idle");
+      if (debugRealtime) {
+        console.log("[realtime] start_error", err);
+      }
+      closeConnection("error");
     }
   }, [
+    acquireMic,
     callState,
     closeConnection,
     difficulty,
+    debugRealtime,
     ensureAudioElement,
     handleDataMessage,
-    micStatus,
     pushEvent,
     pushToTalk,
     scenario,
     sendEvent,
     setMicEnabled,
+    setState,
   ]);
 
   const endCall = useCallback(() => {
-    closeConnection();
+    closeConnection("idle");
   }, [closeConnection]);
 
   const testAudio = useCallback(() => {
@@ -310,13 +428,14 @@ export default function PracticeClient() {
     if (callState === "requesting_mic") return "Requesting mic";
     if (callState === "connecting") return "Connecting";
     if (callState === "live") return "Live";
-    if (callState === "ending") return "Ending";
+    if (callState === "error") return "Error";
     return "Idle";
   }, [callState]);
 
   const callStatusTone = useMemo(() => {
     if (callState === "live") return "success";
     if (callState === "connecting" || callState === "requesting_mic") return "warning";
+    if (callState === "error") return "warning";
     return "neutral";
   }, [callState]);
 
@@ -418,7 +537,7 @@ export default function PracticeClient() {
                 <Badge tone={callStatusTone}>{callStatusLabel}</Badge>
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
-                {callState === "idle" ? (
+                {callState === "idle" || callState === "error" ? (
                   <Button onClick={startCall} type="button">
                     Start Call
                   </Button>
@@ -427,6 +546,17 @@ export default function PracticeClient() {
                     End Call
                   </Button>
                 )}
+                <Button
+                  variant="secondary"
+                  onClick={retryMic}
+                  type="button"
+                  disabled={callState === "requesting_mic"}
+                >
+                  Retry Mic
+                </Button>
+                <Button variant="ghost" onClick={() => closeConnection("idle")} type="button">
+                  Reset
+                </Button>
                 <Button variant="secondary" onClick={testAudio} type="button" disabled={callState !== "live"}>
                   Test Audio
                 </Button>
@@ -438,7 +568,7 @@ export default function PracticeClient() {
                   {debugOpen ? "Hide Debug" : "Show Debug"}
                 </Button>
               </div>
-              <div className="mt-4 flex items-center gap-3 text-sm text-slate-700">
+            <div className="mt-4 flex items-center gap-3 text-sm text-slate-700">
                 <input
                   type="checkbox"
                   checked={pushToTalk}
@@ -513,14 +643,23 @@ export default function PracticeClient() {
               <div className="mt-4 text-sm text-slate-700">
                 This mode uses OpenAI Realtime to run a live interviewer. Audio is never stored.
               </div>
-              {debugOpen ? (
+              {debugOpen && debugRealtime ? (
                 <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
                   <div className="font-semibold text-slate-900">Debug</div>
                   <div className="mt-2 space-y-1">
+                    <div>isSecureContext: {String(window.isSecureContext)}</div>
+                    <div>mediaDevices: {String(Boolean(navigator.mediaDevices))}</div>
+                    <div>permissions: {permissionsState}</div>
                     <div>Mic permission: {micStatus}</div>
                     <div>Connection: {connected ? "connected" : "disconnected"}</div>
                     <div>Remote audio: {remoteAudio ? "received" : "not yet"}</div>
                     <div>Call state: {callState}</div>
+                    <div>Track: {micTrackInfo}</div>
+                    <div>Idle at: {transitionTimes.idle || "-"}</div>
+                    <div>Requesting at: {transitionTimes.requesting_mic || "-"}</div>
+                    <div>Connecting at: {transitionTimes.connecting || "-"}</div>
+                    <div>Live at: {transitionTimes.live || "-"}</div>
+                    <div>Error at: {transitionTimes.error || "-"}</div>
                   </div>
                   <div className="mt-3 font-semibold text-slate-900">Recent events</div>
                   <div className="mt-2 space-y-1">
