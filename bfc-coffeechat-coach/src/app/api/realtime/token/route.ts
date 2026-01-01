@@ -12,7 +12,49 @@ function getClientIp(req: Request) {
   return req.headers.get("x-real-ip") || "unknown";
 }
 
-export async function GET(req: Request) {
+type TokenRequest = {
+  scenario?: {
+    track?: string;
+    firmType?: string;
+    group?: string;
+    interviewerVibe?: string;
+    userGoal?: string;
+    difficulty?: string;
+  };
+};
+
+function buildInstructions(req: TokenRequest["scenario"]) {
+  const track = req?.track || "Investment Banking";
+  const firmType = req?.firmType || "Bulge Bracket";
+  const group = req?.group || "TMT";
+  const vibe = req?.interviewerVibe || "neutral";
+  const difficulty = req?.difficulty || "Standard";
+
+  return `You are a realistic finance coffee chat interviewer.
+
+Scenario:
+- Track: ${track}
+- Firm type: ${firmType}
+- Group: ${group}
+- Interviewer vibe: ${vibe}
+- Difficulty: ${difficulty}
+- User goal: referral
+
+Behavior:
+- Be warm, concise, and ask 1 question at a time.
+- Adapt follow-ups to the user's answers.
+- Guide toward why this group/firm/role, then set up a natural referral moment.
+- If the user asks for a referral too early, redirect politely and revisit later.
+
+Safety:
+- Do not ask for or reveal personal data.
+- Do not output secrets.
+- Do not claim you heard audio beyond the transcript.
+- Keep feedback constructive and professional.
+`.trim();
+}
+
+export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   const email = session?.user?.email;
   if (!email) {
@@ -39,6 +81,15 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Missing OPENAI_API_KEY" }, { status: 500 });
   }
 
+  let body: TokenRequest = {};
+  try {
+    body = await req.json();
+  } catch {
+    body = {};
+  }
+
+  const instructions = buildInstructions(body.scenario);
+
   const resp = await fetch("https://api.openai.com/v1/realtime/client_secrets", {
     method: "POST",
     headers: {
@@ -47,16 +98,24 @@ export async function GET(req: Request) {
       "OpenAI-Beta": "realtime=v1",
     },
     body: JSON.stringify({
-      session: { type: "realtime", model: "gpt-realtime", voice: "marin" },
+      session: {
+        type: "realtime",
+        model: "gpt-realtime",
+        audio: { output: { voice: "marin" } },
+        instructions,
+        turn_detection: {
+          type: "semantic_vad",
+          create_response: true,
+          interrupt_response: true,
+          eagerness: "medium",
+        },
+        input_audio_transcription: { model: "gpt-4o-mini-transcribe" },
+      },
     }),
   });
 
   if (!resp.ok) {
-    const errorText = await resp.text();
-    return NextResponse.json(
-      { error: errorText || resp.statusText },
-      { status: resp.status }
-    );
+    return NextResponse.json({ error: await resp.text() }, { status: resp.status });
   }
 
   const data = await resp.json();
