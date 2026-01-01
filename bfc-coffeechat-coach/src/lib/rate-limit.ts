@@ -6,6 +6,7 @@ type Bucket = {
 
 const userBuckets = new Map<string, Bucket>();
 const ipBuckets = new Map<string, Bucket>();
+const customBuckets = new Map<string, Bucket>();
 
 function prune(bucket: Bucket, now: number) {
   bucket.timestamps = bucket.timestamps.filter((ts) => now - ts <= WINDOW_MS);
@@ -39,5 +40,22 @@ export function enforceRateLimit(params: { userKey: string; ipKey: string }) {
     return { allowed: false, retryAfterMs: ipResult.retryAfterMs };
   }
 
+  return { allowed: true, retryAfterMs: 0 };
+}
+
+export function enforceUserRateLimit(params: { key: string; limit: number; windowMs: number }) {
+  // NOTE: In-memory buckets reset on serverless cold starts. This is baseline protection only.
+  const now = Date.now();
+  const bucket = customBuckets.get(params.key) ?? { timestamps: [] };
+  bucket.timestamps = bucket.timestamps.filter((ts) => now - ts <= params.windowMs);
+
+  if (bucket.timestamps.length >= params.limit) {
+    const earliest = bucket.timestamps[0] ?? now;
+    const retryAfterMs = Math.max(0, params.windowMs - (now - earliest));
+    return { allowed: false, retryAfterMs };
+  }
+
+  bucket.timestamps.push(now);
+  customBuckets.set(params.key, bucket);
   return { allowed: true, retryAfterMs: 0 };
 }

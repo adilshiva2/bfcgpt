@@ -32,6 +32,14 @@ To enable realtime debug logging in the browser, set `NEXT_PUBLIC_DEBUG_REALTIME
 
 To debug coaching responses in the browser, set `NEXT_PUBLIC_DEBUG_COACH=true`.
 
+## ElevenLabs TTS
+
+Set the following environment variables to enable interviewer voice playback:
+
+- `ELEVENLABS_API_KEY`
+- `ELEVENLABS_VOICE_ID`
+- `ELEVENLABS_MODEL_ID` (optional)
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

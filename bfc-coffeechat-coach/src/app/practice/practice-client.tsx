@@ -54,6 +54,7 @@ export default function PracticeClient() {
   const dataChannelRef = useRef<RTCDataChannel | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
   const callStateRef = useRef<CallState>("idle");
   const connectionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -82,6 +83,9 @@ export default function PracticeClient() {
   const [userLive, setUserLive] = useState("");
   const [aiTranscript, setAiTranscript] = useState("");
   const [aiLive, setAiLive] = useState("");
+  const [ttsError, setTtsError] = useState<string | null>(null);
+  const ttsQueueRef = useRef<string[]>([]);
+  const ttsPlayingRef = useRef(false);
 
   const debugRealtime = process.env.NEXT_PUBLIC_DEBUG_REALTIME === "true";
 
@@ -118,17 +122,30 @@ export default function PracticeClient() {
       audioEl.autoplay = true;
       audioEl.setAttribute("playsinline", "");
       audioEl.style.display = "none";
+      audioEl.muted = true;
       document.body.appendChild(audioEl);
       audioElementRef.current = audioEl;
     }
     return audioElementRef.current;
   }, []);
 
+  const ensureTtsAudioElement = useCallback(() => {
+    if (!ttsAudioRef.current) {
+      const audioEl = document.createElement("audio");
+      audioEl.autoplay = true;
+      audioEl.setAttribute("playsinline", "");
+      audioEl.style.display = "none";
+      document.body.appendChild(audioEl);
+      ttsAudioRef.current = audioEl;
+    }
+    return ttsAudioRef.current;
+  }, []);
+
   const attemptPlay = useCallback(async () => {
-    const audioEl = audioElementRef.current;
-    if (!audioEl) return;
+    const audioEls = [audioElementRef.current, ttsAudioRef.current].filter(Boolean) as HTMLAudioElement[];
+    if (audioEls.length === 0) return;
     try {
-      await audioEl.play();
+      await Promise.all(audioEls.map((el) => el.play()));
       setAudioNeedsClick(false);
     } catch {
       setAudioNeedsClick(true);
@@ -154,6 +171,10 @@ export default function PracticeClient() {
 
       if (audioElementRef.current) {
         audioElementRef.current.srcObject = null;
+      }
+      if (ttsAudioRef.current) {
+        ttsAudioRef.current.pause();
+        ttsAudioRef.current.src = "";
       }
 
       setDcState("closed");
@@ -195,6 +216,68 @@ export default function PracticeClient() {
     }
   }, [debugRealtime, setState]);
 
+  const sendEvent = useCallback(
+    (payload: Record<string, unknown>) => {
+      const channel = dataChannelRef.current;
+      if (channel && channel.readyState === "open") {
+        channel.send(JSON.stringify(payload));
+        if (payload.type) {
+          pushEvent(`send:${payload.type}`);
+        }
+      }
+    },
+    [pushEvent]
+  );
+
+  const playNextTts = useCallback(async () => {
+    if (ttsPlayingRef.current) return;
+    const next = ttsQueueRef.current.shift();
+    if (!next) return;
+    ttsPlayingRef.current = true;
+    setTtsError(null);
+
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: next }),
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || res.statusText);
+      }
+
+      const audioBlob = await res.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audioEl = ensureTtsAudioElement();
+      audioEl.src = audioUrl;
+      try {
+        await audioEl.play();
+      } catch {
+        setAudioNeedsClick(true);
+        throw new Error("Audio playback blocked. Click to enable audio.");
+      }
+      audioEl.onended = () => {
+        URL.revokeObjectURL(audioUrl);
+        ttsPlayingRef.current = false;
+        playNextTts().catch(() => undefined);
+      };
+    } catch (err) {
+      ttsPlayingRef.current = false;
+      setTtsError(err instanceof Error ? err.message : "Voice playback failed.");
+    }
+  }, [ensureTtsAudioElement]);
+
+  const speak = useCallback(
+    (text: string) => {
+      if (!text.trim()) return;
+      ttsQueueRef.current.push(text.trim());
+      playNextTts().catch(() => undefined);
+    },
+    [playNextTts]
+  );
+
   const handleDataMessage = useCallback(
     (event: MessageEvent) => {
       try {
@@ -221,6 +304,7 @@ export default function PracticeClient() {
           const finalText = msg.transcript || msg.text || aiLive;
           if (finalText) {
             setAiTranscript((prev) => [prev, finalText].filter(Boolean).join("\n"));
+            speak(finalText);
           }
           setAiLive("");
         }
@@ -228,20 +312,7 @@ export default function PracticeClient() {
         pushEvent("event_parse_error");
       }
     },
-    [aiLive, pushEvent, userLive]
-  );
-
-  const sendEvent = useCallback(
-    (payload: Record<string, unknown>) => {
-      const channel = dataChannelRef.current;
-      if (channel && channel.readyState === "open") {
-        channel.send(JSON.stringify(payload));
-        if (payload.type) {
-          pushEvent(`send:${payload.type}`);
-        }
-      }
-    },
-    [pushEvent]
+    [aiLive, pushEvent, speak, userLive]
   );
 
   const startCall = useCallback(async () => {
@@ -537,6 +608,13 @@ export default function PracticeClient() {
                     End Call
                   </Button>
                 )}
+                <Button
+                  variant="secondary"
+                  onClick={() => speak("Audio test: can you hear me?")}
+                  type="button"
+                >
+                  Test Voice
+                </Button>
                 <Button variant="ghost" onClick={() => setDebugOpen((prev) => !prev)} type="button">
                   {debugOpen ? "Hide Debug" : "Show Debug"}
                 </Button>
@@ -549,6 +627,11 @@ export default function PracticeClient() {
               {errorMessage ? (
                 <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                   {errorMessage}
+                </div>
+              ) : null}
+              {ttsError ? (
+                <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  {ttsError}
                 </div>
               ) : null}
               {micStatus === "denied" ? (
