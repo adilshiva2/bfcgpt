@@ -65,6 +65,7 @@ export default function PracticeClient() {
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentUserTurnRef = useRef("");
+  const inFlightRef = useRef(false);
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [difficulty, setDifficulty] = useState<Difficulty>("Standard");
@@ -72,6 +73,7 @@ export default function PracticeClient() {
 
   const [interviewState, setInterviewState] = useState<InterviewState>("idle");
   const [interviewError, setInterviewError] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<string>("");
 
   const [speechSupported, setSpeechSupported] = useState(true);
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -83,6 +85,7 @@ export default function PracticeClient() {
   const [ttsStatus, setTtsStatus] = useState<number | null>(null);
   const [ttsContentType, setTtsContentType] = useState<string>("-");
   const [ttsBytes, setTtsBytes] = useState<number | null>(null);
+  const [debugOpen, setDebugOpen] = useState(false);
 
   const debugTts = process.env.NEXT_PUBLIC_DEBUG_TTS === "true";
 
@@ -210,6 +213,8 @@ export default function PracticeClient() {
 
   const callInterviewer = useCallback(
     async (nextMessages: Message[]) => {
+      if (inFlightRef.current) return;
+      inFlightRef.current = true;
       setInterviewState("thinking");
       setInterviewError(null);
       try {
@@ -251,18 +256,67 @@ export default function PracticeClient() {
       } catch (err) {
         setInterviewError(err instanceof Error ? err.message : "Interview request failed.");
         setInterviewState("error");
+      } finally {
+        inFlightRef.current = false;
       }
     },
     [scenarioPayload, speak]
   );
 
+  const rerollScenarioOnly = useCallback(() => {
+    const sc = generateScenario(scenario.track);
+    setScenario(sc);
+  }, [scenario.track]);
+
+  const buildFeedback = useCallback((text: string) => {
+    const lower = text.toLowerCase();
+    const fillerWords = ["um", "uh", "like", "you know", "sort of", "kind of"];
+    const fillerCount = fillerWords.reduce((sum, word) => sum + (lower.split(word).length - 1), 0);
+    const longAnswer = text.length > 600;
+    const entitlement = /(i deserve|i should|get me|give me)/i.test(text);
+    const questions = (text.match(/\?/g) || []).length;
+
+    const strengths = [
+      "Clear intent to learn about the role.",
+      questions > 0 ? "Asked at least one thoughtful question." : "Engaged tone with relevant detail.",
+    ];
+    const fixes = [
+      longAnswer ? "Shorten responses to 20–30 seconds to stay crisp." : "Add a concrete example to increase credibility.",
+      fillerCount > 2 ? "Reduce filler words to sound more confident." : "Ask a sharper follow-up after your answer.",
+    ];
+
+    const nextQuestion = "What does success look like in this group for a new analyst?";
+    const referralAsk = entitlement
+      ? "If it feels appropriate after a few chats, would you be open to a referral once I’ve learned more about the team?"
+      : "If it makes sense after I learn more, would you be open to a referral down the line?";
+
+    return [
+      "Strengths:",
+      `- ${strengths[0]}`,
+      `- ${strengths[1]}`,
+      "",
+      "Fixes:",
+      `- ${fixes[0]}`,
+      `- ${fixes[1]}`,
+      "",
+      "Better next question:",
+      `- ${nextQuestion}`,
+      "",
+      "Referral ask line:",
+      `- ${referralAsk}`,
+    ].join("\n");
+  }, []);
+
   const finalizeTurn = useCallback(async () => {
     const text = currentUserTurnRef.current.trim();
     if (!text) return;
     currentUserTurnRef.current = "";
-    const nextMessages: Message[] = [...messages, { role: "user", content: text }];
+    const userMessage: Message = { role: "user", content: text };
+    const nextMessages: Message[] = [...messages, userMessage];
+    setMessages(nextMessages);
+    setFeedback(buildFeedback(text));
     await callInterviewer(nextMessages);
-  }, [callInterviewer, messages]);
+  }, [buildFeedback, callInterviewer, messages]);
 
   const startTranscription = useCallback(() => {
     setSpeechError(null);
@@ -303,7 +357,6 @@ export default function PracticeClient() {
       const trimmedFinal = finalText.trim();
       if (trimmedFinal) {
         currentUserTurnRef.current = `${currentUserTurnRef.current} ${trimmedFinal}`.trim();
-        setMessages((prev) => [...prev, { role: "user", content: trimmedFinal }]);
         if (silenceTimerRef.current) {
           clearTimeout(silenceTimerRef.current);
         }
@@ -342,39 +395,28 @@ export default function PracticeClient() {
     setInterviewState("idle");
   }, []);
 
-  const rerollScenarioOnly = useCallback(() => {
-    const sc = generateScenario(scenario.track);
-    setScenario(sc);
-  }, [scenario.track]);
-
   const startInterview = useCallback(async () => {
     setMessages([]);
     currentUserTurnRef.current = "";
     setInterviewError(null);
     setTranscriptInterim("");
-    await callInterviewer([]);
-  }, [callInterviewer]);
+    startTranscription();
+    await callInterviewer([{ role: "user", content: "Begin the coffee chat." }]);
+  }, [callInterviewer, startTranscription]);
 
-  const sendAnswer = useCallback(async () => {
+  const endInterview = useCallback(async () => {
+    stopTranscription();
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
     }
-    await finalizeTurn();
-  }, [finalizeTurn]);
-
-  const endInterview = useCallback(() => {
-    stopTranscription();
+    if (currentUserTurnRef.current.trim()) {
+      await finalizeTurn();
+    }
     stopSpeaking();
-    setMessages([]);
     currentUserTurnRef.current = "";
     setInterviewState("idle");
     setInterviewError(null);
-  }, [stopSpeaking, stopTranscription]);
-
-  const summaryText = useMemo(() => {
-    const lastInterviewer = [...messages].reverse().find((m) => m.role === "interviewer");
-    return lastInterviewer?.content || "";
-  }, [messages]);
+  }, [finalizeTurn, stopSpeaking, stopTranscription]);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10">
@@ -479,47 +521,19 @@ export default function PracticeClient() {
                 <Button onClick={startInterview} type="button">
                   Start Interview
                 </Button>
-                <Button variant="secondary" onClick={sendAnswer} type="button">
-                  Send Answer
-                </Button>
-                <Button variant="secondary" onClick={stopSpeaking} type="button">
-                  Stop Speaking
-                </Button>
                 <Button variant="ghost" onClick={endInterview} type="button">
                   End Interview
                 </Button>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {!isTranscribing ? (
-                  <Button onClick={startTranscription} type="button">
-                    Start Transcription
-                  </Button>
-                ) : (
-                  <Button variant="secondary" onClick={stopTranscription} type="button">
-                    Stop Transcription
-                  </Button>
-                )}
-                <Button
-                  variant="secondary"
-                  onClick={() => speak("Audio test. If you can hear this, ElevenLabs is working.")}
-                  type="button"
-                >
-                  Test ElevenLabs Voice
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    speak(summaryText ? `Here’s your feedback. ${summaryText}` : "No feedback yet.")
-                  }
-                  type="button"
-                  disabled={!summaryText}
-                >
-                  Speak Feedback
+                <Button variant="ghost" onClick={() => setDebugOpen((prev) => !prev)} type="button">
+                  {debugOpen ? "Hide Debug" : "Show Debug"}
                 </Button>
               </div>
               {audioNeedsClick ? (
                 <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
-                  Audio playback blocked. <Button variant="ghost" onClick={retryAudio}>Click to enable audio</Button>
+                  Audio playback blocked.{" "}
+                  <Button variant="ghost" onClick={retryAudio}>
+                    Click to enable audio
+                  </Button>
                 </div>
               ) : null}
               {!speechSupported ? (
@@ -578,15 +592,15 @@ export default function PracticeClient() {
           >
             <Card className="p-6">
               <div className="flex items-center justify-between">
-                <div className="text-base font-semibold text-slate-900">TTS Debug</div>
-                <Badge tone="neutral">ElevenLabs</Badge>
+                <div className="text-base font-semibold text-slate-900">Feedback</div>
+                <Badge tone="neutral">Auto</Badge>
               </div>
-              <div className="mt-4 text-sm text-slate-700">
-                ElevenLabs voice output without WebRTC.
+              <div className="mt-4 min-h-[220px] whitespace-pre-wrap text-sm text-slate-800">
+                {feedback || "Feedback will appear after each answer."}
               </div>
-              {debugTts ? (
+              {debugTts && debugOpen ? (
                 <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
-                  <div className="font-semibold text-slate-900">Last TTS call</div>
+                  <div className="font-semibold text-slate-900">TTS Debug</div>
                   <div className="mt-2 space-y-1">
                     <div>Status: {ttsStatus ?? "-"}</div>
                     <div>Content-Type: {ttsContentType}</div>

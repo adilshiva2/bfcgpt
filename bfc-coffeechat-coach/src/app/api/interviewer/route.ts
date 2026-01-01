@@ -8,6 +8,7 @@ const LIMIT = 20;
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_TOTAL_CHARS = 4000;
 const MAX_MESSAGE_CHARS = 1000;
+const MODEL = "gpt-5-mini";
 
 type ScenarioPayload = {
   track: string;
@@ -82,6 +83,9 @@ export async function POST(req: Request) {
   if (!scenario) {
     return NextResponse.json({ error: "Missing scenario", requestId }, { status: 400 });
   }
+  if (messages.length === 0) {
+    return NextResponse.json({ error: "Missing messages", requestId }, { status: 400 });
+  }
 
   let totalChars = 0;
   for (const msg of messages) {
@@ -104,7 +108,7 @@ export async function POST(req: Request) {
   }
 
   const payload = {
-    model: "gpt-5-mini",
+    model: MODEL,
     input: [
       { role: "system", content: buildSystemPrompt(scenario) },
       ...messages.map((msg) => ({
@@ -128,15 +132,24 @@ export async function POST(req: Request) {
       const errorText = await resp.text();
       return NextResponse.json(
         { error: errorText || resp.statusText, requestId },
-        { status: resp.status }
+        { status: 502 }
       );
     }
 
     const data = await resp.json();
-    const outputText = (data?.output_text || "").trim();
+    const outputText = extractOutputText(data);
 
     if (!outputText) {
-      return NextResponse.json({ error: "Empty model output", requestId }, { status: 502 });
+      return NextResponse.json(
+        {
+          error: "Empty model output",
+          requestId,
+          ...(process.env.NEXT_PUBLIC_DEBUG_INTERVIEW === "true"
+            ? buildDebugMeta(data, MODEL)
+            : {}),
+        },
+        { status: 502 }
+      );
     }
 
     const interviewerText = outputText.slice(0, 280);
@@ -144,4 +157,38 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Upstream request failed", requestId }, { status: 502 });
   }
+}
+
+function extractOutputText(data: unknown) {
+  const payload = data as {
+    output_text?: string;
+    output?: Array<{ type?: string; content?: Array<{ text?: string }> }>;
+  };
+  const direct = typeof payload?.output_text === "string" ? payload.output_text.trim() : "";
+  if (direct) return direct;
+  const outputItems = Array.isArray(payload?.output) ? payload.output : [];
+  const parts: string[] = [];
+  for (const item of outputItems) {
+    const content = Array.isArray(item?.content) ? item.content : [];
+    for (const part of content) {
+      if (typeof part?.text === "string") {
+        parts.push(part.text);
+      }
+    }
+  }
+  return parts.join("").trim();
+}
+
+function buildDebugMeta(data: unknown, modelUsed: string) {
+  const payload = data as {
+    output?: Array<{ type?: string }>;
+    refusal?: unknown;
+  };
+  const outputItems = Array.isArray(payload?.output) ? payload.output : [];
+  return {
+    modelUsed,
+    outputKeys: Object.keys((payload as Record<string, unknown>) || {}),
+    outputItemTypes: outputItems.map((item) => item?.type).filter(Boolean),
+    hadRefusal: Boolean(payload?.refusal),
+  };
 }

@@ -154,23 +154,62 @@ export async function POST(req: Request) {
     const errorText = await response.text();
     return NextResponse.json(
       { error: errorText || response.statusText, requestId },
-      { status: response.status }
+      { status: 502 }
     );
   }
 
   const data = await response.json();
-  const outputText =
-    data?.output_text ||
-    data?.output?.[0]?.content?.find((item: { type: string; text?: string }) => item.type === "output_text")
-      ?.text ||
-    "";
+  const outputText = extractOutputText(data);
 
   if (!outputText) {
     if (process.env.COACH_DEBUG === "true") {
       console.info(`[coach] empty output ${requestId} keys=${Object.keys(data || {}).join(",")}`);
     }
-    return NextResponse.json({ error: "Empty model output", requestId }, { status: 502 });
+    return NextResponse.json(
+      {
+        error: "Empty model output",
+        requestId,
+        ...(process.env.NEXT_PUBLIC_DEBUG_INTERVIEW === "true"
+          ? buildDebugMeta(data, "gpt-5")
+          : {}),
+      },
+      { status: 502 }
+    );
   }
 
   return NextResponse.json({ feedback: outputText.trim(), requestId });
+}
+
+function extractOutputText(data: unknown) {
+  const payload = data as {
+    output_text?: string;
+    output?: Array<{ type?: string; content?: Array<{ text?: string }> }>;
+  };
+  const direct = typeof payload?.output_text === "string" ? payload.output_text.trim() : "";
+  if (direct) return direct;
+  const outputItems = Array.isArray(payload?.output) ? payload.output : [];
+  const parts: string[] = [];
+  for (const item of outputItems) {
+    const content = Array.isArray(item?.content) ? item.content : [];
+    for (const part of content) {
+      if (typeof part?.text === "string") {
+        parts.push(part.text);
+      }
+    }
+  }
+  return parts.join("").trim();
+}
+
+function buildDebugMeta(data: unknown, modelUsed: string) {
+  const payload = data as {
+    output?: Array<{ type?: string }>;
+    refusal?: unknown;
+  };
+  const outputItems = Array.isArray(payload?.output) ? payload.output : [];
+  return {
+    modelUsed,
+    outputKeys: Object.keys((payload as Record<string, unknown>) || {}),
+    outputItemTypes: outputItems.map((item) => item?.type).filter(Boolean),
+    hadRefusal: Boolean(payload?.refusal),
+  };
 }
