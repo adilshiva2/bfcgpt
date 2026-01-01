@@ -15,12 +15,20 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 
-type CoachScenario = {
+type InterviewState = "idle" | "listening" | "thinking" | "speaking" | "error";
+
+type ScenarioPayload = {
   track: string;
   firmType: string;
   group: string;
   interviewerVibe: string;
-  userGoal: "referral";
+  difficulty: string;
+  goal: "referral";
+};
+
+type Message = {
+  role: "user" | "interviewer";
+  content: string;
 };
 
 const roleTracks: RoleTrack[] = [
@@ -31,6 +39,10 @@ const roleTracks: RoleTrack[] = [
   "Venture Capital",
   "Corporate Development",
 ];
+
+const difficultyOptions = ["Easy", "Standard", "Hard"] as const;
+
+type Difficulty = (typeof difficultyOptions)[number];
 
 const DEFAULT_SCENARIO: Scenario = {
   track: "Investment Banking",
@@ -51,18 +63,20 @@ function getSpeechRecognition(): SpeechRecognition | null {
 export default function PracticeClient() {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
+  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentUserTurnRef = useRef("");
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
+  const [difficulty, setDifficulty] = useState<Difficulty>("Standard");
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const [interviewState, setInterviewState] = useState<InterviewState>("idle");
+  const [interviewError, setInterviewError] = useState<string | null>(null);
 
   const [speechSupported, setSpeechSupported] = useState(true);
   const [isTranscribing, setIsTranscribing] = useState(false);
-  const [transcriptFinal, setTranscriptFinal] = useState("");
   const [transcriptInterim, setTranscriptInterim] = useState("");
   const [speechError, setSpeechError] = useState<string | null>(null);
-
-  const [feedback, setFeedback] = useState<string>("");
-  const [feedbackError, setFeedbackError] = useState<string | null>(null);
-  const [fetchingFeedback, setFetchingFeedback] = useState(false);
 
   const [audioNeedsClick, setAudioNeedsClick] = useState(false);
   const [ttsError, setTtsError] = useState<string | null>(null);
@@ -90,6 +104,9 @@ export default function PracticeClient() {
     return () => {
       recognitionRef.current?.stop();
       recognitionRef.current = null;
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+      }
     };
   }, []);
 
@@ -105,17 +122,27 @@ export default function PracticeClient() {
     return ttsAudioRef.current;
   }, []);
 
+  const stopSpeaking = useCallback(() => {
+    if (ttsAudioRef.current) {
+      ttsAudioRef.current.pause();
+      ttsAudioRef.current.currentTime = 0;
+    }
+    setInterviewState("listening");
+  }, []);
+
   const speak = useCallback(
     async (text: string) => {
       const trimmed = text.trim();
       if (!trimmed) return;
       setTtsError(null);
 
+      const speakText = trimmed.length > 280 ? `${trimmed.slice(0, 277)}...` : trimmed;
+
       try {
         const res = await fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: trimmed }),
+          body: JSON.stringify({ text: speakText }),
         });
 
         setTtsStatus(res.status);
@@ -140,6 +167,7 @@ export default function PracticeClient() {
         audioEl.currentTime = 0;
         audioEl.src = audioUrl;
         try {
+          setInterviewState("speaking");
           await audioEl.play();
           setAudioNeedsClick(false);
         } catch {
@@ -148,9 +176,11 @@ export default function PracticeClient() {
         }
         audioEl.onended = () => {
           URL.revokeObjectURL(audioUrl);
+          setInterviewState("listening");
         };
       } catch (err) {
         setTtsError(err instanceof Error ? err.message : "TTS failed.");
+        setInterviewState("listening");
       }
     },
     [ensureTtsAudio]
@@ -165,6 +195,74 @@ export default function PracticeClient() {
       setAudioNeedsClick(true);
     }
   }, []);
+
+  const scenarioPayload: ScenarioPayload = useMemo(
+    () => ({
+      track: scenario.track,
+      firmType: scenario.firmType,
+      group: scenario.group,
+      interviewerVibe: scenario.person.vibe,
+      difficulty,
+      goal: "referral",
+    }),
+    [scenario, difficulty]
+  );
+
+  const callInterviewer = useCallback(
+    async (nextMessages: Message[]) => {
+      setInterviewState("thinking");
+      setInterviewError(null);
+      try {
+        const res = await fetch("/api/interviewer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: nextMessages, scenario: scenarioPayload }),
+        });
+
+        const text = await res.text();
+        let payload: Record<string, unknown> = {};
+        try {
+          payload = text ? (JSON.parse(text) as Record<string, unknown>) : {};
+        } catch {
+          payload = {};
+        }
+
+        if (!res.ok) {
+          const requestId = payload.requestId as string | undefined;
+          const errorMessage =
+            (payload.error as string) ||
+            (text && text.length < 240 ? text : "") ||
+            res.statusText;
+          const withId = requestId ? `${errorMessage} (Request ID: ${requestId})` : errorMessage;
+          setInterviewError(withId);
+          setInterviewState("error");
+          return;
+        }
+
+        const interviewerText = (payload.interviewerText as string) || "";
+        if (!interviewerText) {
+          setInterviewError("Empty interviewer response.");
+          setInterviewState("error");
+          return;
+        }
+
+        setMessages((prev) => [...prev, { role: "interviewer", content: interviewerText }]);
+        await speak(interviewerText);
+      } catch (err) {
+        setInterviewError(err instanceof Error ? err.message : "Interview request failed.");
+        setInterviewState("error");
+      }
+    },
+    [scenarioPayload, speak]
+  );
+
+  const finalizeTurn = useCallback(async () => {
+    const text = currentUserTurnRef.current.trim();
+    if (!text) return;
+    currentUserTurnRef.current = "";
+    const nextMessages: Message[] = [...messages, { role: "user", content: text }];
+    await callInterviewer(nextMessages);
+  }, [callInterviewer, messages]);
 
   const startTranscription = useCallback(() => {
     setSpeechError(null);
@@ -198,9 +296,20 @@ export default function PracticeClient() {
         }
       }
 
+      if (interviewState === "speaking") {
+        stopSpeaking();
+      }
+
       const trimmedFinal = finalText.trim();
       if (trimmedFinal) {
-        setTranscriptFinal((prev) => [prev, trimmedFinal].filter(Boolean).join(" "));
+        currentUserTurnRef.current = `${currentUserTurnRef.current} ${trimmedFinal}`.trim();
+        setMessages((prev) => [...prev, { role: "user", content: trimmedFinal }]);
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
+        }
+        silenceTimerRef.current = setTimeout(() => {
+          void finalizeTurn();
+        }, 1200);
       }
       setTranscriptInterim(interimText.trim());
     };
@@ -222,13 +331,15 @@ export default function PracticeClient() {
     recognitionRef.current = recognition;
     recognition.start();
     setIsTranscribing(true);
-  }, [isTranscribing, speechSupported]);
+    setInterviewState("listening");
+  }, [finalizeTurn, interviewState, isTranscribing, speechSupported, stopSpeaking]);
 
   const stopTranscription = useCallback(() => {
     recognitionRef.current?.stop();
     recognitionRef.current = null;
     setIsTranscribing(false);
     setTranscriptInterim("");
+    setInterviewState("idle");
   }, []);
 
   const rerollScenarioOnly = useCallback(() => {
@@ -236,59 +347,34 @@ export default function PracticeClient() {
     setScenario(sc);
   }, [scenario.track]);
 
-  const getFeedback = useCallback(async () => {
-    const trimmedTranscript = transcriptFinal.trim();
-    if (!trimmedTranscript || fetchingFeedback) return;
+  const startInterview = useCallback(async () => {
+    setMessages([]);
+    currentUserTurnRef.current = "";
+    setInterviewError(null);
+    setTranscriptInterim("");
+    await callInterviewer([]);
+  }, [callInterviewer]);
 
-    setFetchingFeedback(true);
-    setFeedback("");
-    setFeedbackError(null);
-
-    const scenarioPayload: CoachScenario = {
-      track: scenario.track,
-      firmType: scenario.firmType,
-      group: scenario.group,
-      interviewerVibe: scenario.person.vibe,
-      userGoal: "referral",
-    };
-
-    try {
-      const res = await fetch("/api/coach", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript: trimmedTranscript, scenario: scenarioPayload }),
-      });
-
-      const text = await res.text();
-      let payload: Record<string, unknown> = {};
-      try {
-        payload = text ? (JSON.parse(text) as Record<string, unknown>) : {};
-      } catch {
-        payload = {};
-      }
-
-      if (!res.ok) {
-        const errorMessage =
-          (payload.error as string) ||
-          (text && text.length < 240 ? text : "") ||
-          res.statusText;
-        throw new Error(errorMessage || "Unable to get feedback.");
-      }
-
-      const feedbackText = typeof payload.feedback === "string" ? payload.feedback : "";
-      setFeedback(feedbackText || "No feedback returned.");
-    } catch (err) {
-      setFeedbackError(err instanceof Error ? err.message : "Failed to fetch feedback.");
-    } finally {
-      setFetchingFeedback(false);
+  const sendAnswer = useCallback(async () => {
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
     }
-  }, [fetchingFeedback, scenario, transcriptFinal]);
+    await finalizeTurn();
+  }, [finalizeTurn]);
+
+  const endInterview = useCallback(() => {
+    stopTranscription();
+    stopSpeaking();
+    setMessages([]);
+    currentUserTurnRef.current = "";
+    setInterviewState("idle");
+    setInterviewError(null);
+  }, [stopSpeaking, stopTranscription]);
 
   const summaryText = useMemo(() => {
-    if (!feedback) return "";
-    const lines = feedback.split("\n").filter(Boolean).slice(0, 3).join(" ");
-    return lines.slice(0, 500);
-  }, [feedback]);
+    const lastInterviewer = [...messages].reverse().find((m) => m.role === "interviewer");
+    return lastInterviewer?.content || "";
+  }, [messages]);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10">
@@ -349,6 +435,13 @@ export default function PracticeClient() {
                     }))
                   }
                 />
+                <Select
+                  label="Difficulty"
+                  value={difficulty}
+                  options={difficultyOptions.map((value) => ({ value, label: value }))}
+                  onChange={(value) => setDifficulty(value as Difficulty)}
+                  className="md:col-span-2"
+                />
               </div>
               <div className="mt-6 rounded-lg border border-slate-100 bg-slate-50 p-4 text-sm text-slate-900">
                 <div className="font-semibold">Scenario preview</div>
@@ -372,15 +465,29 @@ export default function PracticeClient() {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Transcription
+                    Interview Controls
                   </div>
                   <div className="mt-1 text-lg font-semibold text-slate-900">
-                    Browser SpeechRecognition
+                    Mock interview loop (TTS)
                   </div>
                 </div>
-                <Badge tone={isTranscribing ? "success" : "neutral"}>
-                  {isTranscribing ? "Transcribing" : "Idle"}
+                <Badge tone={interviewState === "speaking" ? "warning" : "neutral"}>
+                  {interviewState}
                 </Badge>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Button onClick={startInterview} type="button">
+                  Start Interview
+                </Button>
+                <Button variant="secondary" onClick={sendAnswer} type="button">
+                  Send Answer
+                </Button>
+                <Button variant="secondary" onClick={stopSpeaking} type="button">
+                  Stop Speaking
+                </Button>
+                <Button variant="ghost" onClick={endInterview} type="button">
+                  End Interview
+                </Button>
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
                 {!isTranscribing ? (
@@ -392,14 +499,6 @@ export default function PracticeClient() {
                     Stop Transcription
                   </Button>
                 )}
-                <Button
-                  variant="secondary"
-                  onClick={getFeedback}
-                  disabled={!transcriptFinal.trim() || fetchingFeedback}
-                  type="button"
-                >
-                  {fetchingFeedback ? "Getting feedback..." : "Get Feedback"}
-                </Button>
                 <Button
                   variant="secondary"
                   onClick={() => speak("Audio test. If you can hear this, ElevenLabs is working.")}
@@ -433,9 +532,9 @@ export default function PracticeClient() {
                   {speechError}
                 </div>
               ) : null}
-              {feedbackError ? (
+              {interviewError ? (
                 <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-                  {feedbackError}
+                  {interviewError}
                 </div>
               ) : null}
               {ttsError ? (
@@ -443,15 +542,28 @@ export default function PracticeClient() {
                   {ttsError}
                 </div>
               ) : null}
-              <div className="mt-4 min-h-[140px] whitespace-pre-wrap text-sm text-slate-800">
-                {transcriptFinal || transcriptInterim ? (
-                  <>
-                    {transcriptFinal ? <span>{transcriptFinal}</span> : null}
-                    {transcriptInterim ? <span className="text-slate-500"> {transcriptInterim}</span> : null}
-                  </>
+            </Card>
+          </motion.div>
+
+          <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="p-6">
+              <div className="text-base font-semibold text-slate-900">Conversation</div>
+              <div className="mt-4 space-y-4">
+                {messages.length === 0 ? (
+                  <div className="text-sm text-slate-600">No messages yet.</div>
                 ) : (
-                  "Start transcription to capture your response."
+                  messages.map((msg, idx) => (
+                    <div key={idx} className="text-sm">
+                      <div className="font-semibold text-slate-700">
+                        {msg.role === "interviewer" ? "Interviewer" : "You"}
+                      </div>
+                      <div className="mt-1 whitespace-pre-wrap text-slate-900">{msg.content}</div>
+                    </div>
+                  ))
                 )}
+                {transcriptInterim ? (
+                  <div className="text-sm text-slate-500">You (live): {transcriptInterim}</div>
+                ) : null}
               </div>
             </Card>
           </motion.div>
@@ -466,15 +578,15 @@ export default function PracticeClient() {
           >
             <Card className="p-6">
               <div className="flex items-center justify-between">
-                <div className="text-base font-semibold text-slate-900">Coach feedback</div>
-                <Badge tone="neutral">Text</Badge>
+                <div className="text-base font-semibold text-slate-900">TTS Debug</div>
+                <Badge tone="neutral">ElevenLabs</Badge>
               </div>
-              <div className="mt-4 min-h-[220px] whitespace-pre-wrap text-sm text-slate-800">
-                {feedback || "Feedback will appear here after you click Get Feedback."}
+              <div className="mt-4 text-sm text-slate-700">
+                ElevenLabs voice output without WebRTC.
               </div>
               {debugTts ? (
                 <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
-                  <div className="font-semibold text-slate-900">TTS Debug</div>
+                  <div className="font-semibold text-slate-900">Last TTS call</div>
                   <div className="mt-2 space-y-1">
                     <div>Status: {ttsStatus ?? "-"}</div>
                     <div>Content-Type: {ttsContentType}</div>
