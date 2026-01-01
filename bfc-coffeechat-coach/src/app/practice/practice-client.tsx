@@ -15,7 +15,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 
-type CallState = "idle" | "requesting_mic" | "connecting" | "live" | "error";
+type CallState =
+  | "idle"
+  | "requesting_mic"
+  | "creating_peer"
+  | "fetching_token"
+  | "setting_sdp"
+  | "connected"
+  | "error";
 
 const roleTracks: RoleTrack[] = [
   "Investment Banking",
@@ -41,11 +48,20 @@ const DEFAULT_SCENARIO: Scenario = {
 
 const ICE_SERVERS: RTCIceServer[] = [{ urls: "stun:stun.l.google.com:19302" }];
 
+function getSpeechRecognition(): SpeechRecognition | null {
+  if (typeof window === "undefined") return null;
+  const SpeechRecognitionImpl = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognitionImpl) return null;
+  return new SpeechRecognitionImpl();
+}
+
 export default function PracticeClient() {
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const dataChannelRef = useRef<RTCDataChannel | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
+  const callStateRef = useRef<CallState>("idle");
+  const connectionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [difficulty, setDifficulty] = useState<Difficulty>("Standard");
@@ -58,12 +74,23 @@ export default function PracticeClient() {
   const [debugOpen, setDebugOpen] = useState(false);
   const [eventLog, setEventLog] = useState<string[]>([]);
   const [permissionsState, setPermissionsState] = useState<string>("unknown");
+  const [secureContext, setSecureContext] = useState<string>("unknown");
+  const [mediaDevicesAvailable, setMediaDevicesAvailable] = useState(false);
   const [micTrackInfo, setMicTrackInfo] = useState<string>("none");
+  const [lastStep, setLastStep] = useState<string>("idle");
+  const [lastStepAt, setLastStepAt] = useState<string | null>(null);
+  const [tokenStatus, setTokenStatus] = useState<number | null>(null);
+  const [tokenKeys, setTokenKeys] = useState<string>("none");
+  const [iceState, setIceState] = useState<string>("unknown");
+  const [remoteStreamCount, setRemoteStreamCount] = useState(0);
+  const [localTrackCount, setLocalTrackCount] = useState(0);
   const [transitionTimes, setTransitionTimes] = useState<Record<CallState, string | null>>({
     idle: null,
     requesting_mic: null,
-    connecting: null,
-    live: null,
+    creating_peer: null,
+    fetching_token: null,
+    setting_sdp: null,
+    connected: null,
     error: null,
   });
 
@@ -71,6 +98,12 @@ export default function PracticeClient() {
   const [userInterim, setUserInterim] = useState("");
   const [aiTranscript, setAiTranscript] = useState("");
   const [pushToTalk, setPushToTalk] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const [speechSupported, setSpeechSupported] = useState(true);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [speechError, setSpeechError] = useState<string | null>(null);
+  const [transcriptFinal, setTranscriptFinal] = useState("");
+  const [transcriptInterim, setTranscriptInterim] = useState("");
   const debugRealtime = process.env.NEXT_PUBLIC_DEBUG_REALTIME === "true";
 
   const firmTypeOptions = useMemo(
@@ -90,7 +123,10 @@ export default function PracticeClient() {
   const setState = useCallback(
     (state: CallState) => {
       setCallState(state);
+      callStateRef.current = state;
       setTransitionTimes((prev) => ({ ...prev, [state]: new Date().toLocaleTimeString() }));
+      setLastStep(state);
+      setLastStepAt(new Date().toLocaleTimeString());
       if (debugRealtime) {
         console.log(`[realtime] state -> ${state}`);
       }
@@ -117,6 +153,10 @@ export default function PracticeClient() {
   }, []);
 
   const closeConnection = useCallback((nextState: CallState = "idle") => {
+    if (connectionTimeoutRef.current) {
+      clearTimeout(connectionTimeoutRef.current);
+      connectionTimeoutRef.current = null;
+    }
     dataChannelRef.current?.close();
     dataChannelRef.current = null;
 
@@ -171,7 +211,7 @@ export default function PracticeClient() {
       acquired = true;
       setMicStatus("granted");
       refreshMicDiagnostics();
-      setState("connecting");
+      setState("creating_peer");
       return stream;
     } catch (err) {
       const error = err as { name?: string; message?: string };
@@ -216,7 +256,10 @@ export default function PracticeClient() {
 
   useEffect(() => {
     if (!debugRealtime) return;
-    if (typeof navigator === "undefined" || !navigator.mediaDevices) {
+    setSecureContext(typeof window !== "undefined" ? String(window.isSecureContext) : "unknown");
+    const hasMediaDevices = typeof navigator !== "undefined" && Boolean(navigator.mediaDevices);
+    setMediaDevicesAvailable(hasMediaDevices);
+    if (!hasMediaDevices) {
       setPermissionsState("mediaDevices unavailable");
       return;
     }
@@ -237,6 +280,17 @@ export default function PracticeClient() {
       closeConnection("idle");
     };
   }, [closeConnection]);
+
+  useEffect(() => {
+    setSpeechSupported(
+      typeof window !== "undefined" &&
+        ("SpeechRecognition" in window || "webkitSpeechRecognition" in window)
+    );
+    return () => {
+      recognitionRef.current?.stop();
+      recognitionRef.current = null;
+    };
+  }, []);
 
   const handleDataMessage = useCallback(
     (event: MessageEvent) => {
@@ -271,6 +325,71 @@ export default function PracticeClient() {
     [pushEvent, userInterim]
   );
 
+  const startTranscription = useCallback(() => {
+    setSpeechError(null);
+    if (!speechSupported) {
+      setSpeechError("Speech recognition not supported—use Chrome or enable fallback.");
+      return;
+    }
+    if (isTranscribing) return;
+
+    const recognition = getSpeechRecognition();
+    if (!recognition) {
+      setSpeechError("Speech recognition not supported—use Chrome or enable fallback.");
+      return;
+    }
+
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onresult = (event) => {
+      let finalText = "";
+      let interimText = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i += 1) {
+        const result = event.results[i];
+        const chunk = result[0]?.transcript ?? "";
+        if (result.isFinal) {
+          finalText += chunk;
+        } else {
+          interimText += chunk;
+        }
+      }
+
+      const trimmedFinal = finalText.trim();
+      if (trimmedFinal) {
+        setTranscriptFinal((prev) => [prev, trimmedFinal].filter(Boolean).join(" "));
+      }
+      setTranscriptInterim(interimText.trim());
+    };
+
+    recognition.onerror = (event) => {
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        setSpeechError("Microphone blocked. Click the lock icon → allow microphone → reload.");
+      } else {
+        setSpeechError(`Speech recognition error: ${event.error}`);
+      }
+      setIsTranscribing(false);
+    };
+
+    recognition.onend = () => {
+      setIsTranscribing(false);
+      setTranscriptInterim("");
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsTranscribing(true);
+  }, [isTranscribing, speechSupported]);
+
+  const stopTranscription = useCallback(() => {
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+    setIsTranscribing(false);
+    setTranscriptInterim("");
+  }, []);
+
   const sendEvent = useCallback(
     (payload: Record<string, unknown>) => {
       const channel = dataChannelRef.current;
@@ -290,6 +409,11 @@ export default function PracticeClient() {
     setUserInterim("");
     setAiTranscript("");
     setEventLog([]);
+    setTokenStatus(null);
+    setTokenKeys("none");
+    setIceState("unknown");
+    setRemoteStreamCount(0);
+    setLocalTrackCount(0);
 
     try {
       const stream = await acquireMic();
@@ -298,10 +422,28 @@ export default function PracticeClient() {
       const audioEl = ensureAudioElement();
       await audioEl.play().catch(() => undefined);
 
+      if (connectionTimeoutRef.current) {
+        clearTimeout(connectionTimeoutRef.current);
+      }
+      connectionTimeoutRef.current = setTimeout(() => {
+        if (callStateRef.current !== "connected") {
+          const last = callStateRef.current;
+          setErrorMessage(
+            `Connection timed out. Last step: ${last}. Check mic permissions and network.`
+          );
+          if (debugRealtime) {
+            console.log("[realtime] connect_timeout", last);
+          }
+          closeConnection("error");
+        }
+      }, 10000);
+
+      setState("creating_peer");
       const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
       pcRef.current = pc;
 
       stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+      setLocalTrackCount(stream.getTracks().length);
 
       if (pushToTalk) {
         setMicEnabled(false);
@@ -314,11 +456,13 @@ export default function PracticeClient() {
           audioEl.play().catch(() => undefined);
           setRemoteAudio(true);
         }
+        setRemoteStreamCount(ev.streams.length);
       };
 
       pc.oniceconnectionstatechange = () => {
         const state = pc.iceConnectionState;
         pushEvent(`ice:${state}`);
+        setIceState(state);
         setConnected(state === "connected" || state === "completed");
       };
 
@@ -328,6 +472,7 @@ export default function PracticeClient() {
       dataChannel.onclose = () => pushEvent("datachannel:close");
       dataChannel.onmessage = handleDataMessage;
 
+      setState("fetching_token");
       const offer = await pc.createOffer({ offerToReceiveAudio: true });
       await pc.setLocalDescription(offer);
 
@@ -346,17 +491,26 @@ export default function PracticeClient() {
         }),
       });
 
+      setTokenStatus(tokenRes.status);
+      const tokenText = await tokenRes.text();
+      let tokenJson: Record<string, unknown> = {};
+      try {
+        tokenJson = tokenText ? (JSON.parse(tokenText) as Record<string, unknown>) : {};
+      } catch {
+        tokenJson = {};
+      }
+      setTokenKeys(Object.keys(tokenJson).join(", ") || "none");
+
       if (!tokenRes.ok) {
-        const errorText = await tokenRes.text();
-        throw new Error(errorText || tokenRes.statusText);
+        throw new Error((tokenJson.error as string) || tokenRes.statusText);
       }
 
-      const tokenJson = await tokenRes.json();
       const ephemeralKey = tokenJson?.value || tokenJson?.apiKey || tokenJson?.token;
       if (!ephemeralKey) {
         throw new Error("Missing realtime token");
       }
 
+      setState("setting_sdp");
       const sdpResponse = await fetch("https://api.openai.com/v1/realtime?model=gpt-realtime", {
         method: "POST",
         headers: {
@@ -374,12 +528,16 @@ export default function PracticeClient() {
       const answerSdp = await sdpResponse.text();
       await pc.setRemoteDescription({ type: "answer", sdp: answerSdp });
 
-      setState("live");
+      setState("connected");
+      if (connectionTimeoutRef.current) {
+        clearTimeout(connectionTimeoutRef.current);
+        connectionTimeoutRef.current = null;
+      }
       sendEvent({
         type: "response.create",
         response: {
           modalities: ["audio", "text"],
-          instructions: "Start the coffee chat now. Give a brief greeting and 1 opening question.",
+          instructions: "Audio test: can you hear me? Start the coffee chat now with a greeting and 1 opening question.",
         },
       });
     } catch (err) {
@@ -426,15 +584,19 @@ export default function PracticeClient() {
 
   const callStatusLabel = useMemo(() => {
     if (callState === "requesting_mic") return "Requesting mic";
-    if (callState === "connecting") return "Connecting";
-    if (callState === "live") return "Live";
+    if (callState === "creating_peer") return "Creating peer";
+    if (callState === "fetching_token") return "Fetching token";
+    if (callState === "setting_sdp") return "Setting SDP";
+    if (callState === "connected") return "Connected";
     if (callState === "error") return "Error";
     return "Idle";
   }, [callState]);
 
   const callStatusTone = useMemo(() => {
-    if (callState === "live") return "success";
-    if (callState === "connecting" || callState === "requesting_mic") return "warning";
+    if (callState === "connected") return "success";
+    if (callState === "requesting_mic" || callState === "creating_peer" || callState === "fetching_token" || callState === "setting_sdp") {
+      return "warning";
+    }
     if (callState === "error") return "warning";
     return "neutral";
   }, [callState]);
@@ -557,7 +719,12 @@ export default function PracticeClient() {
                 <Button variant="ghost" onClick={() => closeConnection("idle")} type="button">
                   Reset
                 </Button>
-                <Button variant="secondary" onClick={testAudio} type="button" disabled={callState !== "live"}>
+                <Button
+                  variant="secondary"
+                  onClick={testAudio}
+                  type="button"
+                  disabled={callState !== "connected"}
+                >
                   Test Audio
                 </Button>
                 <Button
@@ -584,7 +751,7 @@ export default function PracticeClient() {
                     onMouseLeave={() => setMicEnabled(false)}
                     onTouchStart={() => setMicEnabled(true)}
                     onTouchEnd={() => setMicEnabled(false)}
-                    disabled={callState !== "live"}
+                    disabled={callState !== "connected"}
                   >
                     Hold to Talk
                   </Button>
@@ -600,10 +767,61 @@ export default function PracticeClient() {
 
           <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
             <Card className="p-6">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Transcription
+                  </div>
+                  <div className="mt-1 text-lg font-semibold text-slate-900">
+                    Browser SpeechRecognition
+                  </div>
+                </div>
+                <Badge tone={isTranscribing ? "success" : "neutral"}>
+                  {isTranscribing ? "Transcribing" : "Idle"}
+                </Badge>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {!isTranscribing ? (
+                  <Button onClick={startTranscription} type="button">
+                    Start Transcription
+                  </Button>
+                ) : (
+                  <Button variant="secondary" onClick={stopTranscription} type="button">
+                    Stop Transcription
+                  </Button>
+                )}
+              </div>
+              {!speechSupported ? (
+                <div className="mt-3 text-sm text-amber-700">
+                  Speech recognition not supported—use Chrome or enable fallback.
+                </div>
+              ) : null}
+              {speechError ? (
+                <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  {speechError}
+                </div>
+              ) : null}
+              <div className="mt-4 min-h-[120px] whitespace-pre-wrap text-sm text-slate-800">
+                {transcriptFinal || transcriptInterim ? (
+                  <>
+                    {transcriptFinal ? <span>{transcriptFinal}</span> : null}
+                    {transcriptInterim ? (
+                      <span className="text-slate-500"> {transcriptInterim}</span>
+                    ) : null}
+                  </>
+                ) : (
+                  "Start transcription to capture your response."
+                )}
+              </div>
+            </Card>
+          </motion.div>
+
+          <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div className="text-base font-semibold text-slate-900">Live transcripts</div>
-                <Badge tone={callState === "live" ? "success" : "neutral"}>
-                  {callState === "live" ? "Listening" : "Idle"}
+                <Badge tone={callState === "connected" ? "success" : "neutral"}>
+                  {callState === "connected" ? "Listening" : "Idle"}
                 </Badge>
               </div>
               <div className="mt-4 grid gap-4">
@@ -647,18 +865,27 @@ export default function PracticeClient() {
                 <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
                   <div className="font-semibold text-slate-900">Debug</div>
                   <div className="mt-2 space-y-1">
-                    <div>isSecureContext: {String(window.isSecureContext)}</div>
-                    <div>mediaDevices: {String(Boolean(navigator.mediaDevices))}</div>
+                    <div>isSecureContext: {secureContext}</div>
+                    <div>mediaDevices: {String(mediaDevicesAvailable)}</div>
                     <div>permissions: {permissionsState}</div>
                     <div>Mic permission: {micStatus}</div>
                     <div>Connection: {connected ? "connected" : "disconnected"}</div>
                     <div>Remote audio: {remoteAudio ? "received" : "not yet"}</div>
                     <div>Call state: {callState}</div>
+                    <div>Last step: {lastStep}</div>
+                    <div>Last step at: {lastStepAt || "-"}</div>
+                    <div>Token status: {tokenStatus ?? "-"}</div>
+                    <div>Token keys: {tokenKeys}</div>
+                    <div>ICE state: {iceState}</div>
+                    <div>Local tracks: {localTrackCount}</div>
+                    <div>Remote streams: {remoteStreamCount}</div>
                     <div>Track: {micTrackInfo}</div>
                     <div>Idle at: {transitionTimes.idle || "-"}</div>
                     <div>Requesting at: {transitionTimes.requesting_mic || "-"}</div>
-                    <div>Connecting at: {transitionTimes.connecting || "-"}</div>
-                    <div>Live at: {transitionTimes.live || "-"}</div>
+                    <div>Creating peer at: {transitionTimes.creating_peer || "-"}</div>
+                    <div>Fetching token at: {transitionTimes.fetching_token || "-"}</div>
+                    <div>Setting SDP at: {transitionTimes.setting_sdp || "-"}</div>
+                    <div>Connected at: {transitionTimes.connected || "-"}</div>
                     <div>Error at: {transitionTimes.error || "-"}</div>
                   </div>
                   <div className="mt-3 font-semibold text-slate-900">Recent events</div>
