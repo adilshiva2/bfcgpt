@@ -66,7 +66,7 @@ export default function Home() {
             Berkeley Finance Club
           </Badge>
           <h1 className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-5xl">
-            BFCGPT
+            ChatBFC
           </h1>
           <p className="max-w-xl text-lg text-slate-700 dark:text-slate-200">
             Practice coffee chats. Get real feedback. Win referrals.

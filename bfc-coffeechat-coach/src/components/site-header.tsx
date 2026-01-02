@@ -14,7 +14,7 @@ export default function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-slate-900 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-slate-50">
-          BFCGPT <span className="text-amber-400">•</span>
+          ChatBFC <span className="text-amber-400">•</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm text-slate-300">
           <Link
