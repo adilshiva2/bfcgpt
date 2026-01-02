@@ -17,6 +17,13 @@ type ScenarioPayload = {
   interviewerVibe: string;
   difficulty: string;
   goal: "referral";
+  phase?: string;
+  persona?: {
+    name: string;
+    title: string;
+    firm: string;
+    group: string;
+  };
 };
 
 type Message = {
@@ -30,13 +37,34 @@ type InterviewerRequest = {
 };
 
 function buildSystemPrompt(scenario: ScenarioPayload) {
+  const phase = scenario.phase || "opening";
+  const persona = scenario.persona;
+  const personaLine = persona
+    ? `Interviewer persona: ${persona.name}, ${persona.title} at ${persona.firm} (${persona.group}).`
+    : "Interviewer persona: a finance professional at the target firm.";
+
+  const phaseGuidance: Record<string, string> = {
+    opening:
+      "Start with a warm greeting + small talk + permission to chat. Give a 15–25 second 'about me' intro. Then invite the user to share their 30-second background.",
+    user_intro: "Acknowledge their intro and ask a gentle follow-up to deepen their story.",
+    exploration: "Explore their interests and what drew them to finance in a conversational way.",
+    fit: "Ask why this firm/group/role with natural phrasing, not an interview tone.",
+    user_questions: "Invite their questions and respond briefly. Encourage 1-2 thoughtful questions.",
+    close: "Wrap up with a friendly close and a natural referral moment if appropriate.",
+  };
+
   return `You are a realistic finance coffee chat interviewer.
 - Ask exactly 1 question at a time.
+- Keep a warm, conversational tone (not an interview).
 - Adapt follow-ups to the user's answers.
 - Politely challenge vague answers.
-- Steer toward why this firm/group/role.
 - The goal is earning a referral naturally; if asked too early, redirect and revisit later.
 - Keep each response <= 280 characters for TTS.
+- Include brief acknowledgments before the next question.
+
+${personaLine}
+
+Phase guidance: ${phaseGuidance[phase] || phaseGuidance.opening}
 
 Scenario:
 - Track: ${scenario.track}
@@ -152,7 +180,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const interviewerText = outputText.slice(0, 280);
+    let interviewerText = outputText.trim();
+    if (interviewerText.length > 280) {
+      const shortened = await tryShorten(apiKey, interviewerText);
+      interviewerText = shortened || `${interviewerText.slice(0, 277)}...`;
+    }
     return NextResponse.json({ interviewerText, requestId });
   } catch {
     return NextResponse.json({ error: "Upstream request failed", requestId }, { status: 502 });
@@ -191,4 +223,32 @@ function buildDebugMeta(data: unknown, modelUsed: string) {
     outputItemTypes: outputItems.map((item) => item?.type).filter(Boolean),
     hadRefusal: Boolean(payload?.refusal),
   };
+}
+
+async function tryShorten(apiKey: string, text: string) {
+  try {
+    const resp = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        input: [
+          {
+            role: "system",
+            content: "Shorten the text to <= 280 characters. Preserve intent and keep it conversational.",
+          },
+          { role: "user", content: text },
+        ],
+      }),
+    });
+    if (!resp.ok) return "";
+    const data = await resp.json();
+    const outputText = extractOutputText(data);
+    return outputText?.trim().slice(0, 280) || "";
+  } catch {
+    return "";
+  }
 }

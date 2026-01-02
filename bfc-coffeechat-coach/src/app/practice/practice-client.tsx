@@ -17,6 +17,8 @@ import { Select } from "@/components/ui/select";
 
 type InterviewState = "idle" | "listening" | "thinking" | "speaking" | "error";
 
+type Phase = "opening" | "user_intro" | "exploration" | "fit" | "user_questions" | "close";
+
 type ScenarioPayload = {
   track: string;
   firmType: string;
@@ -24,11 +26,26 @@ type ScenarioPayload = {
   interviewerVibe: string;
   difficulty: string;
   goal: "referral";
+  persona: {
+    name: string;
+    title: string;
+    firm: string;
+    group: string;
+  };
+  phase: Phase;
 };
 
 type Message = {
   role: "user" | "interviewer";
   content: string;
+};
+
+type LiveCoach = {
+  tone: string;
+  clarity: string;
+  structure: string;
+  referral: string;
+  bullets: string[];
 };
 
 const roleTracks: RoleTrack[] = [
@@ -53,6 +70,15 @@ const DEFAULT_SCENARIO: Scenario = {
   userGoal: "referral",
 };
 
+const PERSONAS = [
+  { name: "Jordan", title: "Analyst" },
+  { name: "Avery", title: "Associate" },
+  { name: "Morgan", title: "VP" },
+  { name: "Riley", title: "Associate" },
+  { name: "Casey", title: "Analyst" },
+  { name: "Taylor", title: "VP" },
+];
+
 function getSpeechRecognition(): SpeechRecognition | null {
   if (typeof window === "undefined") return null;
   const SpeechRecognitionImpl = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -69,11 +95,14 @@ export default function PracticeClient() {
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [difficulty, setDifficulty] = useState<Difficulty>("Standard");
+  const [phase, setPhase] = useState<Phase>("opening");
   const [messages, setMessages] = useState<Message[]>([]);
+  const [userTurns, setUserTurns] = useState(0);
 
   const [interviewState, setInterviewState] = useState<InterviewState>("idle");
   const [interviewError, setInterviewError] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<string>("");
+  const [paused, setPaused] = useState(false);
+  const [holdToTalk, setHoldToTalk] = useState(false);
 
   const [speechSupported, setSpeechSupported] = useState(true);
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -85,9 +114,14 @@ export default function PracticeClient() {
   const [ttsStatus, setTtsStatus] = useState<number | null>(null);
   const [ttsContentType, setTtsContentType] = useState<string>("-");
   const [ttsBytes, setTtsBytes] = useState<number | null>(null);
-  const [debugOpen, setDebugOpen] = useState(false);
+
+  const [liveCoach, setLiveCoach] = useState<LiveCoach | null>(null);
+  const [turnReview, setTurnReview] = useState<string>("");
+  const [finalSummary, setFinalSummary] = useState<string>("");
 
   const debugTts = process.env.NEXT_PUBLIC_DEBUG_TTS === "true";
+  const debugEnabled = process.env.NEXT_PUBLIC_DEBUG_INTERVIEW === "true";
+  const [showDebug, setShowDebug] = useState(false);
 
   const firmTypeOptions = useMemo(
     () => firmTypesByTrack[scenario.track].map((value) => ({ value, label: value })),
@@ -98,6 +132,17 @@ export default function PracticeClient() {
     [scenario.track]
   );
   const vibeOptions = useMemo(() => vibes.map((value) => ({ value, label: value })), []);
+
+  const persona = useMemo(() => {
+    const idx = Math.max(0, roleTracks.indexOf(scenario.track));
+    const base = PERSONAS[idx % PERSONAS.length];
+    return {
+      name: base.name,
+      title: base.title,
+      firm: scenario.firmType,
+      group: scenario.group,
+    };
+  }, [scenario]);
 
   useEffect(() => {
     setSpeechSupported(
@@ -207,8 +252,10 @@ export default function PracticeClient() {
       interviewerVibe: scenario.person.vibe,
       difficulty,
       goal: "referral",
+      persona,
+      phase,
     }),
-    [scenario, difficulty]
+    [scenario, difficulty, persona, phase]
   );
 
   const callInterviewer = useCallback(
@@ -263,10 +310,67 @@ export default function PracticeClient() {
     [scenarioPayload, speak]
   );
 
-  const rerollScenarioOnly = useCallback(() => {
-    const sc = generateScenario(scenario.track);
-    setScenario(sc);
-  }, [scenario.track]);
+  const callLiveCoach = useCallback(
+    async (lastUserTurn: string) => {
+      if (!lastUserTurn.trim()) return;
+      try {
+        const res = await fetch("/api/coach/live", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lastUserTurn, scenario: scenarioPayload, phase }),
+        });
+        const text = await res.text();
+        const payload = text ? (JSON.parse(text) as LiveCoach) : null;
+        if (res.ok && payload) {
+          setLiveCoach(payload);
+        }
+      } catch {
+        // Ignore live coach failures to avoid blocking
+      }
+    },
+    [phase, scenarioPayload]
+  );
+
+  const callTurnCoach = useCallback(
+    async (lastUserTurn: string) => {
+      if (!lastUserTurn.trim()) return;
+      try {
+        const res = await fetch("/api/coach/turn", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lastUserTurn, scenario: scenarioPayload, phase }),
+        });
+        const text = await res.text();
+        const payload = text ? (JSON.parse(text) as Record<string, unknown>) : {};
+        if (res.ok && payload.turnReview) {
+          setTurnReview(payload.turnReview as string);
+        }
+      } catch {
+        // Non-blocking
+      }
+    },
+    [phase, scenarioPayload]
+  );
+
+  const callFinalCoach = useCallback(
+    async () => {
+      try {
+        const res = await fetch("/api/coach/final", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages, scenario: scenarioPayload }),
+        });
+        const text = await res.text();
+        const payload = text ? (JSON.parse(text) as Record<string, unknown>) : {};
+        if (res.ok && payload.finalSummary) {
+          setFinalSummary(payload.finalSummary as string);
+        }
+      } catch {
+        // Non-blocking
+      }
+    },
+    [messages, scenarioPayload]
+  );
 
   const buildFeedback = useCallback((text: string) => {
     const lower = text.toLowerCase();
@@ -314,9 +418,18 @@ export default function PracticeClient() {
     const userMessage: Message = { role: "user", content: text };
     const nextMessages: Message[] = [...messages, userMessage];
     setMessages(nextMessages);
-    setFeedback(buildFeedback(text));
+    setTurnReview(buildFeedback(text));
+    await callTurnCoach(text);
     await callInterviewer(nextMessages);
-  }, [buildFeedback, callInterviewer, messages]);
+
+    if (phase === "opening") setPhase("user_intro");
+    else if (phase === "user_intro") setPhase("exploration");
+    else if (phase === "exploration" && userTurns >= 1) setPhase("fit");
+    else if (phase === "fit" && userTurns >= 2) setPhase("user_questions");
+    else if (phase === "user_questions" && userTurns >= 3) setPhase("close");
+
+    setUserTurns((prev) => prev + 1);
+  }, [buildFeedback, callInterviewer, callTurnCoach, messages, phase, userTurns]);
 
   const startTranscription = useCallback(() => {
     setSpeechError(null);
@@ -332,7 +445,7 @@ export default function PracticeClient() {
       return;
     }
 
-    recognition.continuous = true;
+    recognition.continuous = !holdToTalk;
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
@@ -357,12 +470,15 @@ export default function PracticeClient() {
       const trimmedFinal = finalText.trim();
       if (trimmedFinal) {
         currentUserTurnRef.current = `${currentUserTurnRef.current} ${trimmedFinal}`.trim();
-        if (silenceTimerRef.current) {
-          clearTimeout(silenceTimerRef.current);
+        void callLiveCoach(trimmedFinal);
+        if (!holdToTalk) {
+          if (silenceTimerRef.current) {
+            clearTimeout(silenceTimerRef.current);
+          }
+          silenceTimerRef.current = setTimeout(() => {
+            void finalizeTurn();
+          }, 1200);
         }
-        silenceTimerRef.current = setTimeout(() => {
-          void finalizeTurn();
-        }, 1200);
       }
       setTranscriptInterim(interimText.trim());
     };
@@ -379,13 +495,16 @@ export default function PracticeClient() {
     recognition.onend = () => {
       setIsTranscribing(false);
       setTranscriptInterim("");
+      if (holdToTalk && currentUserTurnRef.current.trim()) {
+        void finalizeTurn();
+      }
     };
 
     recognitionRef.current = recognition;
     recognition.start();
     setIsTranscribing(true);
     setInterviewState("listening");
-  }, [finalizeTurn, interviewState, isTranscribing, speechSupported, stopSpeaking]);
+  }, [callLiveCoach, finalizeTurn, holdToTalk, interviewState, isTranscribing, speechSupported, stopSpeaking]);
 
   const stopTranscription = useCallback(() => {
     recognitionRef.current?.stop();
@@ -395,14 +514,25 @@ export default function PracticeClient() {
     setInterviewState("idle");
   }, []);
 
+  const rerollScenarioOnly = useCallback(() => {
+    const sc = generateScenario(scenario.track);
+    setScenario(sc);
+  }, [scenario.track]);
+
   const startInterview = useCallback(async () => {
     setMessages([]);
+    setUserTurns(0);
     currentUserTurnRef.current = "";
     setInterviewError(null);
     setTranscriptInterim("");
-    startTranscription();
+    setFinalSummary("");
+    setTurnReview("");
+    setPhase("opening");
+    if (!holdToTalk) {
+      startTranscription();
+    }
     await callInterviewer([{ role: "user", content: "Begin the coffee chat." }]);
-  }, [callInterviewer, startTranscription]);
+  }, [callInterviewer, holdToTalk, startTranscription]);
 
   const endInterview = useCallback(async () => {
     stopTranscription();
@@ -416,7 +546,31 @@ export default function PracticeClient() {
     currentUserTurnRef.current = "";
     setInterviewState("idle");
     setInterviewError(null);
-  }, [finalizeTurn, stopSpeaking, stopTranscription]);
+    await callFinalCoach();
+  }, [callFinalCoach, finalizeTurn, stopSpeaking, stopTranscription]);
+
+  const pauseInterview = useCallback(() => {
+    setPaused(true);
+    stopTranscription();
+    stopSpeaking();
+  }, [stopSpeaking, stopTranscription]);
+
+  const resumeInterview = useCallback(() => {
+    setPaused(false);
+    if (!holdToTalk) {
+      startTranscription();
+    }
+  }, [holdToTalk, startTranscription]);
+
+  const handleHoldStart = () => {
+    if (!holdToTalk) return;
+    startTranscription();
+  };
+
+  const handleHoldEnd = () => {
+    if (!holdToTalk) return;
+    stopTranscription();
+  };
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10">
@@ -510,30 +664,62 @@ export default function PracticeClient() {
                     Interview Controls
                   </div>
                   <div className="mt-1 text-lg font-semibold text-slate-900">
-                    Mock interview loop (TTS)
+                    Coffee chat loop (TTS)
                   </div>
                 </div>
                 <Badge tone={interviewState === "speaking" ? "warning" : "neutral"}>
-                  {interviewState}
+                  {paused ? "paused" : interviewState}
                 </Badge>
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
                 <Button onClick={startInterview} type="button">
                   Start Interview
                 </Button>
-                <Button variant="ghost" onClick={endInterview} type="button">
+                <Button variant="secondary" onClick={endInterview} type="button">
                   End Interview
                 </Button>
-                <Button variant="ghost" onClick={() => setDebugOpen((prev) => !prev)} type="button">
-                  {debugOpen ? "Hide Debug" : "Show Debug"}
+                <Button
+                  variant="secondary"
+                  onClick={paused ? resumeInterview : pauseInterview}
+                  type="button"
+                >
+                  {paused ? "Resume" : "Pause"}
                 </Button>
+                {debugEnabled ? (
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    onClick={() => setShowDebug((prev) => !prev)}
+                    className="px-2 py-1 text-xs"
+                  >
+                    {showDebug ? "Hide Debug" : "Show Debug"}
+                  </Button>
+                ) : null}
+              </div>
+              <div className="mt-4 flex items-center gap-3 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={holdToTalk}
+                  onChange={(e) => setHoldToTalk(e.target.checked)}
+                />
+                <span>Hold to talk</span>
+                {holdToTalk ? (
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    onMouseDown={handleHoldStart}
+                    onMouseUp={handleHoldEnd}
+                    onMouseLeave={handleHoldEnd}
+                    onTouchStart={handleHoldStart}
+                    onTouchEnd={handleHoldEnd}
+                  >
+                    Hold to Talk
+                  </Button>
+                ) : null}
               </div>
               {audioNeedsClick ? (
                 <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
-                  Audio playback blocked.{" "}
-                  <Button variant="ghost" onClick={retryAudio}>
-                    Click to enable audio
-                  </Button>
+                  Audio playback blocked. <Button variant="ghost" onClick={retryAudio}>Click to enable audio</Button>
                 </div>
               ) : null}
               {!speechSupported ? (
@@ -592,13 +778,74 @@ export default function PracticeClient() {
           >
             <Card className="p-6">
               <div className="flex items-center justify-between">
-                <div className="text-base font-semibold text-slate-900">Feedback</div>
-                <Badge tone="neutral">Auto</Badge>
+                <div className="text-base font-semibold text-slate-900">Live coaching</div>
+                <Badge tone="neutral">Realtime</Badge>
               </div>
-              <div className="mt-4 min-h-[220px] whitespace-pre-wrap text-sm text-slate-800">
-                {feedback || "Feedback will appear after each answer."}
+              <div className="mt-4 space-y-3 text-sm text-slate-700">
+                {liveCoach ? (
+                  <>
+                    <div>Rapport: <span className="font-semibold text-slate-900">{liveCoach.tone}</span></div>
+                    <div>Clarity: <span className="font-semibold text-slate-900">{liveCoach.clarity}</span></div>
+                    <div>Structure: <span className="font-semibold text-slate-900">{liveCoach.structure}</span></div>
+                    <div>Referral readiness: <span className="font-semibold text-slate-900">{liveCoach.referral}</span></div>
+                    <div className="mt-2 space-y-1">
+                      {liveCoach.bullets.map((bullet, idx) => (
+                        <div key={idx}>• {bullet}</div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div>Live coaching updates after each response.</div>
+                )}
               </div>
-              {debugTts && debugOpen ? (
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="text-base font-semibold text-slate-900">Turn review</div>
+                <Badge tone="neutral">After each answer</Badge>
+              </div>
+              <div className="mt-4 min-h-[160px] whitespace-pre-wrap text-sm text-slate-800">
+                {turnReview || "Turn review appears after each answer."}
+              </div>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="text-base font-semibold text-slate-900">Final summary</div>
+                <Badge tone="neutral">End of call</Badge>
+              </div>
+              <div className="mt-4 min-h-[200px] whitespace-pre-wrap text-sm text-slate-800">
+                {finalSummary || "Final summary appears after ending the interview."}
+              </div>
+              {debugEnabled && showDebug ? (
+                <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+                  <div className="font-semibold text-slate-900">Debug</div>
+                  <div className="mt-2 space-y-1">
+                    <div>State: {interviewState}</div>
+                    <div>Phase: {phase}</div>
+                    <div>Paused: {paused ? "yes" : "no"}</div>
+                    <div>Hold to talk: {holdToTalk ? "yes" : "no"}</div>
+                    <div>Transcribing: {isTranscribing ? "yes" : "no"}</div>
+                    <div>Messages: {messages.length}</div>
+                  </div>
+                </div>
+              ) : null}
+              {debugTts && debugEnabled && showDebug ? (
                 <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
                   <div className="font-semibold text-slate-900">TTS Debug</div>
                   <div className="mt-2 space-y-1">
