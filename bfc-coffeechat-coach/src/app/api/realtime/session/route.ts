@@ -23,16 +23,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Forbidden", requestId }, { status: 403 });
   }
 
-  const rate = enforceRateLimit({ userKey: email, ipKey: getClientIp(req) });
-  if (!rate.allowed) {
-    const retryAfter = Math.ceil(rate.retryAfterMs / 1000);
-    return NextResponse.json(
-      { error: `Rate limit exceeded. Try again in ${retryAfter} seconds.`, requestId },
-      {
-        status: 429,
-        headers: { "Retry-After": retryAfter.toString() },
-      }
-    );
+  if (process.env.NODE_ENV === "production") {
+    const rate = enforceRateLimit({ userKey: email, ipKey: getClientIp(req) });
+    if (!rate.allowed) {
+      const retryAfter = Math.ceil(rate.retryAfterMs / 1000);
+      return NextResponse.json(
+        {
+          error: `Rate limit exceeded. Try again in ${retryAfter} seconds.`,
+          requestId,
+          retryAfterSeconds: retryAfter,
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": retryAfter.toString() },
+        }
+      );
+    }
   }
 
   const apiKey = process.env.OPENAI_API_KEY;

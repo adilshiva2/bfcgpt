@@ -55,30 +55,37 @@ Safety:
 }
 
 export async function POST(req: Request) {
+  const requestId = crypto.randomUUID();
   const session = await getServerSession(authOptions);
   const email = session?.user?.email;
   if (!email) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized", requestId }, { status: 401 });
   }
   if (!isAllowedEmail(email)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return NextResponse.json({ error: "Forbidden", requestId }, { status: 403 });
   }
 
-  const rate = enforceRateLimit({ userKey: email, ipKey: getClientIp(req) });
-  if (!rate.allowed) {
-    const retryAfter = Math.ceil(rate.retryAfterMs / 1000);
-    return NextResponse.json(
-      { error: `Rate limit exceeded. Try again in ${retryAfter} seconds.` },
-      {
-        status: 429,
-        headers: { "Retry-After": retryAfter.toString() },
-      }
-    );
+  if (process.env.NODE_ENV === "production") {
+    const rate = enforceRateLimit({ userKey: email, ipKey: getClientIp(req) });
+    if (!rate.allowed) {
+      const retryAfter = Math.ceil(rate.retryAfterMs / 1000);
+      return NextResponse.json(
+        {
+          error: `Rate limit exceeded. Try again in ${retryAfter} seconds.`,
+          requestId,
+          retryAfterSeconds: retryAfter,
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": retryAfter.toString() },
+        }
+      );
+    }
   }
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return NextResponse.json({ error: "Missing OPENAI_API_KEY" }, { status: 500 });
+    return NextResponse.json({ error: "Missing OPENAI_API_KEY", requestId }, { status: 500 });
   }
 
   let body: TokenRequest = {};
@@ -115,13 +122,16 @@ export async function POST(req: Request) {
   });
 
   if (!resp.ok) {
-    return NextResponse.json({ error: await resp.text() }, { status: resp.status });
+    return NextResponse.json({ error: await resp.text(), requestId }, { status: resp.status });
   }
 
   const data = await resp.json();
   const value = data?.value ?? data?.client_secret?.value;
   if (!value) {
-    return NextResponse.json({ error: "Unexpected realtime token response." }, { status: 502 });
+    return NextResponse.json(
+      { error: "Unexpected realtime token response.", requestId },
+      { status: 502 }
+    );
   }
   return NextResponse.json({ value });
 }

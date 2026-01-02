@@ -116,12 +116,18 @@ export default function PracticeClient() {
   const [ttsBytes, setTtsBytes] = useState<number | null>(null);
 
   const [liveCoach, setLiveCoach] = useState<LiveCoach | null>(null);
+  const [liveCoachError, setLiveCoachError] = useState<string | null>(null);
   const [turnReview, setTurnReview] = useState<string>("");
   const [finalSummary, setFinalSummary] = useState<string>("");
 
   const debugTts = process.env.NEXT_PUBLIC_DEBUG_TTS === "true";
   const debugEnabled = process.env.NEXT_PUBLIC_DEBUG_INTERVIEW === "true";
   const [showDebug, setShowDebug] = useState(false);
+
+  const lastLiveCoachAtRef = useRef(0);
+  const liveCoachTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const liveCoachRetryRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastLiveCoachTextRef = useRef("");
 
   const firmTypeOptions = useMemo(
     () => firmTypesByTrack[scenario.track].map((value) => ({ value, label: value })),
@@ -154,6 +160,12 @@ export default function PracticeClient() {
       recognitionRef.current = null;
       if (silenceTimerRef.current) {
         clearTimeout(silenceTimerRef.current);
+      }
+      if (liveCoachTimeoutRef.current) {
+        clearTimeout(liveCoachTimeoutRef.current);
+      }
+      if (liveCoachRetryRef.current) {
+        clearTimeout(liveCoachRetryRef.current);
       }
     };
   }, []);
@@ -320,15 +332,64 @@ export default function PracticeClient() {
           body: JSON.stringify({ lastUserTurn, scenario: scenarioPayload, phase }),
         });
         const text = await res.text();
-        const payload = text ? (JSON.parse(text) as LiveCoach) : null;
-        if (res.ok && payload) {
-          setLiveCoach(payload);
+        let payload: Record<string, unknown> = {};
+        try {
+          payload = text ? (JSON.parse(text) as Record<string, unknown>) : {};
+        } catch {
+          payload = {};
+        }
+
+        if (res.status === 429) {
+          const retryAfterSeconds = Number(payload.retryAfterSeconds) || 2;
+          setLiveCoachError(
+            `Live coaching is paused for ${retryAfterSeconds}s due to rate limits.`
+          );
+          if (!liveCoachRetryRef.current) {
+            liveCoachRetryRef.current = setTimeout(() => {
+              liveCoachRetryRef.current = null;
+              if (lastLiveCoachTextRef.current) {
+                void callLiveCoach(lastLiveCoachTextRef.current);
+              }
+            }, retryAfterSeconds * 1000);
+          }
+          return;
+        }
+
+        if (res.ok) {
+          setLiveCoachError(null);
+          const parsed = payload as LiveCoach;
+          if (parsed?.tone && parsed?.clarity && parsed?.structure && parsed?.referral) {
+            setLiveCoach(parsed);
+          }
         }
       } catch {
         // Ignore live coach failures to avoid blocking
       }
     },
     [phase, scenarioPayload]
+  );
+
+  const queueLiveCoach = useCallback(
+    (lastUserTurn: string) => {
+      if (!lastUserTurn.trim()) return;
+      lastLiveCoachTextRef.current = lastUserTurn;
+      const now = Date.now();
+      const elapsed = now - lastLiveCoachAtRef.current;
+      if (elapsed >= 2000) {
+        lastLiveCoachAtRef.current = now;
+        void callLiveCoach(lastUserTurn);
+        return;
+      }
+
+      if (liveCoachTimeoutRef.current) {
+        clearTimeout(liveCoachTimeoutRef.current);
+      }
+      liveCoachTimeoutRef.current = setTimeout(() => {
+        lastLiveCoachAtRef.current = Date.now();
+        void callLiveCoach(lastLiveCoachTextRef.current);
+      }, 2000 - elapsed);
+    },
+    [callLiveCoach]
   );
 
   const callTurnCoach = useCallback(
@@ -470,7 +531,7 @@ export default function PracticeClient() {
       const trimmedFinal = finalText.trim();
       if (trimmedFinal) {
         currentUserTurnRef.current = `${currentUserTurnRef.current} ${trimmedFinal}`.trim();
-        void callLiveCoach(trimmedFinal);
+        queueLiveCoach(trimmedFinal);
         if (!holdToTalk) {
           if (silenceTimerRef.current) {
             clearTimeout(silenceTimerRef.current);
@@ -504,7 +565,7 @@ export default function PracticeClient() {
     recognition.start();
     setIsTranscribing(true);
     setInterviewState("listening");
-  }, [callLiveCoach, finalizeTurn, holdToTalk, interviewState, isTranscribing, speechSupported, stopSpeaking]);
+  }, [finalizeTurn, holdToTalk, interviewState, isTranscribing, queueLiveCoach, speechSupported, stopSpeaking]);
 
   const stopTranscription = useCallback(() => {
     recognitionRef.current?.stop();
@@ -782,6 +843,11 @@ export default function PracticeClient() {
                 <Badge tone="neutral">Realtime</Badge>
               </div>
               <div className="mt-4 space-y-3 text-sm text-slate-700">
+                {liveCoachError ? (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
+                    {liveCoachError}
+                  </div>
+                ) : null}
                 {liveCoach ? (
                   <>
                     <div>Rapport: <span className="font-semibold text-slate-900">{liveCoach.tone}</span></div>

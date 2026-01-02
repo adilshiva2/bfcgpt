@@ -6,7 +6,7 @@ import { enforceUserRateLimit } from "@/lib/rate-limit";
 
 const MAX_TEXT_CHARS = 800;
 const WINDOW_MS = 10 * 60 * 1000;
-const LIMIT = 30;
+const LIMIT = 60;
 
 export async function POST(req: Request) {
   const requestId = crypto.randomUUID();
@@ -19,16 +19,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Forbidden", requestId }, { status: 403 });
   }
 
-  const rate = enforceUserRateLimit({ key: email, limit: LIMIT, windowMs: WINDOW_MS });
-  if (!rate.allowed) {
-    const retryAfter = Math.ceil(rate.retryAfterMs / 1000);
-    return NextResponse.json(
-      { error: `Rate limit exceeded. Try again in ${retryAfter} seconds.`, requestId },
-      {
-        status: 429,
-        headers: { "Retry-After": retryAfter.toString() },
-      }
-    );
+  if (process.env.NODE_ENV === "production") {
+    const rate = enforceUserRateLimit({ key: email, limit: LIMIT, windowMs: WINDOW_MS });
+    if (!rate.allowed) {
+      const retryAfter = Math.ceil(rate.retryAfterMs / 1000);
+      return NextResponse.json(
+        {
+          error: `Rate limit exceeded. Try again in ${retryAfter} seconds.`,
+          requestId,
+          retryAfterSeconds: retryAfter,
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": retryAfter.toString() },
+        }
+      );
+    }
   }
 
   let body: { text?: string; voiceId?: string } = {};
