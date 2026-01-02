@@ -34,9 +34,15 @@ type Message = {
 type InterviewerRequest = {
   messages?: Message[];
   scenario?: ScenarioPayload;
+  turnIndex?: number;
+  lastInterviewerText?: string;
 };
 
-function buildSystemPrompt(scenario: ScenarioPayload) {
+function buildSystemPrompt(
+  scenario: ScenarioPayload,
+  hasUserMessages: boolean,
+  extraInstruction?: string
+) {
   const phase = scenario.phase || "opening";
   const persona = scenario.persona;
   const personaLine = persona
@@ -53,6 +59,10 @@ function buildSystemPrompt(scenario: ScenarioPayload) {
     close: "Wrap up with a friendly close and a natural referral moment if appropriate.",
   };
 
+  const introGuard = hasUserMessages
+    ? "The user has already spoken. Do NOT reintroduce yourself; respond naturally to their message."
+    : "Only provide the full intro/greeting when there are no user messages yet.";
+
   return `You are a realistic finance coffee chat interviewer.
 - Ask exactly 1 question at a time.
 - Keep a warm, conversational tone (not an interview).
@@ -65,6 +75,8 @@ function buildSystemPrompt(scenario: ScenarioPayload) {
 ${personaLine}
 
 Phase guidance: ${phaseGuidance[phase] || phaseGuidance.opening}
+${introGuard}
+${extraInstruction ? `\n${extraInstruction}` : ""}
 
 Scenario:
 - Track: ${scenario.track}
@@ -114,6 +126,7 @@ export async function POST(req: Request) {
 
   const messages = Array.isArray(body.messages) ? body.messages : [];
   const scenario = body.scenario;
+  const lastInterviewerText = (body.lastInterviewerText || "").trim();
   if (!scenario) {
     return NextResponse.json({ error: "Missing scenario", requestId }, { status: 400 });
   }
@@ -141,37 +154,39 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing OPENAI_API_KEY", requestId }, { status: 500 });
   }
 
-  const payload = {
+  const hasUserMessages = messages.some((msg) => msg.role === "user");
+
+  const buildPayload = (extraInstruction?: string) => ({
     model: MODEL,
     input: [
-      { role: "system", content: buildSystemPrompt(scenario) },
+      { role: "system", content: buildSystemPrompt(scenario, hasUserMessages, extraInstruction) },
       ...messages.map((msg) => ({
         role: msg.role === "interviewer" ? "assistant" : "user",
         content: msg.content,
       })),
     ],
-  };
+  });
 
   try {
-    const resp = await fetch("https://api.openai.com/v1/responses", {
+    const firstResp = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(buildPayload()),
     });
 
-    if (!resp.ok) {
-      const errorText = await resp.text();
+    if (!firstResp.ok) {
+      const errorText = await firstResp.text();
       return NextResponse.json(
-        { error: errorText || resp.statusText, requestId },
+        { error: errorText || firstResp.statusText, requestId },
         { status: 502 }
       );
     }
 
-    const data = await resp.json();
-    const outputText = extractOutputText(data);
+    const firstData = await firstResp.json();
+    const outputText = extractOutputText(firstData);
 
     if (!outputText) {
       return NextResponse.json(
@@ -179,7 +194,7 @@ export async function POST(req: Request) {
           error: "Empty model output",
           requestId,
           ...(process.env.NEXT_PUBLIC_DEBUG_INTERVIEW === "true"
-            ? buildDebugMeta(data, MODEL)
+            ? buildDebugMeta(firstData, MODEL)
             : {}),
         },
         { status: 502 }
@@ -187,6 +202,24 @@ export async function POST(req: Request) {
     }
 
     let interviewerText = outputText.trim();
+    if (lastInterviewerText && isTooSimilar(interviewerText, lastInterviewerText)) {
+      const retryResp = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(buildPayload("Do NOT repeat yourself; ask a different follow-up.")),
+      });
+      if (retryResp.ok) {
+        const retryData = await retryResp.json();
+        const retryText = extractOutputText(retryData);
+        if (retryText) {
+          interviewerText = retryText.trim();
+        }
+      }
+    }
+
     if (interviewerText.length > 280) {
       const shortened = await tryShorten(apiKey, interviewerText);
       interviewerText = shortened || `${interviewerText.slice(0, 277)}...`;
@@ -229,6 +262,29 @@ function buildDebugMeta(data: unknown, modelUsed: string) {
     outputItemTypes: outputItems.map((item) => item?.type).filter(Boolean),
     hadRefusal: Boolean(payload?.refusal),
   };
+}
+
+function isTooSimilar(a: string, b: string) {
+  const tokensA = tokenize(a);
+  const tokensB = tokenize(b);
+  if (tokensA.length === 0 || tokensB.length === 0) return false;
+  const setA = new Set(tokensA);
+  const setB = new Set(tokensB);
+  let intersect = 0;
+  for (const token of setA) {
+    if (setB.has(token)) intersect += 1;
+  }
+  const union = new Set([...setA, ...setB]).size;
+  const score = union === 0 ? 0 : intersect / union;
+  return score >= 0.75;
+}
+
+function tokenize(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .split(/\s+/)
+    .filter(Boolean);
 }
 
 async function tryShorten(apiKey: string, text: string) {

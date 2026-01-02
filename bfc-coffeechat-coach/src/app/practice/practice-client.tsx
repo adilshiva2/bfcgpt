@@ -92,12 +92,18 @@ export default function PracticeClient() {
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentUserTurnRef = useRef("");
   const inFlightRef = useRef(false);
+  const lastSubmittedTurnHashRef = useRef<string | null>(null);
+  const hasUserSpokenRef = useRef(false);
+  const introTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastInterviewerTextRef = useRef("");
+  const turnIndexRef = useRef(0);
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [difficulty, setDifficulty] = useState<Difficulty>("Standard");
   const [phase, setPhase] = useState<Phase>("opening");
   const [messages, setMessages] = useState<Message[]>([]);
   const [userTurns, setUserTurns] = useState(0);
+  const [turnIndex, setTurnIndex] = useState(0);
 
   const [interviewState, setInterviewState] = useState<InterviewState>("idle");
   const [interviewError, setInterviewError] = useState<string | null>(null);
@@ -160,6 +166,9 @@ export default function PracticeClient() {
       recognitionRef.current = null;
       if (silenceTimerRef.current) {
         clearTimeout(silenceTimerRef.current);
+      }
+      if (introTimeoutRef.current) {
+        clearTimeout(introTimeoutRef.current);
       }
       if (liveCoachTimeoutRef.current) {
         clearTimeout(liveCoachTimeoutRef.current);
@@ -280,7 +289,12 @@ export default function PracticeClient() {
         const res = await fetch("/api/interviewer", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: nextMessages, scenario: scenarioPayload }),
+          body: JSON.stringify({
+            messages: nextMessages,
+            scenario: scenarioPayload,
+            turnIndex: turnIndexRef.current,
+            lastInterviewerText: lastInterviewerTextRef.current,
+          }),
         });
 
         const text = await res.text();
@@ -311,6 +325,7 @@ export default function PracticeClient() {
         }
 
         setMessages((prev) => [...prev, { role: "interviewer", content: interviewerText }]);
+        lastInterviewerTextRef.current = interviewerText;
         await speak(interviewerText);
       } catch (err) {
         setInterviewError(err instanceof Error ? err.message : "Interview request failed.");
@@ -472,15 +487,33 @@ export default function PracticeClient() {
     ].join("\n");
   }, []);
 
+  const normalizeTurn = useCallback((text: string) => text.replace(/\s+/g, " ").trim(), []);
+
+  const hashTurn = useCallback((text: string) => {
+    let hash = 0;
+    for (let i = 0; i < text.length; i += 1) {
+      hash = (hash << 5) - hash + text.charCodeAt(i);
+      hash |= 0;
+    }
+    return `${hash}`;
+  }, []);
+
   const finalizeTurn = useCallback(async () => {
-    const text = currentUserTurnRef.current.trim();
-    if (!text) return;
+    const normalized = normalizeTurn(currentUserTurnRef.current);
+    if (!normalized) return;
+    const turnHash = hashTurn(normalized);
+    if (turnHash === lastSubmittedTurnHashRef.current || inFlightRef.current) {
+      return;
+    }
+    lastSubmittedTurnHashRef.current = turnHash;
     currentUserTurnRef.current = "";
-    const userMessage: Message = { role: "user", content: text };
+    const userMessage: Message = { role: "user", content: normalized };
     const nextMessages: Message[] = [...messages, userMessage];
     setMessages(nextMessages);
-    setTurnReview(buildFeedback(text));
-    await callTurnCoach(text);
+    setTurnReview(buildFeedback(normalized));
+    await callTurnCoach(normalized);
+    turnIndexRef.current += 1;
+    setTurnIndex(turnIndexRef.current);
     await callInterviewer(nextMessages);
 
     if (phase === "opening") setPhase("user_intro");
@@ -490,7 +523,16 @@ export default function PracticeClient() {
     else if (phase === "user_questions" && userTurns >= 3) setPhase("close");
 
     setUserTurns((prev) => prev + 1);
-  }, [buildFeedback, callInterviewer, callTurnCoach, messages, phase, userTurns]);
+  }, [
+    buildFeedback,
+    callInterviewer,
+    callTurnCoach,
+    hashTurn,
+    messages,
+    normalizeTurn,
+    phase,
+    userTurns,
+  ]);
 
   const startTranscription = useCallback(() => {
     setSpeechError(null);
@@ -517,6 +559,9 @@ export default function PracticeClient() {
       for (let i = event.resultIndex; i < event.results.length; i += 1) {
         const result = event.results[i];
         const chunk = result[0]?.transcript ?? "";
+        if (chunk.trim()) {
+          hasUserSpokenRef.current = true;
+        }
         if (result.isFinal) {
           finalText += chunk;
         } else {
@@ -583,6 +628,11 @@ export default function PracticeClient() {
   const startInterview = useCallback(async () => {
     setMessages([]);
     setUserTurns(0);
+    setTurnIndex(0);
+    turnIndexRef.current = 0;
+    lastSubmittedTurnHashRef.current = null;
+    lastInterviewerTextRef.current = "";
+    hasUserSpokenRef.current = false;
     currentUserTurnRef.current = "";
     setInterviewError(null);
     setTranscriptInterim("");
@@ -592,10 +642,20 @@ export default function PracticeClient() {
     if (!holdToTalk) {
       startTranscription();
     }
-    await callInterviewer([{ role: "user", content: "Begin the coffee chat." }]);
+    if (introTimeoutRef.current) {
+      clearTimeout(introTimeoutRef.current);
+    }
+    introTimeoutRef.current = setTimeout(() => {
+      if (!hasUserSpokenRef.current) {
+        void callInterviewer([{ role: "user", content: "Begin the coffee chat." }]);
+      }
+    }, 1500);
   }, [callInterviewer, holdToTalk, startTranscription]);
 
   const endInterview = useCallback(async () => {
+    if (introTimeoutRef.current) {
+      clearTimeout(introTimeoutRef.current);
+    }
     stopTranscription();
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
@@ -611,6 +671,9 @@ export default function PracticeClient() {
   }, [callFinalCoach, finalizeTurn, stopSpeaking, stopTranscription]);
 
   const pauseInterview = useCallback(() => {
+    if (introTimeoutRef.current) {
+      clearTimeout(introTimeoutRef.current);
+    }
     setPaused(true);
     stopTranscription();
     stopSpeaking();
@@ -904,6 +967,7 @@ export default function PracticeClient() {
                   <div className="mt-2 space-y-1">
                     <div>State: {interviewState}</div>
                     <div>Phase: {phase}</div>
+                    <div>Turn index: {turnIndex}</div>
                     <div>Paused: {paused ? "yes" : "no"}</div>
                     <div>Hold to talk: {holdToTalk ? "yes" : "no"}</div>
                     <div>Transcribing: {isTranscribing ? "yes" : "no"}</div>
