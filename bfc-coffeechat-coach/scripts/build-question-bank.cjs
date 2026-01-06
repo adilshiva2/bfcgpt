@@ -7,6 +7,8 @@ const SOURCE_PDF = path.join(__dirname, "..", "data", "source", "interview-quest
 const OUTPUT_JSON = path.join(__dirname, "..", "data", "question-bank.json");
 const OUTPUT_META = path.join(__dirname, "..", "data", "question-bank.meta.json");
 const MANUAL_JSON = path.join(__dirname, "..", "data", "question-bank.manual.json");
+const ALLOWLIST_JSON = path.join(__dirname, "..", "data", "firm-allowlist.json");
+const ALIASES_JSON = path.join(__dirname, "..", "data", "firm-aliases.json");
 
 function isFirmHeading(line) {
   if (!line) return false;
@@ -52,7 +54,9 @@ function stageFor(text) {
 }
 
 function buildMeta(records) {
-  const firms = Array.from(new Set(records.map((r) => r.firm))).sort();
+  const firms = Array.from(
+    new Set(records.map((r) => r.firm).filter((firm) => firm !== "Other"))
+  ).sort();
   const countsByFirm = {};
   const countsByType = {};
   const countsByStage = {};
@@ -62,6 +66,29 @@ function buildMeta(records) {
     countsByStage[record.stage] = (countsByStage[record.stage] || 0) + 1;
   }
   return { firms, countsByFirm, countsByType, countsByStage };
+}
+
+function loadAllowlist() {
+  if (!fs.existsSync(ALLOWLIST_JSON)) return [];
+  return JSON.parse(fs.readFileSync(ALLOWLIST_JSON, "utf8"));
+}
+
+function loadAliases() {
+  if (!fs.existsSync(ALIASES_JSON)) return {};
+  return JSON.parse(fs.readFileSync(ALIASES_JSON, "utf8"));
+}
+
+function normalizeFirm(rawFirm, allowlistMap, aliases) {
+  const cleaned = rawFirm.replace(/\s{2,}/g, " ").trim();
+  const lower = cleaned.toLowerCase();
+  const alias = aliases[lower];
+  if (alias && allowlistMap.has(alias.toLowerCase())) {
+    return allowlistMap.get(alias.toLowerCase());
+  }
+  if (allowlistMap.has(lower)) {
+    return allowlistMap.get(lower);
+  }
+  return "Other";
 }
 
 function mergeManual(records, manualRecords) {
@@ -87,6 +114,12 @@ async function buildQuestionBank() {
     .map((line) => line.trim())
     .filter(Boolean);
 
+  const allowlist = loadAllowlist();
+  const allowlistMap = new Map(
+    allowlist.map((firm) => [firm.toLowerCase(), firm])
+  );
+  const aliases = loadAliases();
+
   let currentFirm = "Unknown";
   const questions = [];
   const perFirmCount = {};
@@ -103,12 +136,13 @@ async function buildQuestionBank() {
     const looksLikeQuestion = cleaned.endsWith("?") || cleaned.length > 15;
     if (!looksLikeQuestion) continue;
 
+    const normalizedFirm = normalizeFirm(currentFirm, allowlistMap, aliases);
     const idx = (perFirmCount[currentFirm] = (perFirmCount[currentFirm] || 0) + 1);
-    const id = `${currentFirm.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${idx}`;
+    const id = `${normalizedFirm.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${idx}`;
     const stage = stageFor(cleaned);
     questions.push({
       id,
-      firm: currentFirm,
+      firm: normalizedFirm,
       group: "unknown",
       stage,
       questionType: questionTypeFor(cleaned),

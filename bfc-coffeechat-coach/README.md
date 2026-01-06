@@ -46,6 +46,13 @@ Set the following environment variables to enable interviewer voice playback:
 
 Place the source PDF at `bfc-coffeechat-coach/data/source/interview-question-bank.pdf`.
 
+Firm normalization is controlled by:
+
+- `bfc-coffeechat-coach/data/firm-allowlist.json` (canonical firm names shown in the UI)
+- `bfc-coffeechat-coach/data/firm-aliases.json` (common variants -> canonical names)
+
+Firms not in the allowlist are assigned to `Other` and hidden by default in the UI (toggle "Show Other/Unclassified" to include them).
+
 Generate the question bank JSON with:
 
 ```bash

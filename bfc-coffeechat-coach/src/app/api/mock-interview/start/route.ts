@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { z } from "zod";
+import z from "zod/v4";
 import { authOptions } from "@/auth";
 import { isAllowedEmail } from "@/lib/auth-allowlist";
 import { enforceUserRateLimit } from "@/lib/rate-limit";
@@ -29,7 +29,6 @@ Keep it short and speakable (<= 280 characters).
 Question: ${questionPrompt}
 Firm: ${settings.firm}
 Stage: ${settings.stage}
-Difficulty: ${settings.difficulty}
 `;
 }
 

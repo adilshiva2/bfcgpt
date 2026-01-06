@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod/v4";
 import type { QuestionRecord, QuestionStage, QuestionType } from "@/lib/question-bank";
 
 export const stageSchema = z.enum([
@@ -25,8 +25,8 @@ export const questionTypeSchema = z.enum([
 export const settingsSchema = z.object({
   firm: z.string(),
   stage: stageSchema,
-  questionTypes: z.array(questionTypeSchema),
-  difficulty: z.union([z.literal("any"), z.literal(1), z.literal(2), z.literal(3)]),
+  questionTypes: z.array(z.union([questionTypeSchema, z.literal("all")])),
+  difficulty: z.union([z.literal("any"), z.literal(1), z.literal(2), z.literal(3)]).optional(),
   randomize: z.boolean(),
   followUps: z.boolean(),
 });
@@ -43,6 +43,9 @@ export function filterQuestions(
   settings: MockInterviewSettings,
   askedIds: string[] = []
 ) {
+  const questionTypes = settings.questionTypes.includes("all")
+    ? questionTypeOptions
+    : settings.questionTypes;
   return questions.filter((question) => {
     if (settings.firm && settings.firm !== "All" && question.firm !== settings.firm) {
       return false;
@@ -50,10 +53,7 @@ export function filterQuestions(
     if (settings.stage !== "all" && question.stage !== settings.stage) {
       return false;
     }
-    if (settings.questionTypes.length > 0 && !settings.questionTypes.includes(question.questionType)) {
-      return false;
-    }
-    if (settings.difficulty !== "any" && question.difficulty !== settings.difficulty) {
+    if (questionTypes.length > 0 && !questionTypes.includes(question.questionType)) {
       return false;
     }
     if (askedIds.length > 0 && askedIds.includes(question.id)) {

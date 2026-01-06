@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { z } from "zod";
+import z from "zod/v4";
 import { authOptions } from "@/auth";
 import { isAllowedEmail } from "@/lib/auth-allowlist";
 import { enforceUserRateLimit } from "@/lib/rate-limit";
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Conversation history too long", requestId }, { status: 413 });
   }
 
-  const conversationText = body.conversation
+  const conversationText = (body.conversation as Array<{ role: "interviewer" | "user"; content: string }>)
     .map((msg) => `${msg.role === "interviewer" ? "Interviewer" : "User"}: ${msg.content}`)
     .join("\n");
 

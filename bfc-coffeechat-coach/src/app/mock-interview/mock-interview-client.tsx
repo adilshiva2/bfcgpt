@@ -87,11 +87,11 @@ export default function MockInterviewClient({ meta }: Props) {
   const [settings, setSettings] = useState<MockInterviewSettings>({
     firm: meta.firms[0] || "All",
     stage: "all",
-    questionTypes: [],
-    difficulty: "any",
+    questionTypes: ["all"],
     randomize: true,
     followUps: true,
   });
+  const [showOtherFirms, setShowOtherFirms] = useState(false);
 
   useEffect(() => {
     setSpeechSupported(
@@ -108,10 +108,13 @@ export default function MockInterviewClient({ meta }: Props) {
   }, []);
 
 
-  const firmOptions = useMemo(
-    () => [{ value: "All", label: "All" }, ...meta.firms.map((firm) => ({ value: firm, label: firm }))],
-    [meta.firms]
-  );
+  const firmOptions = useMemo(() => {
+    const base = [{ value: "All", label: "All" }, ...meta.firms.map((firm) => ({ value: firm, label: firm }))];
+    if (showOtherFirms) {
+      base.push({ value: "Other", label: "Other / Unclassified" });
+    }
+    return base;
+  }, [meta.firms, showOtherFirms]);
 
   const stageOptions = useMemo(
     () => [
@@ -123,6 +126,40 @@ export default function MockInterviewClient({ meta }: Props) {
     ],
     []
   );
+
+  useEffect(() => {
+    if (!showOtherFirms && settings.firm === "Other") {
+      setSettings((prev: MockInterviewSettings) => ({ ...prev, firm: meta.firms[0] || "All" }));
+    }
+  }, [meta.firms, settings.firm, showOtherFirms]);
+
+  const allTypesSelected = useMemo(() => {
+    if (settings.questionTypes.includes("all")) return true;
+    return questionTypeOptions.every((type) => settings.questionTypes.includes(type));
+  }, [settings.questionTypes]);
+
+  const toggleAllTypes = (checked: boolean) => {
+    if (checked) {
+      setSettings((prev: MockInterviewSettings) => ({ ...prev, questionTypes: ["all"] }));
+      return;
+    }
+    setSettings((prev: MockInterviewSettings) => ({ ...prev, questionTypes: [questionTypeOptions[0]] }));
+  };
+
+  const toggleType = (type: typeof questionTypeOptions[number], checked: boolean) => {
+    if (settings.questionTypes.includes("all")) {
+      setSettings((prev: MockInterviewSettings) => ({ ...prev, questionTypes: checked ? [type] : [] }));
+      return;
+    }
+    const next = checked
+      ? [...settings.questionTypes, type]
+      : settings.questionTypes.filter(
+          (item: MockInterviewSettings["questionTypes"][number]) => item !== type
+        );
+    const collapsed =
+      next.length === questionTypeOptions.length ? (["all"] as MockInterviewSettings["questionTypes"]) : next;
+    setSettings((prev: MockInterviewSettings) => ({ ...prev, questionTypes: collapsed }));
+  };
 
   const ensureTtsAudio = useCallback(() => {
     if (!ttsAudioRef.current) {
@@ -476,49 +513,40 @@ export default function MockInterviewClient({ meta }: Props) {
                   label="Firm"
                   value={settings.firm}
                   options={firmOptions}
-                  onChange={(value) => setSettings((prev) => ({ ...prev, firm: value }))}
+                  onChange={(value) =>
+                    setSettings((prev: MockInterviewSettings) => ({ ...prev, firm: value }))
+                  }
                 />
                 <Select
                   label="Stage"
                   value={settings.stage}
                   options={stageOptions}
                   onChange={(value) =>
-                    setSettings((prev) => ({ ...prev, stage: value as MockInterviewSettings["stage"] }))
-                  }
-                />
-                <Select
-                  label="Difficulty"
-                  value={String(settings.difficulty)}
-                  options={[
-                    { value: "any", label: "Any" },
-                    { value: "1", label: "1" },
-                    { value: "2", label: "2" },
-                    { value: "3", label: "3" },
-                  ]}
-                  onChange={(value) =>
-                    setSettings((prev) => ({
+                    setSettings((prev: MockInterviewSettings) => ({
                       ...prev,
-                      difficulty:
-                        value === "any" ? "any" : (Number.parseInt(value, 10) as 1 | 2 | 3),
+                      stage: value as MockInterviewSettings["stage"],
                     }))
                   }
                 />
                 <div className="rounded-lg border border-slate-200 bg-white p-4">
                   <div className="text-sm font-semibold text-slate-900">Question types</div>
                   <div className="mt-3 grid gap-2 text-sm text-slate-700">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={allTypesSelected}
+                        onChange={(event) => toggleAllTypes(event.target.checked)}
+                      />
+                      <span>All</span>
+                    </label>
                     {questionTypeOptions.map((type) => (
                       <label key={type} className="flex items-center gap-2">
                         <input
                           type="checkbox"
-                          checked={settings.questionTypes.includes(type)}
-                          onChange={(event) => {
-                            setSettings((prev) => ({
-                              ...prev,
-                              questionTypes: event.target.checked
-                                ? [...prev.questionTypes, type]
-                                : prev.questionTypes.filter((item) => item !== type),
-                            }));
-                          }}
+                          checked={
+                            allTypesSelected || settings.questionTypes.includes(type)
+                          }
+                          onChange={(event) => toggleType(type, event.target.checked)}
                         />
                         <span>{type.replace(/_/g, " ")}</span>
                       </label>
@@ -531,19 +559,36 @@ export default function MockInterviewClient({ meta }: Props) {
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
+                    checked={showOtherFirms}
+                    onChange={(event) => setShowOtherFirms(event.target.checked)}
+                  />
+                  <span>Show Other/Unclassified</span>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
                     checked={settings.randomize}
                     onChange={(event) =>
-                      setSettings((prev) => ({ ...prev, randomize: event.target.checked }))
+                      setSettings((prev: MockInterviewSettings) => ({
+                        ...prev,
+                        randomize: event.target.checked,
+                      }))
                     }
                   />
                   <span>Randomize questions</span>
                 </label>
+                <div className="text-xs text-slate-500">
+                  Randomize: pick the next question at random from your selected filters.
+                </div>
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={settings.followUps}
                     onChange={(event) =>
-                      setSettings((prev) => ({ ...prev, followUps: event.target.checked }))
+                      setSettings((prev: MockInterviewSettings) => ({
+                        ...prev,
+                        followUps: event.target.checked,
+                      }))
                     }
                   />
                   <span>Allow 1 follow-up before moving on</span>
