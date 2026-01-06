@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import AccountMenu from "@/components/account-menu";
 
 export default function SiteHeader() {
@@ -15,6 +16,9 @@ export default function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-slate-50">
           ChatBFC <span className="text-amber-400">•</span>
+          <Badge tone="neutral" className="text-[10px] uppercase tracking-wide text-slate-900">
+            Beta
+          </Badge>
         </Link>
         <nav className="flex items-center gap-4 text-sm text-slate-300">
           <Link
@@ -22,7 +26,7 @@ export default function SiteHeader() {
             className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-200"
           >
             <motion.span whileHover={{ y: -1 }} className="inline-flex hover:text-slate-50">
-              Practice
+              Coffee Chats
             </motion.span>
           </Link>
           <Link
@@ -31,14 +35,6 @@ export default function SiteHeader() {
           >
             <motion.span whileHover={{ y: -1 }} className="inline-flex hover:text-slate-50">
               Mock Interview
-            </motion.span>
-          </Link>
-          <Link
-            href="/#how-it-works"
-            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-200"
-          >
-            <motion.span whileHover={{ y: -1 }} className="inline-flex hover:text-slate-50">
-              How it Works
             </motion.span>
           </Link>
         </nav>
