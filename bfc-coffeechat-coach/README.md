@@ -42,6 +42,35 @@ Set the following environment variables to enable interviewer voice playback:
 - `ELEVENLABS_VOICE_ID`
 - `ELEVENLABS_MODEL_ID` (optional)
 
+## Mock Interview Question Bank
+
+Place the source PDF at `bfc-coffeechat-coach/data/source/interview-question-bank.pdf`.
+
+Generate the question bank JSON with:
+
+```bash
+npm run build-question-bank
+```
+
+This creates:
+
+- `bfc-coffeechat-coach/data/question-bank.json`
+- `bfc-coffeechat-coach/data/question-bank.meta.json`
+
+Optional manual overrides can be added in `bfc-coffeechat-coach/data/question-bank.manual.json` and will be merged by `id`.
+
+To validate the bank locally and print firm counts:
+
+```bash
+npm run question-bank-info
+```
+
+## Mock Interview (Local)
+
+1. Run `npm run build-question-bank`.
+2. Start the dev server (`npm run dev`).
+3. Open `http://localhost:3000/mock-interview`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

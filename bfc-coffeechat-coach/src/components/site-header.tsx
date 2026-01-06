@@ -26,6 +26,14 @@ export default function SiteHeader() {
             </motion.span>
           </Link>
           <Link
+            href="/mock-interview"
+            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-200"
+          >
+            <motion.span whileHover={{ y: -1 }} className="inline-flex hover:text-slate-50">
+              Mock Interview
+            </motion.span>
+          </Link>
+          <Link
             href="/#how-it-works"
             className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-200"
           >
