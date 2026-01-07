@@ -1,15 +1,18 @@
 import z from "zod/v4";
 import type { QuestionRecord, QuestionStage, QuestionType } from "@/lib/question-bank";
 
-export const stageSchema = z.enum([
-  "coffee_chat",
-  "hirevue",
-  "first_round",
-  "second_round",
-  "superday",
-  "unknown",
-  "all",
-]);
+const allowedStages = ["first_round", "second_round", "superday"] as const;
+
+export const stageSchema = z.preprocess(
+  (value: unknown) => {
+    if (typeof value !== "string") return "first_round";
+    if (allowedStages.includes(value as (typeof allowedStages)[number])) {
+      return value;
+    }
+    return "first_round";
+  },
+  z.enum(allowedStages)
+);
 
 export const questionTypeSchema = z.enum([
   "behavioral",
@@ -26,10 +29,9 @@ export const settingsSchema = z.object({
   firm: z.string(),
   stage: stageSchema,
   questionTypes: z.array(z.union([questionTypeSchema, z.literal("all")])),
-  difficulty: z.union([z.literal("any"), z.literal(1), z.literal(2), z.literal(3)]).optional(),
   randomize: z.boolean(),
   followUps: z.boolean(),
-});
+}).passthrough();
 
 export type MockInterviewSettings = z.infer<typeof settingsSchema>;
 
@@ -43,14 +45,15 @@ export function filterQuestions(
   settings: MockInterviewSettings,
   askedIds: string[] = []
 ) {
-  const questionTypes = settings.questionTypes.includes("all")
-    ? questionTypeOptions
-    : settings.questionTypes;
+  const questionTypes =
+    settings.questionTypes.length === 0 || settings.questionTypes.includes("all")
+      ? questionTypeOptions
+      : settings.questionTypes;
   return questions.filter((question) => {
     if (settings.firm && settings.firm !== "All" && question.firm !== settings.firm) {
       return false;
     }
-    if (settings.stage !== "all" && question.stage !== settings.stage) {
+    if (question.stage !== settings.stage) {
       return false;
     }
     if (questionTypes.length > 0 && !questionTypes.includes(question.questionType)) {
@@ -84,12 +87,9 @@ export function sumConversationChars(conversation: ConversationMessage[]) {
 }
 
 export const questionStageOptions: QuestionStage[] = [
-  "coffee_chat",
-  "hirevue",
   "first_round",
   "second_round",
   "superday",
-  "unknown",
 ];
 
 export const questionTypeOptions: QuestionType[] = [

@@ -20,25 +20,37 @@ type Message = {
   content: string;
 };
 
-type StartResponse = {
-  interviewerText: string;
-  realtimeFeedback?: string;
-  questionId: string;
+type PlanItem = {
+  qIndex: number;
+  type:
+    | "behavioral"
+    | "accounting"
+    | "valuation"
+    | "lbo"
+    | "merger_math"
+    | "market"
+    | "brainteaser"
+    | "other";
+  interviewerQuestion: string;
+  expectedRubric: string;
+  idealAnswerOutline: string;
+};
+
+type PlanResponse = {
+  plan: PlanItem[];
+  seedCount: number;
   requestId?: string;
 };
 
-type TurnResponse = {
-  interviewerText: string;
-  realtimeFeedback?: string;
-  nextQuestionId: string;
-  done: boolean;
+type GradeResponse = {
+  score0to10: number;
+  strengths: string[];
+  gaps: string[];
+  correctedAnswerOutline: string;
+  nextBestSentence: string;
   requestId?: string;
 };
 
-type EndResponse = {
-  finalSummary: string;
-  requestId?: string;
-};
 
 function parseJsonRecord(text: string) {
   if (!text) return {} as Record<string, unknown>;
@@ -66,8 +78,6 @@ export default function MockInterviewClient({ meta }: Props) {
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentUserTurnRef = useRef("");
   const conversationRef = useRef<Message[]>([]);
-  const askedIdsRef = useRef<string[]>([]);
-  const lastQuestionIdRef = useRef<string | null>(null);
   const inFlightRef = useRef(false);
   const finalizeTurnRef = useRef<() => void>(() => {});
   const startTranscriptionRef = useRef<() => void>(() => {});
@@ -80,17 +90,22 @@ export default function MockInterviewClient({ meta }: Props) {
   const [audioNeedsClick, setAudioNeedsClick] = useState(false);
   const [ttsError, setTtsError] = useState<string | null>(null);
   const [conversation, setConversation] = useState<Message[]>([]);
-  const [realtimeFeedback, setRealtimeFeedback] = useState<string>("");
+  const [plan, setPlan] = useState<PlanItem[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [seedCount, setSeedCount] = useState<number | null>(null);
   const [finalSummary, setFinalSummary] = useState<string>("");
+  const [feedback, setFeedback] = useState<GradeResponse | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [pendingNext, setPendingNext] = useState(false);
 
   const [settings, setSettings] = useState<MockInterviewSettings>({
     firm: meta.firms[0] || "All",
-    stage: "all",
+    stage: "first_round",
     questionTypes: ["all"],
     randomize: true,
     followUps: true,
   });
+  const [numQuestions, setNumQuestions] = useState(6);
   const [showOtherFirms, setShowOtherFirms] = useState(false);
 
   useEffect(() => {
@@ -117,13 +132,11 @@ export default function MockInterviewClient({ meta }: Props) {
   }, [meta.firms, showOtherFirms]);
 
   const stageOptions = useMemo(
-    () => [
-      { value: "all", label: "All stages" },
-      ...questionStageOptions.map((stage) => ({
+    () =>
+      questionStageOptions.map((stage) => ({
         value: stage,
         label: stage.replace(/_/g, " "),
       })),
-    ],
     []
   );
 
@@ -245,6 +258,25 @@ export default function MockInterviewClient({ meta }: Props) {
     setConversation(next);
   }, []);
 
+  const advanceToQuestion = useCallback(
+    async (index: number) => {
+      const nextItem = plan[index];
+      if (!nextItem) {
+        setStatus("idle");
+        return;
+      }
+      setCurrentIndex(index);
+      const updatedConversation: Message[] = [
+        ...conversationRef.current,
+        { role: "interviewer", content: nextItem.interviewerQuestion },
+      ];
+      updateConversation(updatedConversation);
+      await speak(nextItem.interviewerQuestion);
+      startTranscriptionRef.current();
+    },
+    [plan, speak, updateConversation]
+  );
+
   const startTranscription = useCallback(() => {
     setSpeechError(null);
     if (!speechSupported) {
@@ -328,19 +360,26 @@ export default function MockInterviewClient({ meta }: Props) {
   const startInterview = useCallback(async () => {
     setApiError(null);
     setFinalSummary("");
-    setRealtimeFeedback("");
+    setFeedback(null);
+    setSeedCount(null);
     setSpeechError(null);
     currentUserTurnRef.current = "";
     updateConversation([]);
-    askedIdsRef.current = [];
-    lastQuestionIdRef.current = null;
+    setPlan([]);
+    setCurrentIndex(0);
 
     setStatus("speaking_intro");
     try {
-      const res = await fetch("/api/mock-interview/start", {
+      const res = await fetch("/api/mock-interview/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ settings }),
+        body: JSON.stringify({
+          firm: settings.firm,
+          stage: settings.stage,
+          questionTypes: settings.questionTypes,
+          numQuestions,
+          randomize: settings.randomize,
+        }),
       });
       const text = await res.text();
       const payload = parseJsonRecord(text);
@@ -348,23 +387,36 @@ export default function MockInterviewClient({ meta }: Props) {
       if (!res.ok) {
         const msg = (payload.error as string) || res.statusText;
         const requestId = payload.requestId as string | undefined;
-        setApiError(requestId ? `${msg} (Request ID: ${requestId})` : msg);
+        const fullMessage =
+          res.status === 404
+            ? `No questions found for ${settings.firm} ${settings.stage.replace(
+                /_/g,
+                " "
+              )}. Add questions to the bank or adjust filters.`
+            : msg;
+        setApiError(requestId ? `${fullMessage} (Request ID: ${requestId})` : fullMessage);
         setStatus("idle");
         return;
       }
 
-      const response = payload as StartResponse;
-      updateConversation([{ role: "interviewer", content: response.interviewerText }]);
-      setRealtimeFeedback(response.realtimeFeedback || "");
-      lastQuestionIdRef.current = response.questionId;
-      askedIdsRef.current = [response.questionId];
-      await speak(response.interviewerText);
+      const response = payload as PlanResponse;
+      if (!response.plan || response.plan.length === 0) {
+        setApiError("No plan generated. Adjust filters and try again.");
+        setStatus("idle");
+        return;
+      }
+      setPlan(response.plan);
+      setSeedCount(response.seedCount);
+      setCurrentIndex(0);
+      const firstQuestion = response.plan[0];
+      updateConversation([{ role: "interviewer", content: firstQuestion.interviewerQuestion }]);
+      await speak(firstQuestion.interviewerQuestion);
       startTranscriptionRef.current();
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "Failed to start interview.");
       setStatus("idle");
     }
-  }, [settings, speak, updateConversation]);
+  }, [numQuestions, settings, speak, updateConversation]);
 
   const finalizeTurn = useCallback(async () => {
     if (inFlightRef.current) return;
@@ -378,20 +430,20 @@ export default function MockInterviewClient({ meta }: Props) {
     ];
     updateConversation(updatedConversation);
 
-    if (!lastQuestionIdRef.current) return;
+    const currentItem = plan[currentIndex];
+    if (!currentItem) return;
     setStatus("thinking");
     inFlightRef.current = true;
 
     try {
-      const res = await fetch("/api/mock-interview/turn", {
+      const res = await fetch("/api/mock-interview/grade", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          settings,
-          conversation: updatedConversation.slice(-6),
-          lastQuestionId: lastQuestionIdRef.current,
-          askedQuestionIds: askedIdsRef.current,
-          lastUserTurn,
+          planItem: currentItem,
+          userAnswer: lastUserTurn,
+          firm: settings.firm,
+          stage: settings.stage,
         }),
       });
       const text = await res.text();
@@ -405,30 +457,26 @@ export default function MockInterviewClient({ meta }: Props) {
         return;
       }
 
-      const response = payload as TurnResponse;
-      setRealtimeFeedback(response.realtimeFeedback || "");
-      updateConversation([
-        ...updatedConversation,
-        { role: "interviewer", content: response.interviewerText },
-      ]);
+      const response = payload as GradeResponse;
+      setFeedback(response);
 
-      if (response.nextQuestionId && !askedIdsRef.current.includes(response.nextQuestionId)) {
-        askedIdsRef.current = [...askedIdsRef.current, response.nextQuestionId];
-      }
-      lastQuestionIdRef.current = response.nextQuestionId;
-      await speak(response.interviewerText);
-      if (!response.done) {
-        startTranscriptionRef.current();
-      } else {
+      const nextIndex = currentIndex + 1;
+      if (nextIndex >= plan.length) {
         setStatus("idle");
+        return;
       }
+      if (status === "paused") {
+        setPendingNext(true);
+        return;
+      }
+      await advanceToQuestion(nextIndex);
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "Failed to process turn.");
       setStatus("idle");
     } finally {
       inFlightRef.current = false;
     }
-  }, [settings, speak, updateConversation]);
+  }, [advanceToQuestion, currentIndex, plan, settings, status, updateConversation]);
 
   useEffect(() => {
     finalizeTurnRef.current = finalizeTurn;
@@ -442,8 +490,13 @@ export default function MockInterviewClient({ meta }: Props) {
 
   const resumeInterview = useCallback(() => {
     if (status !== "paused") return;
+    if (pendingNext) {
+      setPendingNext(false);
+      void advanceToQuestion(currentIndex + 1);
+      return;
+    }
     startTranscriptionRef.current();
-  }, [status]);
+  }, [advanceToQuestion, currentIndex, pendingNext, status]);
 
   const endInterview = useCallback(async () => {
     stopTranscription();
@@ -463,13 +516,16 @@ export default function MockInterviewClient({ meta }: Props) {
     }
 
     setStatus("idle");
+    setPlan([]);
+    setCurrentIndex(0);
+    setPendingNext(false);
     try {
       const res = await fetch("/api/mock-interview/end", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           settings,
-          askedQuestionIds: askedIdsRef.current,
+          askedQuestionIds: plan.map((item) => String(item.qIndex)),
           conversation: conversationRef.current.slice(-8),
         }),
       });
@@ -483,12 +539,12 @@ export default function MockInterviewClient({ meta }: Props) {
         return;
       }
 
-      const response = payload as EndResponse;
-      setFinalSummary(response.finalSummary);
+      const response = payload as { finalSummary?: string };
+      setFinalSummary(response.finalSummary || "");
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "Failed to end interview.");
     }
-  }, [settings, stopSpeaking, stopTranscription, updateConversation]);
+  }, [plan, settings, stopSpeaking, stopTranscription, updateConversation]);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10">
@@ -527,6 +583,17 @@ export default function MockInterviewClient({ meta }: Props) {
                       stage: value as MockInterviewSettings["stage"],
                     }))
                   }
+                />
+                <Select
+                  label="Number of questions"
+                  value={String(numQuestions)}
+                  options={[
+                    { value: "4", label: "4" },
+                    { value: "6", label: "6" },
+                    { value: "8", label: "8" },
+                    { value: "10", label: "10" },
+                  ]}
+                  onChange={(value) => setNumQuestions(Number.parseInt(value, 10))}
                 />
                 <div className="rounded-lg border border-slate-200 bg-white p-4">
                   <div className="text-sm font-semibold text-slate-900">Question types</div>
@@ -619,6 +686,11 @@ export default function MockInterviewClient({ meta }: Props) {
                 <Button variant="secondary" onClick={resumeInterview} type="button">
                   Resume
                 </Button>
+                {pendingNext && status === "paused" ? (
+                  <Button variant="secondary" onClick={resumeInterview} type="button">
+                    Next
+                  </Button>
+                ) : null}
                 <Button variant="secondary" onClick={endInterview} type="button">
                   End Interview
                 </Button>
@@ -652,12 +724,30 @@ export default function MockInterviewClient({ meta }: Props) {
                   {ttsError}
                 </div>
               ) : null}
+              {seedCount !== null ? (
+                <div className="mt-3 text-xs text-slate-500">
+                  Seed questions loaded: {seedCount}
+                </div>
+              ) : null}
             </Card>
           </motion.div>
 
           <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
             <Card className="p-6">
-              <div className="text-base font-semibold text-slate-900">Conversation</div>
+              <div className="flex items-center justify-between">
+                <div className="text-base font-semibold text-slate-900">Conversation</div>
+                {plan.length > 0 ? (
+                  <Badge tone="neutral">
+                    Q{currentIndex + 1} of {plan.length}
+                  </Badge>
+                ) : null}
+              </div>
+              {plan[currentIndex] ? (
+                <div className="mt-4 rounded-lg border border-slate-100 bg-slate-50 p-3 text-sm text-slate-700">
+                  <span className="font-semibold text-slate-900">Current question:</span>{" "}
+                  {plan[currentIndex].interviewerQuestion}
+                </div>
+              ) : null}
               <div className="mt-4 space-y-4">
                 {conversation.length === 0 ? (
                   <div className="text-sm text-slate-600">No messages yet.</div>
@@ -688,12 +778,42 @@ export default function MockInterviewClient({ meta }: Props) {
           >
             <Card className="p-6">
               <div className="flex items-center justify-between">
-                <div className="text-base font-semibold text-slate-900">Realtime Coaching</div>
-                <Badge tone="neutral">Live</Badge>
+                <div className="text-base font-semibold text-slate-900">Interview Feedback</div>
+                <Badge tone="neutral">Auto-graded</Badge>
               </div>
-              <div className="mt-4 whitespace-pre-wrap text-sm text-slate-700">
-                {realtimeFeedback || "Coaching updates after each response."}
-              </div>
+              {feedback ? (
+                <div className="mt-4 space-y-3 text-sm text-slate-700">
+                  <div className="font-semibold text-slate-900">Score: {feedback.score0to10}/10</div>
+                  <div>
+                    <div className="font-semibold text-slate-900">Strengths</div>
+                    <ul className="mt-2 space-y-1">
+                      {feedback.strengths.map((item, idx) => (
+                        <li key={idx}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-900">Gaps</div>
+                    <ul className="mt-2 space-y-1">
+                      {feedback.gaps.map((item, idx) => (
+                        <li key={idx}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-900">Better outline</div>
+                    <div className="mt-2 whitespace-pre-wrap">{feedback.correctedAnswerOutline}</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-900">Next best sentence</div>
+                    <div className="mt-2">{feedback.nextBestSentence}</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-4 whitespace-pre-wrap text-sm text-slate-700">
+                  Feedback updates after each response.
+                </div>
+              )}
             </Card>
           </motion.div>
 
