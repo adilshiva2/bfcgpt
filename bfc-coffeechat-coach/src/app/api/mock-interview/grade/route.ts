@@ -4,7 +4,11 @@ import z from "zod/v4";
 import { authOptions } from "@/auth";
 import { isAllowedEmail } from "@/lib/auth-allowlist";
 import { enforceUserRateLimit } from "@/lib/rate-limit";
-import { questionTypeSchema } from "@/lib/mock-interview";
+import {
+  type InterviewMode,
+  interviewModeConfigs,
+  questionTypeSchema,
+} from "@/lib/mock-interview";
 
 const LIMIT = 90;
 const WINDOW_MS = 10 * 60 * 1000;
@@ -24,6 +28,7 @@ const gradeSchema = z.object({
   userAnswer: z.string().min(1),
   firm: z.string(),
   stage: z.string(),
+  interviewMode: z.string().optional(),
 });
 
 const gradeResponseSchema = z.object({
@@ -117,6 +122,30 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing OPENAI_API_KEY", requestId }, { status: 500 });
   }
 
+  const mode = (body.interviewMode || "standard") as InterviewMode;
+  const modeConfig = interviewModeConfigs[mode] || interviewModeConfigs.standard;
+  const gradingFocus = modeConfig.gradingFocus ? `\nGrading focus: ${modeConfig.gradingFocus}\n` : "";
+
+  const typeGuidance: Record<string, string> = {
+    behavioral:
+      "For behavioral questions: evaluate using STAR method (Situation, Task, Action, Result). Check for specificity, self-awareness, and genuine reflection.",
+    accounting:
+      "For accounting questions: evaluate technical accuracy of accounting concepts. Penalize incorrect mechanics (e.g. wrong direction of change on financial statements).",
+    valuation:
+      "For valuation questions: evaluate understanding of DCF, comparable analysis, and precedent transactions. Check for correct methodology and logical reasoning.",
+    lbo:
+      "For LBO questions: evaluate understanding of leverage, debt structure, returns calculation, and value creation levers. Check for precision in mechanics.",
+    merger_math:
+      "For M&A questions: evaluate understanding of accretion/dilution, synergies, deal structure. Check mathematical reasoning.",
+    market:
+      "For market questions: evaluate investment thesis quality, conviction, risk awareness, and ability to defend a view. Check for clear catalysts.",
+    brainteaser:
+      "For brainteasers: evaluate problem-solving approach, logical structure, and ability to break down problems. Process matters more than exact answer.",
+    other: "",
+  };
+
+  const typeHint = typeGuidance[body.planItem.type] || "";
+
   const prompt = `Grade the user's answer against the rubric and ideal outline.
 Return strict JSON with:
 score0to10 (0-10),
@@ -127,7 +156,11 @@ nextBestSentence (single sentence).
 
 Firm: ${body.firm}
 Stage: ${body.stage}
+Interview mode: ${modeConfig.label}
+Question type: ${body.planItem.type}
 
+${typeHint}
+${gradingFocus}
 Question: ${body.planItem.interviewerQuestion}
 
 Expected rubric:

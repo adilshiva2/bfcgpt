@@ -97,6 +97,8 @@ export default function PracticeClient() {
   const introTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastInterviewerTextRef = useRef("");
   const turnIndexRef = useRef(0);
+  const interviewStateRef = useRef<InterviewState>("idle");
+  const startTranscriptionRef = useRef<() => void>(() => {});
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [difficulty, setDifficulty] = useState<Difficulty>("Standard");
@@ -178,6 +180,10 @@ export default function PracticeClient() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    interviewStateRef.current = interviewState;
+  }, [interviewState]);
 
   const ensureTtsAudio = useCallback(() => {
     if (!ttsAudioRef.current) {
@@ -511,7 +517,7 @@ export default function PracticeClient() {
     const nextMessages: Message[] = [...messages, userMessage];
     setMessages(nextMessages);
     setTurnReview(buildFeedback(normalized));
-    await callTurnCoach(normalized);
+    void callTurnCoach(normalized);
     turnIndexRef.current += 1;
     setTurnIndex(turnIndexRef.current);
     await callInterviewer(nextMessages);
@@ -569,7 +575,7 @@ export default function PracticeClient() {
         }
       }
 
-      if (interviewState === "speaking") {
+      if (interviewStateRef.current === "speaking") {
         stopSpeaking();
       }
 
@@ -603,6 +609,11 @@ export default function PracticeClient() {
       setTranscriptInterim("");
       if (holdToTalk && currentUserTurnRef.current.trim()) {
         void finalizeTurn();
+      } else if (
+        !holdToTalk &&
+        interviewStateRef.current === "listening"
+      ) {
+        setTimeout(() => startTranscriptionRef.current(), 300);
       }
     };
 
@@ -610,7 +621,11 @@ export default function PracticeClient() {
     recognition.start();
     setIsTranscribing(true);
     setInterviewState("listening");
-  }, [finalizeTurn, holdToTalk, interviewState, isTranscribing, queueLiveCoach, speechSupported, stopSpeaking]);
+  }, [finalizeTurn, holdToTalk, isTranscribing, queueLiveCoach, speechSupported, stopSpeaking]);
+
+  useEffect(() => {
+    startTranscriptionRef.current = startTranscription;
+  }, [startTranscription]);
 
   const stopTranscription = useCallback(() => {
     recognitionRef.current?.stop();

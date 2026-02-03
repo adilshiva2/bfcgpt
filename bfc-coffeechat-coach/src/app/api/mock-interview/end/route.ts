@@ -4,7 +4,12 @@ import z from "zod/v4";
 import { authOptions } from "@/auth";
 import { isAllowedEmail } from "@/lib/auth-allowlist";
 import { enforceUserRateLimit } from "@/lib/rate-limit";
-import { settingsSchema, sumConversationChars } from "@/lib/mock-interview";
+import {
+  type InterviewMode,
+  interviewModeConfigs,
+  settingsSchema,
+  sumConversationChars,
+} from "@/lib/mock-interview";
 
 const LIMIT = 10;
 const WINDOW_MS = 10 * 60 * 1000;
@@ -18,18 +23,26 @@ const conversationSchema = z.object({
 
 const endSchema = z.object({
   settings: settingsSchema,
+  interviewMode: z.string().optional(),
   askedQuestionIds: z.array(z.string()).default([]),
   conversation: z.array(conversationSchema).default([]),
 });
 
-function buildSummaryPrompt(settings: z.infer<typeof settingsSchema>, conversation: string) {
-  return `Provide a final summary for a mock interview.
+function buildSummaryPrompt(
+  settings: z.infer<typeof settingsSchema>,
+  conversation: string,
+  modeLabel: string,
+  modeContext: string,
+  gradingFocus: string
+) {
+  return `Provide a final summary for a ${modeLabel} mock interview.
 Include:
-- Top 3 improvements
-- Suggested 30-sec intro rewrite
-- Best 3 questions tailored to the scenario
-- Referral ask script + timing advice
-
+- Top 3 improvements (specific to ${modeLabel} interview expectations)
+- Suggested 30-sec intro rewrite tailored to the firm/role
+- Best 3 follow-up questions tailored to the scenario
+- Overall readiness assessment for this interview type
+${gradingFocus ? `- Apply this grading lens: ${gradingFocus}` : ""}
+${modeContext ? `\nInterview context:\n${modeContext}\n` : ""}
 Settings:
 - Firm: ${settings.firm}
 - Stage: ${settings.stage}
@@ -98,6 +111,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Conversation history too long", requestId }, { status: 413 });
   }
 
+  const mode = (body.interviewMode || "standard") as InterviewMode;
+  const modeConfig = interviewModeConfigs[mode] || interviewModeConfigs.standard;
+
   const conversationText = (body.conversation as Array<{ role: "interviewer" | "user"; content: string }>)
     .map((msg) => `${msg.role === "interviewer" ? "Interviewer" : "User"}: ${msg.content}`)
     .join("\n");
@@ -119,12 +135,17 @@ export async function POST(req: Request) {
         input: [
           {
             role: "system",
-            content:
-              "You are a coffee chat coach. Keep the summary concise and practical.",
+            content: `You are a mock interview coach specializing in ${modeConfig.label} interviews. Keep the summary concise and practical.`,
           },
           {
             role: "user",
-            content: buildSummaryPrompt(body.settings, conversationText),
+            content: buildSummaryPrompt(
+              body.settings,
+              conversationText,
+              modeConfig.label,
+              modeConfig.promptContext,
+              modeConfig.gradingFocus
+            ),
           },
         ],
       }),

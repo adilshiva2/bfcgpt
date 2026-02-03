@@ -8,6 +8,8 @@ import { loadQuestionBank } from "@/lib/question-bank";
 import {
   capText,
   filterQuestions,
+  type InterviewMode,
+  interviewModeConfigs,
   MockInterviewSettings,
   pickQuestion,
   settingsSchema,
@@ -19,13 +21,19 @@ const MODEL = "gpt-5-mini";
 
 const startSchema = z.object({
   settings: settingsSchema,
+  interviewMode: z.string().optional(),
 });
 
-function buildIntroPrompt(settings: MockInterviewSettings, questionPrompt: string) {
-  return `You are a friendly coffee chat interviewer. Start with a brief greeting and small talk,
-offer a quick 1-sentence intro about yourself, then ask the question naturally.
+function buildIntroPrompt(
+  settings: MockInterviewSettings,
+  questionPrompt: string,
+  modeLabel: string,
+  modeContext: string
+) {
+  return `You are a mock interviewer conducting a ${modeLabel} interview. Start with a brief greeting,
+then ask the first question naturally.
 Keep it short and speakable (<= 280 characters).
-
+${modeContext ? `\n${modeContext}\n` : ""}
 Question: ${questionPrompt}
 Firm: ${settings.firm}
 Stage: ${settings.stage}
@@ -89,6 +97,8 @@ export async function POST(req: Request) {
   }
 
   const settings = body.settings;
+  const mode = (body.interviewMode || "standard") as InterviewMode;
+  const modeConfig = interviewModeConfigs[mode] || interviewModeConfigs.standard;
   const questions = loadQuestionBank();
   const eligible = filterQuestions(questions, settings);
   const firstQuestion = pickQuestion(eligible, settings.randomize);
@@ -117,10 +127,12 @@ export async function POST(req: Request) {
         input: [
           {
             role: "system",
-            content:
-              "You are a coffee chat interviewer. Keep responses concise, friendly, and one question at a time.",
+            content: `You are a mock interviewer conducting a ${modeConfig.label} interview. Keep responses concise, professional, and one question at a time.`,
           },
-          { role: "user", content: buildIntroPrompt(settings, firstQuestion.prompt) },
+          {
+            role: "user",
+            content: buildIntroPrompt(settings, firstQuestion.prompt, modeConfig.label, modeConfig.promptContext),
+          },
         ],
       }),
     });

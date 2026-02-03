@@ -8,6 +8,8 @@ import { loadQuestionBank } from "@/lib/question-bank";
 import {
   capText,
   filterQuestions,
+  type InterviewMode,
+  interviewModeConfigs,
   MockInterviewSettings,
   pickQuestion,
   settingsSchema,
@@ -31,6 +33,7 @@ const turnSchema = z.object({
   lastQuestionId: z.string().min(1),
   askedQuestionIds: z.array(z.string()).default([]),
   lastUserTurn: z.string().min(1),
+  interviewMode: z.string().optional(),
 });
 
 function buildInterviewerPrompt(
@@ -38,14 +41,17 @@ function buildInterviewerPrompt(
   lastQuestionPrompt: string,
   nextQuestionPrompt: string | null,
   lastUserTurn: string,
-  shouldFollowUp: boolean
+  shouldFollowUp: boolean,
+  modeLabel: string,
+  modeContext: string
 ) {
   const nextLine = shouldFollowUp
     ? `Ask a brief follow-up on: ${lastQuestionPrompt}`
     : `Ask the next question: ${nextQuestionPrompt}`;
-  return `You are a friendly coffee chat interviewer. Acknowledge the user's answer briefly, then ask one question.
+  return `You are a mock interview interviewer conducting a ${modeLabel} interview.
+Acknowledge the user's answer briefly, then ask one question.
 Keep it concise and speakable (<= 280 characters).
-
+${modeContext ? `\n${modeContext}\n` : ""}
 Last user answer:
 ${lastUserTurn}
 
@@ -57,15 +63,20 @@ Settings:
 `;
 }
 
-function buildRealtimeFeedbackPrompt(settings: MockInterviewSettings, lastUserTurn: string) {
-  return `Provide concise coaching bullets for the user's last answer.
+function buildRealtimeFeedbackPrompt(
+  settings: MockInterviewSettings,
+  lastUserTurn: string,
+  modeLabel: string,
+  gradingFocus: string
+) {
+  return `Provide concise coaching bullets for the user's last answer in a ${modeLabel} mock interview.
 Format as 4-5 bullet lines:
-- Tone/rapport
-- Clarity/structure
-- Referral readiness
+- Technical accuracy / content quality
+- Structure / clarity
+- Depth / specificity
 - Better phrasing
-- Next best question
-
+- Key improvement area
+${gradingFocus ? `\nGrading focus: ${gradingFocus}\n` : ""}
 Settings:
 - Firm: ${settings.firm}
 - Stage: ${settings.stage}
@@ -131,6 +142,8 @@ export async function POST(req: Request) {
   }
 
   const { settings, conversation, askedQuestionIds, lastQuestionId, lastUserTurn } = body;
+  const mode = (body.interviewMode || "standard") as InterviewMode;
+  const modeConfig = interviewModeConfigs[mode] || interviewModeConfigs.standard;
 
   if (lastUserTurn.length > MAX_TURN_CHARS) {
     return NextResponse.json({ error: "Answer too long", requestId }, { status: 413 });
@@ -173,8 +186,7 @@ export async function POST(req: Request) {
         input: [
           {
             role: "system",
-            content:
-              "You are a coffee chat interviewer. One question at a time, keep it friendly and concise.",
+            content: `You are a mock interview interviewer conducting a ${modeConfig.label} interview. One question at a time, keep it concise and professional.`,
           },
           {
             role: "user",
@@ -183,7 +195,9 @@ export async function POST(req: Request) {
               currentQuestion.prompt,
               nextQuestion?.prompt || currentQuestion.prompt,
               lastUserTurn,
-              shouldFollowUp
+              shouldFollowUp,
+              modeConfig.label,
+              modeConfig.promptContext
             ),
           },
         ],
@@ -221,10 +235,9 @@ export async function POST(req: Request) {
         input: [
           {
             role: "system",
-            content:
-              "You are a coffee chat coach. Keep feedback tight and skimmable.",
+            content: `You are a mock interview coach for a ${modeConfig.label} interview. Keep feedback tight and skimmable.`,
           },
-          { role: "user", content: buildRealtimeFeedbackPrompt(settings, lastUserTurn) },
+          { role: "user", content: buildRealtimeFeedbackPrompt(settings, lastUserTurn, modeConfig.label, modeConfig.gradingFocus) },
         ],
       }),
     });

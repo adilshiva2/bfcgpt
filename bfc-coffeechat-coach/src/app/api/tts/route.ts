@@ -92,8 +92,9 @@ export async function POST(req: Request) {
     }
 
     const contentType = resp.headers.get("content-type") || "audio/mpeg";
-    const audioBuffer = await resp.arrayBuffer();
-    return new NextResponse(audioBuffer, {
+    // Stream the ElevenLabs response directly instead of buffering — reduces
+    // time-to-first-byte on the client so audio can begin loading sooner.
+    return new NextResponse(resp.body, {
       status: 200,
       headers: { "Content-Type": contentType },
     });

@@ -4,7 +4,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { motion } from "framer-motion";
 import type { QuestionBankMeta } from "@/lib/question-bank";
 import {
-  MockInterviewSettings,
+  type InterviewMode,
+  type MockInterviewSettings,
+  interviewModeConfigs,
+  interviewModeOptions,
   questionStageOptions,
   questionTypeOptions,
 } from "@/lib/mock-interview";
@@ -81,6 +84,8 @@ export default function MockInterviewClient({ meta }: Props) {
   const inFlightRef = useRef(false);
   const finalizeTurnRef = useRef<() => void>(() => {});
   const startTranscriptionRef = useRef<() => void>(() => {});
+  const statusRef = useRef<InterviewStatus>("idle");
+  const holdToTalkRef = useRef(false);
 
   const [status, setStatus] = useState<InterviewStatus>("idle");
   const [speechSupported, setSpeechSupported] = useState(true);
@@ -97,6 +102,10 @@ export default function MockInterviewClient({ meta }: Props) {
   const [feedback, setFeedback] = useState<GradeResponse | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
   const [pendingNext, setPendingNext] = useState(false);
+  const [holdToTalk, setHoldToTalk] = useState(false);
+
+  const [interviewMode, setInterviewMode] = useState<InterviewMode>("standard");
+  const modeConfig = interviewModeConfigs[interviewMode];
 
   const [settings, setSettings] = useState<MockInterviewSettings>({
     firm: meta.firms[0] || "All",
@@ -107,6 +116,14 @@ export default function MockInterviewClient({ meta }: Props) {
   });
   const [numQuestions, setNumQuestions] = useState(6);
   const [showOtherFirms, setShowOtherFirms] = useState(false);
+
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
+
+  useEffect(() => {
+    holdToTalkRef.current = holdToTalk;
+  }, [holdToTalk]);
 
   useEffect(() => {
     setSpeechSupported(
@@ -122,6 +139,15 @@ export default function MockInterviewClient({ meta }: Props) {
     };
   }, []);
 
+  // When interview mode changes, update suggested question types and count
+  useEffect(() => {
+    const config = interviewModeConfigs[interviewMode];
+    setSettings((prev: MockInterviewSettings) => ({
+      ...prev,
+      questionTypes: config.suggestedTypes.length > 0 ? config.suggestedTypes : ["all"],
+    }));
+    setNumQuestions(config.defaultNumQuestions);
+  }, [interviewMode]);
 
   const firmOptions = useMemo(() => {
     const base = [{ value: "All", label: "All" }, ...meta.firms.map((firm) => ({ value: firm, label: firm }))];
@@ -193,52 +219,67 @@ export default function MockInterviewClient({ meta }: Props) {
     }
   }, []);
 
+  /**
+   * speak() returns a Promise that resolves when audio playback ENDS (not when
+   * it starts). This ensures callers can sequence: speak → then start listening,
+   * preventing the microphone from picking up TTS audio output.
+   */
   const speak = useCallback(
-    async (text: string) => {
+    (text: string): Promise<void> => {
       const trimmed = text.trim();
-      if (!trimmed) return;
+      if (!trimmed) return Promise.resolve();
       setTtsError(null);
       const speakText = trimmed.length > 280 ? `${trimmed.slice(0, 277)}...` : trimmed;
 
-      try {
-        const res = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: speakText }),
-        });
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          let payload: { error?: string } = {};
+      return new Promise<void>((resolve) => {
+        void (async () => {
           try {
-            payload = errorText ? (JSON.parse(errorText) as { error?: string }) : {};
-          } catch {
-            payload = {};
-          }
-          throw new Error(payload.error || errorText || res.statusText);
-        }
+            const res = await fetch("/api/tts", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: speakText }),
+            });
 
-        const blob = await res.blob();
-        const audioUrl = URL.createObjectURL(blob);
-        const audioEl = ensureTtsAudio();
-        audioEl.pause();
-        audioEl.currentTime = 0;
-        audioEl.src = audioUrl;
-        setStatus((prev) => (prev === "paused" ? prev : "speaking"));
-        try {
-          await audioEl.play();
-          setAudioNeedsClick(false);
-        } catch {
-          setAudioNeedsClick(true);
-          throw new Error("Audio playback blocked. Click to enable audio.");
-        }
-        audioEl.onended = () => {
-          URL.revokeObjectURL(audioUrl);
-          setStatus((prev) => (prev === "paused" ? prev : "listening"));
-        };
-      } catch (err) {
-        setTtsError(err instanceof Error ? err.message : "TTS failed.");
-      }
+            if (!res.ok) {
+              const errorText = await res.text();
+              let payload: { error?: string } = {};
+              try {
+                payload = errorText ? (JSON.parse(errorText) as { error?: string }) : {};
+              } catch {
+                payload = {};
+              }
+              throw new Error(payload.error || errorText || res.statusText);
+            }
+
+            const blob = await res.blob();
+            const audioUrl = URL.createObjectURL(blob);
+            const audioEl = ensureTtsAudio();
+            audioEl.pause();
+            audioEl.currentTime = 0;
+            audioEl.src = audioUrl;
+            setStatus((prev) => (prev === "paused" ? prev : "speaking"));
+            try {
+              await audioEl.play();
+              setAudioNeedsClick(false);
+            } catch {
+              setAudioNeedsClick(true);
+              resolve();
+              return;
+            }
+            audioEl.onended = () => {
+              URL.revokeObjectURL(audioUrl);
+              setStatus((prev) => (prev === "paused" ? prev : "listening"));
+              resolve();
+            };
+            audioEl.onerror = () => {
+              resolve();
+            };
+          } catch (err) {
+            setTtsError(err instanceof Error ? err.message : "TTS failed.");
+            resolve();
+          }
+        })();
+      });
     },
     [ensureTtsAudio]
   );
@@ -258,40 +299,32 @@ export default function MockInterviewClient({ meta }: Props) {
     setConversation(next);
   }, []);
 
-  const advanceToQuestion = useCallback(
-    async (index: number) => {
-      const nextItem = plan[index];
-      if (!nextItem) {
-        setStatus("idle");
-        return;
-      }
-      setCurrentIndex(index);
-      const updatedConversation: Message[] = [
-        ...conversationRef.current,
-        { role: "interviewer", content: nextItem.interviewerQuestion },
-      ];
-      updateConversation(updatedConversation);
-      await speak(nextItem.interviewerQuestion);
-      startTranscriptionRef.current();
-    },
-    [plan, speak, updateConversation]
-  );
+  const stopTranscription = useCallback(() => {
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+    setIsTranscribing(false);
+    setInterimTranscript("");
+  }, []);
 
   const startTranscription = useCallback(() => {
     setSpeechError(null);
     if (!speechSupported) {
-      setSpeechError("Speech recognition not supported—use Chrome or enable fallback.");
+      setSpeechError("Speech recognition not supported — use Chrome or enable fallback.");
       return;
     }
     if (isTranscribing) return;
 
     const recognition = getSpeechRecognition();
     if (!recognition) {
-      setSpeechError("Speech recognition not supported—use Chrome or enable fallback.");
+      setSpeechError("Speech recognition not supported — use Chrome or enable fallback.");
       return;
     }
 
-    recognition.continuous = true;
+    recognition.continuous = !holdToTalkRef.current;
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
@@ -308,7 +341,8 @@ export default function MockInterviewClient({ meta }: Props) {
         }
       }
 
-      if (status === "speaking") {
+      // Use ref to avoid stale closure — status state may be outdated
+      if (statusRef.current === "speaking") {
         stopSpeaking();
         setStatus("listening");
       }
@@ -316,12 +350,14 @@ export default function MockInterviewClient({ meta }: Props) {
       const trimmedFinal = finalText.trim();
       if (trimmedFinal) {
         currentUserTurnRef.current = `${currentUserTurnRef.current} ${trimmedFinal}`.trim();
-        if (silenceTimerRef.current) {
-          clearTimeout(silenceTimerRef.current);
+        if (!holdToTalkRef.current) {
+          if (silenceTimerRef.current) {
+            clearTimeout(silenceTimerRef.current);
+          }
+          silenceTimerRef.current = setTimeout(() => {
+            void finalizeTurnRef.current();
+          }, 1200);
         }
-        silenceTimerRef.current = setTimeout(() => {
-          void finalizeTurnRef.current();
-        }, 1200);
       }
       setInterimTranscript(interimText.trim());
     };
@@ -329,7 +365,7 @@ export default function MockInterviewClient({ meta }: Props) {
     recognition.onerror = (event) => {
       if (event.error === "not-allowed" || event.error === "service-not-allowed") {
         setSpeechError("Microphone blocked. Click the lock icon → allow microphone → reload.");
-      } else {
+      } else if (event.error !== "aborted") {
         setSpeechError(`Speech recognition error: ${event.error}`);
       }
       setIsTranscribing(false);
@@ -338,24 +374,51 @@ export default function MockInterviewClient({ meta }: Props) {
     recognition.onend = () => {
       setIsTranscribing(false);
       setInterimTranscript("");
+      if (holdToTalkRef.current && currentUserTurnRef.current.trim()) {
+        void finalizeTurnRef.current();
+      } else if (
+        !holdToTalkRef.current &&
+        statusRef.current === "listening"
+      ) {
+        // Chrome kills continuous recognition periodically — auto-restart
+        setTimeout(() => startTranscriptionRef.current(), 300);
+      }
     };
 
     recognitionRef.current = recognition;
     recognition.start();
     setIsTranscribing(true);
     setStatus("listening");
-  }, [isTranscribing, speechSupported, status, stopSpeaking]);
+  }, [isTranscribing, speechSupported, stopSpeaking]);
 
   useEffect(() => {
     startTranscriptionRef.current = startTranscription;
   }, [startTranscription]);
 
-  const stopTranscription = useCallback(() => {
-    recognitionRef.current?.stop();
-    recognitionRef.current = null;
-    setIsTranscribing(false);
-    setInterimTranscript("");
-  }, []);
+  const advanceToQuestion = useCallback(
+    async (index: number) => {
+      const nextItem = plan[index];
+      if (!nextItem) {
+        setStatus("idle");
+        return;
+      }
+      setCurrentIndex(index);
+      // Stop listening before TTS to prevent microphone picking up speaker audio
+      stopTranscription();
+      const updatedConversation: Message[] = [
+        ...conversationRef.current,
+        { role: "interviewer", content: nextItem.interviewerQuestion },
+      ];
+      updateConversation(updatedConversation);
+      // speak() now resolves when audio playback finishes
+      await speak(nextItem.interviewerQuestion);
+      // Only start recognition after audio ends and if not paused/idle
+      if (statusRef.current !== "paused" && statusRef.current !== "idle") {
+        startTranscriptionRef.current();
+      }
+    },
+    [plan, speak, stopTranscription, updateConversation]
+  );
 
   const startInterview = useCallback(async () => {
     setApiError(null);
@@ -379,6 +442,7 @@ export default function MockInterviewClient({ meta }: Props) {
           questionTypes: settings.questionTypes,
           numQuestions,
           randomize: settings.randomize,
+          interviewMode,
         }),
       });
       const text = await res.text();
@@ -410,19 +474,25 @@ export default function MockInterviewClient({ meta }: Props) {
       setCurrentIndex(0);
       const firstQuestion = response.plan[0];
       updateConversation([{ role: "interviewer", content: firstQuestion.interviewerQuestion }]);
+      // speak waits until audio finishes, then start listening
       await speak(firstQuestion.interviewerQuestion);
-      startTranscriptionRef.current();
+      if (statusRef.current !== "paused" && statusRef.current !== "idle") {
+        startTranscriptionRef.current();
+      }
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "Failed to start interview.");
       setStatus("idle");
     }
-  }, [numQuestions, settings, speak, updateConversation]);
+  }, [interviewMode, numQuestions, settings, speak, updateConversation]);
 
   const finalizeTurn = useCallback(async () => {
     if (inFlightRef.current) return;
     const lastUserTurn = currentUserTurnRef.current.trim();
     if (!lastUserTurn) return;
     currentUserTurnRef.current = "";
+
+    // Stop recognition while processing to avoid stale audio capture
+    stopTranscription();
 
     const updatedConversation: Message[] = [
       ...conversationRef.current,
@@ -444,6 +514,7 @@ export default function MockInterviewClient({ meta }: Props) {
           userAnswer: lastUserTurn,
           firm: settings.firm,
           stage: settings.stage,
+          interviewMode,
         }),
       });
       const text = await res.text();
@@ -465,7 +536,7 @@ export default function MockInterviewClient({ meta }: Props) {
         setStatus("idle");
         return;
       }
-      if (status === "paused") {
+      if (statusRef.current === "paused") {
         setPendingNext(true);
         return;
       }
@@ -476,7 +547,7 @@ export default function MockInterviewClient({ meta }: Props) {
     } finally {
       inFlightRef.current = false;
     }
-  }, [advanceToQuestion, currentIndex, plan, settings, status, updateConversation]);
+  }, [advanceToQuestion, currentIndex, interviewMode, plan, settings, stopTranscription, updateConversation]);
 
   useEffect(() => {
     finalizeTurnRef.current = finalizeTurn;
@@ -501,9 +572,6 @@ export default function MockInterviewClient({ meta }: Props) {
   const endInterview = useCallback(async () => {
     stopTranscription();
     stopSpeaking();
-    if (silenceTimerRef.current) {
-      clearTimeout(silenceTimerRef.current);
-    }
 
     const lastUserTurn = currentUserTurnRef.current.trim();
     if (lastUserTurn) {
@@ -525,6 +593,7 @@ export default function MockInterviewClient({ meta }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           settings,
+          interviewMode,
           askedQuestionIds: plan.map((item) => String(item.qIndex)),
           conversation: conversationRef.current.slice(-8),
         }),
@@ -544,7 +613,17 @@ export default function MockInterviewClient({ meta }: Props) {
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "Failed to end interview.");
     }
-  }, [plan, settings, stopSpeaking, stopTranscription, updateConversation]);
+  }, [interviewMode, plan, settings, stopSpeaking, stopTranscription, updateConversation]);
+
+  const handleHoldStart = () => {
+    if (!holdToTalk) return;
+    startTranscriptionRef.current();
+  };
+
+  const handleHoldEnd = () => {
+    if (!holdToTalk) return;
+    stopTranscription();
+  };
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10">
@@ -565,6 +644,23 @@ export default function MockInterviewClient({ meta }: Props) {
               </div>
 
               <div className="mt-6 grid gap-4 md:grid-cols-2">
+                <Select
+                  label="Interview mode"
+                  value={interviewMode}
+                  options={interviewModeOptions.map((o) => ({ value: o.value, label: o.label }))}
+                  onChange={(value) => setInterviewMode(value as InterviewMode)}
+                  className="md:col-span-2"
+                />
+                {modeConfig.description ? (
+                  <div className="md:col-span-2 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-xs text-blue-800">
+                    {modeConfig.description}
+                    {modeConfig.pressureLevel !== "low" ? (
+                      <span className="ml-2 font-semibold">
+                        Pressure: {modeConfig.pressureLevel}
+                      </span>
+                    ) : null}
+                  </div>
+                ) : null}
                 <Select
                   label="Firm"
                   value={settings.firm}
@@ -592,6 +688,7 @@ export default function MockInterviewClient({ meta }: Props) {
                     { value: "6", label: "6" },
                     { value: "8", label: "8" },
                     { value: "10", label: "10" },
+                    { value: "12", label: "12" },
                   ]}
                   onChange={(value) => setNumQuestions(Number.parseInt(value, 10))}
                 />
@@ -673,7 +770,9 @@ export default function MockInterviewClient({ meta }: Props) {
                   </div>
                   <div className="mt-1 text-lg font-semibold text-slate-900">Live interview loop</div>
                 </div>
-                <Badge tone="neutral">{status.replace(/_/g, " ")}</Badge>
+                <Badge tone={status === "speaking" ? "warning" : "neutral"}>
+                  {status.replace(/_/g, " ")}
+                </Badge>
               </div>
 
               <div className="mt-4 flex flex-wrap gap-3">
@@ -696,6 +795,28 @@ export default function MockInterviewClient({ meta }: Props) {
                 </Button>
               </div>
 
+              <div className="mt-4 flex items-center gap-3 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={holdToTalk}
+                  onChange={(e) => setHoldToTalk(e.target.checked)}
+                />
+                <span>Hold to talk</span>
+                {holdToTalk ? (
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    onMouseDown={handleHoldStart}
+                    onMouseUp={handleHoldEnd}
+                    onMouseLeave={handleHoldEnd}
+                    onTouchStart={handleHoldStart}
+                    onTouchEnd={handleHoldEnd}
+                  >
+                    Hold to Talk
+                  </Button>
+                ) : null}
+              </div>
+
               {audioNeedsClick ? (
                 <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
                   Audio playback blocked.{" "}
@@ -706,7 +827,7 @@ export default function MockInterviewClient({ meta }: Props) {
               ) : null}
               {!speechSupported ? (
                 <div className="mt-3 text-sm text-amber-700">
-                  Speech recognition not supported—use Chrome or enable fallback.
+                  Speech recognition not supported — use Chrome or enable fallback.
                 </div>
               ) : null}
               {speechError ? (
@@ -836,7 +957,7 @@ export default function MockInterviewClient({ meta }: Props) {
                   variant="secondary"
                   type="button"
                   className="mt-4"
-                  onClick={() => speak(finalSummary)}
+                  onClick={() => void speak(finalSummary)}
                 >
                   Speak summary
                 </Button>

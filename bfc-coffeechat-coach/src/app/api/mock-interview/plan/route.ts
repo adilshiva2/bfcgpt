@@ -7,6 +7,8 @@ import { enforceUserRateLimit } from "@/lib/rate-limit";
 import { loadQuestionBank } from "@/lib/question-bank";
 import {
   capText,
+  type InterviewMode,
+  interviewModeConfigs,
   questionTypeOptions,
   settingsSchema,
   questionTypeSchema,
@@ -22,6 +24,7 @@ const planSchema = z.object({
   questionTypes: z.array(z.union([questionTypeSchema, z.literal("all")])).default([]),
   numQuestions: z.number().min(1).max(12).default(6),
   randomize: z.boolean().optional(),
+  interviewMode: z.string().optional(),
 });
 
 const planItemSchema = z.object({
@@ -176,6 +179,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing OPENAI_API_KEY", requestId }, { status: 500 });
   }
 
+  const mode = (body.interviewMode || "standard") as InterviewMode;
+  const modeConfig = interviewModeConfigs[mode] || interviewModeConfigs.standard;
+  const modeContext = modeConfig.promptContext
+    ? `\nInterview context:\n${modeConfig.promptContext}\n`
+    : "";
+
   const prompt = `You are creating a mock interview plan. Use the seed questions below as grounding.
 Create a plan of ${targetCount} questions. Questions should be similar or rephrased, not invented.
 Return strict JSON with the shape: { "plan": [ ... ] }.
@@ -189,7 +198,8 @@ Each plan item must include:
 
 Firm: ${body.firm}
 Stage: ${body.stage}
-
+Interview mode: ${modeConfig.label}
+${modeContext}
 Seed questions:
 ${seedList}`;
 
