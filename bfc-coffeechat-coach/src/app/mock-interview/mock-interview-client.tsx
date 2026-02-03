@@ -840,6 +840,46 @@ export default function MockInterviewClient({ meta }: Props) {
                 ) : null}
               </div>
 
+              {status === "listening" && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mt-4 flex items-center gap-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3"
+                >
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
+                  </span>
+                  <span className="text-sm font-semibold text-emerald-800">Your turn — speak now</span>
+                </motion.div>
+              )}
+              {(status === "speaking" || status === "speaking_intro") && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mt-4 flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3"
+                >
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-amber-500" />
+                  </span>
+                  <span className="text-sm font-semibold text-amber-800">Interviewer is speaking...</span>
+                </motion.div>
+              )}
+              {status === "thinking" && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mt-4 flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 p-3"
+                >
+                  <span className="relative flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-blue-500" />
+                  </span>
+                  <span className="text-sm font-semibold text-blue-800">Grading your answer...</span>
+                </motion.div>
+              )}
+
               {audioNeedsClick ? (
                 <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
                   Audio playback blocked.{" "}
