@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing ELEVENLABS_VOICE_ID", requestId }, { status: 500 });
   }
 
-  const modelId = process.env.ELEVENLABS_MODEL_ID || "eleven_monolingual_v1";
+  const modelId = process.env.ELEVENLABS_MODEL_ID || "eleven_turbo_v2";
 
   try {
     const resp = await fetch(

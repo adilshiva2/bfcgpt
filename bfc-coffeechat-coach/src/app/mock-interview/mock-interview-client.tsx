@@ -356,7 +356,7 @@ export default function MockInterviewClient({ meta }: Props) {
           }
           silenceTimerRef.current = setTimeout(() => {
             void finalizeTurnRef.current();
-          }, 1200);
+          }, 900);
         }
       }
       setInterimTranscript(interimText.trim());

@@ -8,7 +8,7 @@ const LIMIT = 30;
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_TOTAL_CHARS = 4000;
 const MAX_MESSAGE_CHARS = 1000;
-const MODEL = "gpt-5-mini";
+const MODEL = "gpt-4o-mini";
 
 type ScenarioPayload = {
   track: string;
@@ -41,7 +41,7 @@ type InterviewerRequest = {
 function buildSystemPrompt(
   scenario: ScenarioPayload,
   hasUserMessages: boolean,
-  extraInstruction?: string
+  lastInterviewerText?: string
 ) {
   const phase = scenario.phase || "opening";
   const persona = scenario.persona;
@@ -63,20 +63,23 @@ function buildSystemPrompt(
     ? "The user has already spoken. Do NOT reintroduce yourself; respond naturally to their message."
     : "Only provide the full intro/greeting when there are no user messages yet.";
 
+  const dedupLine = lastInterviewerText
+    ? `\nYour last response was: "${lastInterviewerText}"\nDo NOT repeat or closely rephrase it. Ask a different follow-up.`
+    : "";
+
   return `You are a realistic finance coffee chat interviewer.
 - Ask exactly 1 question at a time.
 - Keep a warm, conversational tone (not an interview).
 - Adapt follow-ups to the user's answers.
 - Politely challenge vague answers.
 - The goal is earning a referral naturally; if asked too early, redirect and revisit later.
-- Keep each response <= 280 characters for TTS.
+- CRITICAL: Keep each response <= 280 characters. Be concise.
 - Include brief acknowledgments before the next question.
 
 ${personaLine}
 
 Phase guidance: ${phaseGuidance[phase] || phaseGuidance.opening}
-${introGuard}
-${extraInstruction ? `\n${extraInstruction}` : ""}
+${introGuard}${dedupLine}
 
 Scenario:
 - Track: ${scenario.track}
@@ -86,6 +89,17 @@ Scenario:
 - Difficulty: ${scenario.difficulty}
 - Goal: ${scenario.goal}
 `;
+}
+
+function truncateAtSentence(text: string, maxLen: number): string {
+  if (text.length <= maxLen) return text;
+  const sub = text.slice(0, maxLen);
+  const lastPeriod = sub.lastIndexOf(".");
+  const lastQuestion = sub.lastIndexOf("?");
+  const lastExcl = sub.lastIndexOf("!");
+  const cutoff = Math.max(lastPeriod, lastQuestion, lastExcl);
+  if (cutoff > maxLen * 0.4) return text.slice(0, cutoff + 1).trim();
+  return `${sub.slice(0, maxLen - 3).trimEnd()}...`;
 }
 
 export async function POST(req: Request) {
@@ -156,37 +170,44 @@ export async function POST(req: Request) {
 
   const hasUserMessages = messages.some((msg) => msg.role === "user");
 
-  const buildPayload = (extraInstruction?: string) => ({
+  const payload = {
     model: MODEL,
     input: [
-      { role: "system", content: buildSystemPrompt(scenario, hasUserMessages, extraInstruction) },
+      {
+        role: "system",
+        content: buildSystemPrompt(
+          scenario,
+          hasUserMessages,
+          lastInterviewerText || undefined
+        ),
+      },
       ...messages.map((msg) => ({
         role: msg.role === "interviewer" ? "assistant" : "user",
         content: msg.content,
       })),
     ],
-  });
+  };
 
   try {
-    const firstResp = await fetch("https://api.openai.com/v1/responses", {
+    const resp = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(buildPayload()),
+      body: JSON.stringify(payload),
     });
 
-    if (!firstResp.ok) {
-      const errorText = await firstResp.text();
+    if (!resp.ok) {
+      const errorText = await resp.text();
       return NextResponse.json(
-        { error: errorText || firstResp.statusText, requestId },
+        { error: errorText || resp.statusText, requestId },
         { status: 502 }
       );
     }
 
-    const firstData = await firstResp.json();
-    const outputText = extractOutputText(firstData);
+    const data = await resp.json();
+    const outputText = extractOutputText(data);
 
     if (!outputText) {
       return NextResponse.json(
@@ -194,36 +215,14 @@ export async function POST(req: Request) {
           error: "Empty model output",
           requestId,
           ...(process.env.NEXT_PUBLIC_DEBUG_INTERVIEW === "true"
-            ? buildDebugMeta(firstData, MODEL)
+            ? buildDebugMeta(data, MODEL)
             : {}),
         },
         { status: 502 }
       );
     }
 
-    let interviewerText = outputText.trim();
-    if (lastInterviewerText && isTooSimilar(interviewerText, lastInterviewerText)) {
-      const retryResp = await fetch("https://api.openai.com/v1/responses", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(buildPayload("Do NOT repeat yourself; ask a different follow-up.")),
-      });
-      if (retryResp.ok) {
-        const retryData = await retryResp.json();
-        const retryText = extractOutputText(retryData);
-        if (retryText) {
-          interviewerText = retryText.trim();
-        }
-      }
-    }
-
-    if (interviewerText.length > 280) {
-      const shortened = await tryShorten(apiKey, interviewerText);
-      interviewerText = shortened || `${interviewerText.slice(0, 277)}...`;
-    }
+    const interviewerText = truncateAtSentence(outputText.trim(), 280);
     return NextResponse.json({ interviewerText, requestId });
   } catch {
     return NextResponse.json({ error: "Upstream request failed", requestId }, { status: 502 });
@@ -264,53 +263,3 @@ function buildDebugMeta(data: unknown, modelUsed: string) {
   };
 }
 
-function isTooSimilar(a: string, b: string) {
-  const tokensA = tokenize(a);
-  const tokensB = tokenize(b);
-  if (tokensA.length === 0 || tokensB.length === 0) return false;
-  const setA = new Set(tokensA);
-  const setB = new Set(tokensB);
-  let intersect = 0;
-  for (const token of setA) {
-    if (setB.has(token)) intersect += 1;
-  }
-  const union = new Set([...setA, ...setB]).size;
-  const score = union === 0 ? 0 : intersect / union;
-  return score >= 0.75;
-}
-
-function tokenize(text: string) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .split(/\s+/)
-    .filter(Boolean);
-}
-
-async function tryShorten(apiKey: string, text: string) {
-  try {
-    const resp = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        input: [
-          {
-            role: "system",
-            content: "Shorten the text to <= 280 characters. Preserve intent and keep it conversational.",
-          },
-          { role: "user", content: text },
-        ],
-      }),
-    });
-    if (!resp.ok) return "";
-    const data = await resp.json();
-    const outputText = extractOutputText(data);
-    return outputText?.trim().slice(0, 280) || "";
-  } catch {
-    return "";
-  }
-}

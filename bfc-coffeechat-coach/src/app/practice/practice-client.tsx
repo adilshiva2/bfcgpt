@@ -589,7 +589,7 @@ export default function PracticeClient() {
           }
           silenceTimerRef.current = setTimeout(() => {
             void finalizeTurn();
-          }, 1200);
+          }, 900);
         }
       }
       setTranscriptInterim(interimText.trim());
@@ -664,7 +664,7 @@ export default function PracticeClient() {
       if (!hasUserSpokenRef.current) {
         void callInterviewer([{ role: "user", content: "Begin the coffee chat." }]);
       }
-    }, 1500);
+    }, 300);
   }, [callInterviewer, holdToTalk, startTranscription]);
 
   const endInterview = useCallback(async () => {
