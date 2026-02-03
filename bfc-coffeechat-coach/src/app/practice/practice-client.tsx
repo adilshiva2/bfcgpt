@@ -711,8 +711,55 @@ export default function PracticeClient() {
     stopTranscription();
   };
 
+  const phaseList: { key: Phase; label: string }[] = [
+    { key: "opening", label: "Opening" },
+    { key: "user_intro", label: "Intro" },
+    { key: "exploration", label: "Explore" },
+    { key: "fit", label: "Fit" },
+    { key: "user_questions", label: "Q&A" },
+    { key: "close", label: "Close" },
+  ];
+
+  const activePhaseIndex = phaseList.findIndex((p) => p.key === phase);
+
+  const stateStyles: Record<InterviewState, { dot: string; pulse: boolean; badgeTone: "neutral" | "success" | "warning" }> = {
+    idle: { dot: "bg-slate-300", pulse: false, badgeTone: "neutral" },
+    listening: { dot: "bg-emerald-400", pulse: true, badgeTone: "success" },
+    thinking: { dot: "bg-blue-400", pulse: true, badgeTone: "neutral" },
+    speaking: { dot: "bg-amber-400", pulse: true, badgeTone: "warning" },
+    error: { dot: "bg-red-400", pulse: false, badgeTone: "neutral" },
+  };
+
+  const currentStateStyle = stateStyles[paused ? "idle" : interviewState];
+
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-10">
+      {interviewState !== "idle" && (
+        <div className="mb-6 flex items-center gap-1 overflow-x-auto">
+          {phaseList.map((p, i) => (
+            <React.Fragment key={p.key}>
+              <div
+                className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold transition-all ${
+                  i === activePhaseIndex
+                    ? "bg-slate-900 text-white shadow-sm"
+                    : i < activePhaseIndex
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-slate-100 text-slate-400"
+                }`}
+              >
+                {p.label}
+              </div>
+              {i < phaseList.length - 1 && (
+                <div
+                  className={`h-px w-4 flex-shrink-0 ${
+                    i < activePhaseIndex ? "bg-emerald-300" : "bg-slate-200"
+                  }`}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="flex flex-col gap-6">
           <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
@@ -803,12 +850,24 @@ export default function PracticeClient() {
                     Interview Controls
                   </div>
                   <div className="mt-1 text-lg font-semibold text-slate-900">
-                    Coffee chat loop (TTS)
+                    Coffee Chat
                   </div>
                 </div>
-                <Badge tone={interviewState === "speaking" ? "warning" : "neutral"}>
-                  {paused ? "paused" : interviewState}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-3 w-3">
+                    {currentStateStyle.pulse && (
+                      <span
+                        className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${currentStateStyle.dot}`}
+                      />
+                    )}
+                    <span
+                      className={`relative inline-flex h-3 w-3 rounded-full ${currentStateStyle.dot}`}
+                    />
+                  </span>
+                  <Badge tone={currentStateStyle.badgeTone}>
+                    {paused ? "Paused" : interviewState === "idle" ? "Ready" : interviewState.charAt(0).toUpperCase() + interviewState.slice(1)}
+                  </Badge>
+                </div>
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
                 <Button onClick={startInterview} type="button">
@@ -887,21 +946,37 @@ export default function PracticeClient() {
           <motion.div whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
             <Card className="p-6">
               <div className="text-base font-semibold text-slate-900">Conversation</div>
-              <div className="mt-4 space-y-4">
+              <div className="mt-4 space-y-3">
                 {messages.length === 0 ? (
-                  <div className="text-sm text-slate-600">No messages yet.</div>
+                  <div className="py-8 text-center text-sm text-slate-400">
+                    Start the interview to begin your coffee chat.
+                  </div>
                 ) : (
                   messages.map((msg, idx) => (
-                    <div key={idx} className="text-sm">
-                      <div className="font-semibold text-slate-700">
-                        {msg.role === "interviewer" ? "Interviewer" : "You"}
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                    >
+                      <div
+                        className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
+                          msg.role === "user"
+                            ? "bg-slate-900 text-white"
+                            : "border border-slate-200 bg-slate-50 text-slate-900"
+                        }`}
+                      >
+                        {msg.content}
                       </div>
-                      <div className="mt-1 whitespace-pre-wrap text-slate-900">{msg.content}</div>
-                    </div>
+                    </motion.div>
                   ))
                 )}
                 {transcriptInterim ? (
-                  <div className="text-sm text-slate-500">You (live): {transcriptInterim}</div>
+                  <div className="flex justify-end">
+                    <div className="max-w-[85%] rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-400">
+                      {transcriptInterim}
+                    </div>
+                  </div>
                 ) : null}
               </div>
             </Card>
@@ -927,19 +1002,41 @@ export default function PracticeClient() {
                   </div>
                 ) : null}
                 {liveCoach ? (
-                  <>
-                    <div>Rapport: <span className="font-semibold text-slate-900">{liveCoach.tone}</span></div>
-                    <div>Clarity: <span className="font-semibold text-slate-900">{liveCoach.clarity}</span></div>
-                    <div>Structure: <span className="font-semibold text-slate-900">{liveCoach.structure}</span></div>
-                    <div>Referral readiness: <span className="font-semibold text-slate-900">{liveCoach.referral}</span></div>
-                    <div className="mt-2 space-y-1">
+                  <div className="space-y-3">
+                    {[
+                      { label: "Rapport", value: liveCoach.tone },
+                      { label: "Clarity", value: liveCoach.clarity },
+                      { label: "Structure", value: liveCoach.structure },
+                      { label: "Referral", value: liveCoach.referral },
+                    ].map((metric) => (
+                      <div key={metric.label} className="flex items-center justify-between">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{metric.label}</span>
+                        <Badge
+                          tone={
+                            metric.value === "warm" || metric.value === "clear" || metric.value === "has story" || metric.value === "ready"
+                              ? "success"
+                              : metric.value === "abrupt" || metric.value === "rambling" || metric.value === "too early"
+                                ? "warning"
+                                : "neutral"
+                          }
+                        >
+                          {metric.value}
+                        </Badge>
+                      </div>
+                    ))}
+                    <div className="space-y-1.5 border-t border-slate-100 pt-3">
                       {liveCoach.bullets.map((bullet, idx) => (
-                        <div key={idx}>• {bullet}</div>
+                        <div key={idx} className="flex items-start gap-2 text-xs text-slate-600">
+                          <span className="mt-0.5 block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-slate-400" />
+                          {bullet}
+                        </div>
                       ))}
                     </div>
-                  </>
+                  </div>
                 ) : (
-                  <div>Live coaching updates after each response.</div>
+                  <div className="py-4 text-center text-sm text-slate-400">
+                    Live coaching updates after each response.
+                  </div>
                 )}
               </div>
             </Card>
@@ -957,7 +1054,9 @@ export default function PracticeClient() {
                 <Badge tone="neutral">After each answer</Badge>
               </div>
               <div className="mt-4 min-h-[160px] whitespace-pre-wrap text-sm text-slate-800">
-                {turnReview || "Turn review appears after each answer."}
+                {turnReview || (
+                  <span className="block py-4 text-center text-slate-400">Turn review appears after each answer.</span>
+                )}
               </div>
             </Card>
           </motion.div>
@@ -974,7 +1073,9 @@ export default function PracticeClient() {
                 <Badge tone="neutral">End of call</Badge>
               </div>
               <div className="mt-4 min-h-[200px] whitespace-pre-wrap text-sm text-slate-800">
-                {finalSummary || "Final summary appears after ending the interview."}
+                {finalSummary || (
+                  <span className="block py-6 text-center text-slate-400">Final summary appears after ending the interview.</span>
+                )}
               </div>
               {debugEnabled && showDebug ? (
                 <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">

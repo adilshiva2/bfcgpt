@@ -16,7 +16,7 @@ import {
 
 const LIMIT = 20;
 const WINDOW_MS = 10 * 60 * 1000;
-const MODEL = "gpt-5-mini";
+const MODEL = "gpt-4o-mini";
 
 const planSchema = z.object({
   firm: z.string(),

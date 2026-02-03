@@ -12,7 +12,7 @@ import {
 
 const LIMIT = 90;
 const WINDOW_MS = 10 * 60 * 1000;
-const MODEL = "gpt-5-mini";
+const MODEL = "gpt-4o-mini";
 const MAX_ANSWER_CHARS = 4000;
 
 const planItemSchema = z.object({

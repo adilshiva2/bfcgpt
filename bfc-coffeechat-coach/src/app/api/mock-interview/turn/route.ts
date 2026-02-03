@@ -18,7 +18,7 @@ import {
 
 const LIMIT = 60;
 const WINDOW_MS = 10 * 60 * 1000;
-const MODEL = "gpt-5-mini";
+const MODEL = "gpt-4o-mini";
 const MAX_TURN_CHARS = 4000;
 const MAX_HISTORY_CHARS = 8000;
 
