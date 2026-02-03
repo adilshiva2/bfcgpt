@@ -4,7 +4,7 @@ import { authOptions } from "@/auth";
 import { isAllowedEmail } from "@/lib/auth-allowlist";
 import { enforceUserRateLimit } from "@/lib/rate-limit";
 
-const MODEL = "gpt-5-mini";
+const MODEL = "gpt-4o-mini";
 const LIMIT = 30;
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_TURN_CHARS = 2000;
