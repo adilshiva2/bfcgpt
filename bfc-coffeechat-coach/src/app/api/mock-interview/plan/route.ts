@@ -61,14 +61,16 @@ function extractOutputText(data: unknown) {
 
 function parseJsonFromText(text: string) {
   if (!text) return null;
+  // Strip markdown code fences if present
+  const stripped = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
   try {
-    return JSON.parse(text);
+    return JSON.parse(stripped);
   } catch {
-    const start = text.indexOf("{");
-    const end = text.lastIndexOf("}");
+    const start = stripped.indexOf("{");
+    const end = stripped.lastIndexOf("}");
     if (start !== -1 && end !== -1 && end > start) {
       try {
-        return JSON.parse(text.slice(start, end + 1));
+        return JSON.parse(stripped.slice(start, end + 1));
       } catch {
         return null;
       }
@@ -220,6 +222,7 @@ ${seedList}`;
           },
           { role: "user", content: prompt },
         ],
+        text: { format: { type: "json_object" } },
       }),
     });
 
