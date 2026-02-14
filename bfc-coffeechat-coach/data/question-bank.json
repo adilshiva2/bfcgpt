@@ -1,16 +1,5 @@
 [
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "1. This document only works if we trust one another and are as transparent as possible! If we start keeping stuff from one",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-2",
     "firm": "Other",
     "group": "unknown",
@@ -18,28 +7,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "another, then there's no point of this document",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "2. Give to receive but do not circulate outside of BFC",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "3. Don't post unnecessary comments",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -77,28 +44,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "centerview-1",
-    "firm": "Centerview",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "evercore-1",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "evercore-2",
     "firm": "Evercore",
     "group": "unknown",
@@ -117,17 +62,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "distressed exchange at a discount and raising in unrestricted subsidiary, how do coerce creditors to",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "particiapte?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -194,17 +128,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "raising 300M facility, would rather have 3% cash interest + 10% PIK or 8% cash interest",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-1",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -297,17 +220,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "j-p-morgan-1",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round (Hirevue) \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -374,17 +286,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "aspirations?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -436,17 +337,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "can take to realize value more quickly after an acquisition?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kenway \tSF Tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -539,39 +429,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-17",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Justin \tSF Tech \tNo \tsame as ryan",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-18",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Katie \tSF HC \tNo \tSame as Daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-19",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Beau \tSF M&A \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-20",
     "firm": "Other",
     "group": "unknown",
@@ -590,17 +447,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "You are presenting to a client and there is a incorrect number, your teammate says to ignore it, what do",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-22",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "you do?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -638,28 +484,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-26",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Evelyn \tSF Tech \tno \tsame as daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-27",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Arav \tSF Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-28",
     "firm": "Other",
     "group": "unknown",
@@ -678,17 +502,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "affected during covid/other financial disasters",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-30",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "pearl \tSF tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -781,17 +594,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-39",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Bryce \tSF Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-40",
     "firm": "Other",
     "group": "unknown",
@@ -821,28 +623,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "4. deal that used equity",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-43",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Allan \tSF Tech \tno \tsame as Kenway",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "morgan-stanley-1",
-    "firm": "Morgan Stanley",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \tScreening \tHirevue \t1st Round \t2nd Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -979,127 +759,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-11",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ryan \tMenlo Tech \tNo \tSame as Daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-12",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kenway \tSF FSG \tNo \tSame as Daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-13",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Brandon \tMenlo Tech \tNo \tSame as Daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-14",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Bryce \tFSG \tno \tSame as Daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-15",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Vanessa \tSF Industrials \tNo \tSame as Daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Allan \tMenlo Tech \tno \tSame as Daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-17",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Katie \tSF HC \tno \tSame as Daniel",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-18",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-2",
     "firm": "Other",
     "group": "unknown",
@@ -1199,17 +858,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-9",
     "firm": "Other",
     "group": "unknown",
@@ -1265,17 +913,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-14",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "trading?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-15",
     "firm": "Other",
     "group": "unknown",
@@ -1316,160 +953,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Piper Sandler / DBO",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-19",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tCoffee Chat \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -1558,17 +1041,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "what are you looking for in a summer experience",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "qatalyst-1",
-    "firm": "Qatalyst",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -1668,17 +1140,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "7. Potential acquisition of 2 companies - can't be what u wrote on ur app.",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "qatalyst-11",
-    "firm": "Qatalyst",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tsf \tyes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -2013,28 +1474,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "evercore-3",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "evercore-4",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Mateo \tMP tech \tyuh",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "evercore-5",
     "firm": "Evercore",
     "group": "unknown",
@@ -2207,17 +1646,6 @@
     "questionType": "lbo",
     "difficulty": 3,
     "prompt": "Regular paper LBO but cooked numbers i lowk forgot",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tMP tech \tyes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -2607,17 +2035,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-15",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "at?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-16",
     "firm": "Other",
     "group": "unknown",
@@ -2691,28 +2108,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Why healthcare investment banking?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-22",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why Evercore?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-23",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why bay area?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -3069,17 +2464,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-56",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "share $ value?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-57",
     "firm": "Other",
     "group": "unknown",
@@ -3087,17 +2471,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Company A is well established FDA approved drug, Company B is Phase II. Which",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-58",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "one has debt?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -3344,17 +2717,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "goldman-sachs-2",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round - Hirevue \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "goldman-sachs-3",
     "firm": "Goldman Sachs",
     "group": "unknown",
@@ -3498,17 +2860,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "goldman-sachs-16",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "available?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "goldman-sachs-17",
     "firm": "Goldman Sachs",
     "group": "unknown",
@@ -3542,17 +2893,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "goldman-sachs-20",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Karan \tIB/NY \tno \tSame as Adil",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "goldman-sachs-21",
     "firm": "Goldman Sachs",
     "group": "unknown",
@@ -3575,17 +2915,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "goldman-sachs-23",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Hibah \tIB & AWM \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "goldman-sachs-24",
     "firm": "Goldman Sachs",
     "group": "unknown",
@@ -3604,61 +2933,6 @@
     "questionType": "market",
     "difficulty": 1,
     "prompt": "Why Asset Management? What divisions are you interested in? Describe a recent market",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-26",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tIb SF \tsame as kris",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-27",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Mateo Cervantes sf/ny \tnah \tsame as kris",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-28",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "ethan \tib/sf \tno \tSame as Kris",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-2",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round (Hirevue) \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-3",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "nav \tSF Tech \tnah",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -3692,17 +2966,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "2 ways to calculate TV + explain each",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-7",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement Liu \tSF Tech \tnope",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -3982,17 +3245,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-22",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Emily \tSF HC \tNo \tSame as Mateo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -4022,17 +3274,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "3. synergies and examples",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Hibah \tSF/NY \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -4077,17 +3318,6 @@
     "questionType": "lbo",
     "difficulty": 3,
     "prompt": "3. key line items of an LBO to get free cash flow",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-9",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tsf tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -4400,17 +3630,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Karan \tSF Tech / NY \tno \tSame as Hibah",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -4565,28 +3784,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \tAdvisory Prep Program \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement Liu \tTech/SF \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -4693,17 +3890,6 @@
     "questionType": "valuation",
     "difficulty": 2,
     "prompt": "simple techs from the 400q guide like accounting, dcf, valuation and other stuff like that",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tTech/SF \tYes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -5412,17 +4598,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-12",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "pranav \tsf tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-17",
     "firm": "Other",
     "group": "unknown",
@@ -5518,17 +4693,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "14. Time you were a leader",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-26",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tsf tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -5753,17 +4917,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "morgan-stanley-2",
-    "firm": "Morgan Stanley",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \tHirevue \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -5848,17 +5001,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "about the same vs. today (and why)? 4. Subject that should be taught by schools",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kris \tMS SF \tNo \tSame as Cece",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -5951,17 +5093,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-9",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement Liu \tMS Menlo \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-10",
     "firm": "Other",
     "group": "unknown",
@@ -6024,17 +5155,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "would you rather have 1M now or 100k every year into perpetuity",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-27",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "valuation",
-    "difficulty": 2,
-    "prompt": "name the valuation methodoloties and run through each of them and which one gives highest",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -6193,17 +5313,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-42",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tny/public finance \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-43",
     "firm": "Other",
     "group": "unknown",
@@ -6332,17 +5441,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "questions for her",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-55",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -6596,17 +5694,6 @@
     "questionType": "brainteaser",
     "difficulty": 1,
     "prompt": "brainteasers at the end",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tny global ib \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -6952,17 +6039,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-2",
     "firm": "Other",
     "group": "unknown",
@@ -7047,17 +6123,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "NYC - Sophomore Program",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "market",
-    "difficulty": 1,
-    "prompt": "Adrian \tNYC - Sophomore Global Markets \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -7249,17 +6314,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-11",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Hibah \tTomorrow's Talent - IB Diversity Program \tYes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-12",
     "firm": "Other",
     "group": "unknown",
@@ -7366,17 +6420,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "7. Last Question is Open Response",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -7788,39 +6831,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-11",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Cece \tSF HC \tPranav J:",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tsuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement Liu \tSF TMT \tnah",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -8030,17 +7040,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-9",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "each year?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-10",
     "firm": "Other",
     "group": "unknown",
@@ -8125,17 +7124,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "talking about semis",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tSF TMT \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -8371,17 +7359,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-21",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Adil \tSF TMT \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-22",
     "firm": "Other",
     "group": "unknown",
@@ -8602,17 +7579,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-42",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tsf tmt \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -8701,17 +7667,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-9",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ethan \tsf tmt \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -8763,17 +7718,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "5. EV- would you still subtract cash if a company uses all of its cash for day to day",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "operations?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -8840,17 +7784,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "range for LTV/CAC? What would LTV/CAC over 7x mean conceptually? Drivers of",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-13",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "LTV/CAC?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -9042,17 +7975,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-7",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "7. Why SF?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-8",
     "firm": "Other",
     "group": "unknown",
@@ -9185,17 +8107,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-20",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "in all cases?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-21",
     "firm": "Other",
     "group": "unknown",
@@ -9251,17 +8162,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-2",
     "firm": "Other",
     "group": "unknown",
@@ -9269,28 +8169,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Piper Sandler / DBO",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Cece \tDiversity Program \tyes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -9328,17 +8206,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Sandler?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-9",
     "firm": "Other",
     "group": "unknown",
@@ -9346,17 +8213,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "3. How have you worked to foster an inclusive environment at school and/or in your",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "community?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -9390,17 +8246,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "professionally that you’d like us to take into consideration?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-14",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Emily \tCareer Exploration Program \tYes \tSame as Cece \tmet financeable guy",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -9581,39 +8426,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kylie \tNY/LevFin \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -9676,17 +8488,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "q's for them: chill conversations about his startup, moving to ny",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tNY/Generalist \tya",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -9856,17 +8657,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -9929,17 +8719,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "4. What is one thing you're excited about for this internship and one thing you hope to",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-60",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "learn?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -10219,17 +8998,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-24",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Adil \tSF Private Equity \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-25",
     "firm": "Other",
     "group": "unknown",
@@ -10369,28 +9137,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "some other behavs i forgot but super chill guy",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tCoffee Chat \t1st Round \tRound 2 \tRound 3 \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Mateo \tACOF LA \tnah",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -10934,17 +9680,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-35",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kylie \tACOF LA \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-36",
     "firm": "Other",
     "group": "unknown",
@@ -11011,17 +9746,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-42",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement \tACOF LA \tnah",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -11062,28 +9786,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "questions for him",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \topportunitistic credit la \tnah \tsame as everyone but gave me a math brain teaser at the end",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tACOF LA \tno?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -11216,17 +9918,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "will fill up lol LETS GO MATEO",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Cece \tSpecialty Healthcare \tnah",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -11436,17 +10127,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "There is only 2 rounds for this group lol they are aiming to finish in the next week, super",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSecond Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -12045,17 +10725,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -12364,28 +11033,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Karan \tSF Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -12404,17 +11051,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "2. Recent HW deal",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-108",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "behavioral",
-    "difficulty": 1,
-    "prompt": "4. Strengths?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -12554,39 +11190,6 @@
     "id": "other-2",
     "firm": "Other",
     "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tny/equities \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "why equities?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
     "stage": "unknown",
     "questionType": "market",
     "difficulty": 1,
@@ -12705,17 +11308,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-13",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tny/credit \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-14",
     "firm": "Other",
     "group": "unknown",
@@ -12760,17 +11352,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-18",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "why you?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-19",
     "firm": "Other",
     "group": "unknown",
@@ -12811,28 +11392,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "fly you out to ny for superday, pulled out but probably a few rounds with VP's \t^^",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "valuation",
-    "difficulty": 2,
-    "prompt": "adil \tsf 2025 summer analyst, portfolio valuations \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -13090,17 +11649,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-27",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tsf/tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-28",
     "firm": "Other",
     "group": "unknown",
@@ -13251,17 +11799,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "all technical round",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-42",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Joseph \tSF/ Tech \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -14476,28 +13013,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round (Pymetrics) \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tsf/tac opps \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -14593,39 +13108,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "specific choice.",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-13",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "clement \tsf/tac opps \tno \tsame as adil",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \t4th Round \tFinal Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tny/equities \tno \twonderlic oa - 50 q's 12 min, think you have to get 42+/50",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -15279,17 +13761,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-150",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "stock?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-151",
     "firm": "Other",
     "group": "unknown",
@@ -15363,17 +13834,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "10. what investment book shaped your ideology of",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-158",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "investing?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -15462,17 +13922,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Christa Short or",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -15906,28 +14355,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tsf tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -16137,39 +14564,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "moelis-1",
-    "firm": "Moelis",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "moelis-2",
-    "firm": "Moelis",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "behavioral",
-    "difficulty": 1,
-    "prompt": "Emily \tNY - Leadership Development Program \tYes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-81",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why Moelis?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-82",
     "firm": "Other",
     "group": "unknown",
@@ -16221,17 +14615,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "When would an increase in tax lead to an increase in value?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-87",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Emily \tNY - Life Science \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -16544,17 +14927,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-116",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why Moelis?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-117",
     "firm": "Other",
     "group": "unknown",
@@ -16573,17 +14945,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Why would a large pharma company buy a small biotech company with FDA approval for a",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-119",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "30% premium?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -16753,17 +15114,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-135",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tLA \tno?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-136",
     "firm": "Other",
     "group": "unknown",
@@ -16848,28 +15198,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "lowk have no idea how i got this interview but very intense vibes and culture imo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tHirevue \t1R \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-167",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "2. Why WF?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -17182,28 +15510,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-196",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "3. Why WF?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-197",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "4. Why IB?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-198",
     "firm": "Other",
     "group": "unknown",
@@ -17255,39 +15561,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "4. Skill that you are proactively developing",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-203",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tsf \tno \tsame as clement",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-204",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Joseph \tSF \tNo \tsame as Clement",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-205",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tnew york \tno \tsame as clement",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -17581,17 +15854,6 @@
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tHirevue \tFirst Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
     "stage": "unknown",
     "questionType": "other",
     "difficulty": 1,
@@ -17765,17 +16027,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-74",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement \tSF Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-75",
     "firm": "Other",
     "group": "unknown",
@@ -17871,17 +16122,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "like 15 min for questions",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-11",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tFuture Leaders Summit 1R \tFuture Leaders Summit 2R \tR2 \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -18256,17 +16496,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "services like plumbing)",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tHirevue \tFLP \tFirst Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -18978,17 +17207,6 @@
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tGDL Program \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
     "stage": "unknown",
     "questionType": "other",
     "difficulty": 1,
@@ -19440,17 +17658,6 @@
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tInclusion Program \tSuperday \tFinal Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
     "stage": "unknown",
     "questionType": "other",
     "difficulty": 1,
@@ -19602,39 +17809,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round - Hirevue \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tpe, credit solutions, global solutions \tno \tsame as emily and kylie",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "market",
-    "difficulty": 1,
-    "prompt": "Emily \tPE, credit solutions, capital markets \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -19767,17 +17941,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "meet kkr?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-17",
     "firm": "Other",
     "group": "unknown",
@@ -19905,17 +18068,6 @@
     "stage": "unknown",
     "questionType": "other",
     "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round (Screening Call) \t2nd Round \t3rd Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
     "prompt": "Courtney Schoeb - honestly very chill, talked about LA?",
     "notes": "",
     "source": "interview-question-bank.pdf"
@@ -19932,17 +18084,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "why evergreen?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -19950,17 +18091,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "which sector stands out to you the most?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "recent deal?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -20240,28 +18370,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement \tNY/RX \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-56",
     "firm": "Other",
     "group": "unknown",
@@ -20317,17 +18425,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-61",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement \tSF/ RX & M&A cross Product/Industry \tnah",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-62",
     "firm": "Other",
     "group": "unknown",
@@ -20379,17 +18476,6 @@
     "questionType": "valuation",
     "difficulty": 2,
     "prompt": "3 valuation methodologies and run each of them through",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "name as many vaulation methodologies as you can/when u would use them",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -20779,28 +18865,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "citi-1",
-    "firm": "Citi",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tScreen \tTechnical screening \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "citi-2",
-    "firm": "Citi",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tSF/Tech \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "citi-3",
     "firm": "Citi",
     "group": "unknown",
@@ -20922,17 +18986,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Cece \tSF/Tech & HC \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -20962,17 +19015,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "like second week of Feb)",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-7",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ethan \tSF/Tech \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -21160,17 +19202,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "what it means for smaller players?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-25",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "pranav \tsf tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -21538,17 +19569,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-59",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement \tSF/Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-60",
     "firm": "Other",
     "group": "unknown",
@@ -21622,17 +19642,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "questions for him",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-111",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Joseph \tSF/Tech \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -21732,17 +19741,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "process to get ready",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-149",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Hibah \tSF/Tech \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -21989,17 +19987,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-172",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ishaan \tSF/Tech \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-173",
     "firm": "Other",
     "group": "unknown",
@@ -22062,17 +20049,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "returns and which way is most effective; asked about private tech unicorn and why i think it's",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-179",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "mateo \tSF/Tech \tnah",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -22282,17 +20258,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "20% interest 25% tax 2 m additional shares. is it accreitive/dilutive and by how much",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-125",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tSF/Tech \tnah",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -22517,17 +20482,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-273",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kylie \tSF/Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-274",
     "firm": "Other",
     "group": "unknown",
@@ -22656,28 +20610,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "10x pe multiple for two companies, is it accretive/dilutive",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tDiversity Program R1 \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tSanta Monica/Tech \tYes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -22821,17 +20753,6 @@
     "questionType": "behavioral",
     "difficulty": 1,
     "prompt": "final round is 20 min behavioral",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "centerview-2",
-    "firm": "Centerview",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \t1R \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -23672,17 +21593,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-205",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Emily \tNY/Generalist \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-206",
     "firm": "Other",
     "group": "unknown",
@@ -23943,17 +21853,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "withdrew from the process but interview was fun",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-167",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Emily \tSF/Healthcare \tLSBE?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -24284,17 +22183,6 @@
     "questionType": "behavioral",
     "difficulty": 1,
     "prompt": "behaviorals goof",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-198",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Mateo \tNY/Generalist \tNah",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -25047,28 +22935,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tAssessment \t1st Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kylie \tNY \tNo \tmust submit assessment within 20 mins with shown work",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -25142,28 +23008,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "10 min questions for him",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kylie \tNY (financing) \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -25454,17 +23298,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-29",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tNY (financing) \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-30",
     "firm": "Other",
     "group": "unknown",
@@ -25553,28 +23386,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tLA Business Services \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -25637,28 +23448,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "very conversational",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Karan \tMenlo Tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -25784,17 +23573,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "what is NI?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-11",
     "firm": "Other",
     "group": "unknown",
@@ -25806,17 +23584,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-12",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "equity?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-13",
     "firm": "Other",
     "group": "unknown",
@@ -25824,28 +23591,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Need a penultimate summer before interviewing",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "pjt-partners-1",
-    "firm": "PJT Partners",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tCoffee Chat \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "pjt-partners-2",
-    "firm": "PJT Partners",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tsf tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -25901,17 +23646,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Are you interested in PE?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-162",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why the Bay?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -26077,17 +23811,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "cole dixon - he seemed tired lol",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-178",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "why the bay?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -26378,28 +24101,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDIversity? \tFirst Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tcibm sf tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -26686,17 +24387,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Joseph \tCIBM Houston Oil and Gas \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -26840,28 +24530,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tScreener \t1st Round (In-person) \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Karan \tNYC (Services) \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -26990,28 +24658,6 @@
     "questionType": "lbo",
     "difficulty": 3,
     "prompt": "Bunch of LBO questions",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "lazard-1",
-    "firm": "Lazard",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "lazard-2",
-    "firm": "Lazard",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Shefali \tSF/Tech \tYes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -27397,28 +25043,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "healthcare and tech team are very different culturally",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \t4th Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tny ib \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -27929,28 +25553,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDIversity? \tFirst Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tny ib \tyes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -28024,28 +25626,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "they were kinda hardo and it was weird having all 3 people on call at once",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "kylie \tny aspire \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -28336,28 +25916,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Joseph \tSF Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -28573,28 +26131,6 @@
     "stage": "unknown",
     "questionType": "other",
     "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \t1st Round \t2nd Round \tFinal Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Beau \tNY Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
     "prompt": "Why are you a good fit for this role",
     "notes": "",
     "source": "interview-question-bank.pdf"
@@ -28706,28 +26242,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Group head told me he doesn't like diversity LMFAO",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tHirevue \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Beau \tNY Rx Consulting \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -28930,39 +26444,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tHirevue \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "centerview-5",
-    "firm": "Centerview",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "centerview-6",
-    "firm": "Centerview",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle Stepczyk \tSF/HC \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "centerview-7",
     "firm": "Centerview",
     "group": "unknown",
@@ -29091,17 +26572,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "correlated to moving from one stage to the next, how would u factor in risk-adjustment",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-286",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "now?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -29293,17 +26763,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-304",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tashi Gotlieb \tMenlo/Tech \tMenlo/Tech",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-305",
     "firm": "Other",
     "group": "unknown",
@@ -29388,17 +26847,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "9. Give an example of a company with negative NWC",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-313",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tori Hwang \tML tech \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -29766,28 +27214,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-11",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "ropes?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-12",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Amanda \tSF/HC \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-9",
     "firm": "Other",
     "group": "unknown",
@@ -29898,17 +27324,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-19",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Aidan \tSF/HC \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -29982,28 +27397,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "EV/Revenue multiple of 2x",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "evercore-15",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "evercore-16",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Amanda \tMP HC \tinvited but didn't attend",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -30096,17 +27489,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-9",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "G&A savings?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-10",
     "firm": "Other",
     "group": "unknown",
@@ -30169,17 +27551,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "This guy repeatedly turned his camera on and off during the interview and was very deadpan",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Sahil (April 2025) \tMP Tech \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -30349,28 +27720,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \tAdvisory Prep Program \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle Stepczyk \tSF/HC \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-6",
     "firm": "Other",
     "group": "unknown",
@@ -30521,17 +27870,6 @@
     "questionType": "behavioral",
     "difficulty": 1,
     "prompt": "super chill, half behavioral, half biotech techs, both were super nice",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Amanda \tSF/HC \tyes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -30822,17 +28160,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-337",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tashi Gotlieb \tNYC / Generalist \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-338",
     "firm": "Other",
     "group": "unknown",
@@ -30873,17 +28200,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Why do most M&A deals fail?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-29",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round (Hirevue) \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -30954,17 +28270,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "goldman-sachs-36",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "client?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "goldman-sachs-37",
     "firm": "Goldman Sachs",
     "group": "unknown",
@@ -31027,17 +28332,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "challenging? What obstacles did you face and how did you overcome them? What was the",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-43",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "result?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -31317,28 +28611,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "goldman-sachs-69",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Aidan \tNY \tNo \tSame as Grant",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-70",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Amanda \tSF HC \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "goldman-sachs-71",
     "firm": "Goldman Sachs",
     "group": "unknown",
@@ -31603,39 +28875,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-358",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle \tLA HC \tno \tSame as Amanda",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-12",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round (Hirevue) \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-13",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "David \tSF/HC \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "j-p-morgan-14",
     "firm": "J.P. Morgan",
     "group": "unknown",
@@ -31878,17 +29117,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-380",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tashi Gotlieb \tSF/Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-381",
     "firm": "Other",
     "group": "unknown",
@@ -31995,28 +29223,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "3. What is a time u got feedback and what did u learn",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "morgan-stanley-3",
-    "firm": "Morgan Stanley",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \tHirevue \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "morgan-stanley-4",
-    "firm": "Morgan Stanley",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Amanda \tSF/HC \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -32325,28 +29531,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "8. some hc system questions \tTbh don't think HV matters if you've networked – when I got 1R, they asked me to apply to the listing if I hadn't already lol",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-403",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-404",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tori \tPA/tech \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -32670,17 +29854,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "conveying?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-9",
     "firm": "Other",
     "group": "unknown",
@@ -33000,28 +30173,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tori \tSF/tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-5",
     "firm": "Other",
     "group": "unknown",
@@ -33099,17 +30250,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-428",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "David \tSF/Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-429",
     "firm": "Other",
     "group": "unknown",
@@ -33161,17 +30301,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "3. 500m there at a constant speed, 500m back at twice the speed in 20hrs, what is the speed both there and",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-434",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "back?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -33286,17 +30415,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-445",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "valuation",
-    "difficulty": 1,
-    "prompt": "Precedents?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-446",
     "firm": "Other",
     "group": "unknown",
@@ -33359,17 +30477,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "300m debt w FCF what is the MOIC?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-452",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "David \tSF/HC \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -33561,17 +30668,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-470",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "David \tSF/HC \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-471",
     "firm": "Other",
     "group": "unknown",
@@ -33579,17 +30675,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Screening (I think):",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-472",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "2. Why hc?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -33612,17 +30697,6 @@
     "questionType": "valuation",
     "difficulty": 2,
     "prompt": "4. Company has 100m EBIDTA, 50m cash, comps have multiples of 8, 10, and 12 - what's",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-475",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "the EV?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -33722,17 +30796,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "12. 500m EqV, 10m shares, NI = 10m, whats the EPS",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-485",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Amanda \tNY/Generalist \tYes (Discovery Program)",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -33946,17 +31009,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-505",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Aidan \tSF/HC \tVery similar to David",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-506",
     "firm": "Other",
     "group": "unknown",
@@ -33990,28 +31042,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-509",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Recent Deal?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-510",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Stock pick?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-511",
     "firm": "Other",
     "group": "unknown",
@@ -34030,17 +31060,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Asked about longevity of my past experiences (do i commit to stuff and would I with Barclays)",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -34283,28 +31302,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "9. Other easy techs I forgot",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle Stepczyk \tSF \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -35079,17 +32076,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tashi's Friend \tSF \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -35119,17 +32105,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "3. Industry discussion (airline e-commerce and snackpass)",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-18",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -35244,17 +32219,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-11",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Cece \tNYC - Sophomore Program \tyes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-12",
     "firm": "Other",
     "group": "unknown",
@@ -35365,28 +32329,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-22",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-23",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ethan \tBurlingame/DBO Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-555",
     "firm": "Other",
     "group": "unknown",
@@ -35449,17 +32391,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "no techs, all vibe check questions, why berkeley, talked about high school plus activities",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-561",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Anya \tBurlingame/DBO Tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -35530,17 +32461,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-568",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Josh \tBurlingame/DBO Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-569",
     "firm": "Other",
     "group": "unknown",
@@ -35607,17 +32527,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-575",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tashi \tCEP (Diversity) NYC In-Person \tyes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-576",
     "firm": "Other",
     "group": "unknown",
@@ -35651,17 +32560,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-579",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Sandler?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-580",
     "firm": "Other",
     "group": "unknown",
@@ -35669,17 +32567,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "3. How have you worked to foster an inclusive environment at school and/or in your",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-581",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "community?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -35713,39 +32600,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "professionally that you’d like us to take into consideration?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-26",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-27",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Anya \tNY/Generalist \tYes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -36102,17 +32956,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-60",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ethan \tNY/Generalist \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-61",
     "firm": "Other",
     "group": "unknown",
@@ -36344,28 +33187,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Jesse Waller \tSF / PE \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-5",
     "firm": "Other",
     "group": "unknown",
@@ -36487,17 +33308,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "qatalyst-13",
-    "firm": "Qatalyst",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -36560,28 +33370,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "6. If a buyer's PE is greater than a seller's PE, is the deal accretive or dilutive?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-19",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tCoffee Chat \tFirst Round \tSecond Round \tThird Round \tFourth Round \tFifth Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-20",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Russell Kang \tLA/ASOF \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -36747,17 +33535,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "year holding period? Assuming the debt returns 9% interest, would you rather invest in the debt or the equity?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-36",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tashi \tLA/ACOF \tYes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -37290,17 +34067,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-48",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Jesse Waller \tLA/ACOF \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-49",
     "firm": "Other",
     "group": "unknown",
@@ -37367,17 +34133,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-9",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tt \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -37422,28 +34177,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "David Yao \tLA/Seattle \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -37484,17 +34217,6 @@
     "questionType": "brainteaser",
     "difficulty": 1,
     "prompt": "3. A few brainteasers",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -37693,17 +34415,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "pay for $200 at 10% of perpituity?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Harris Williams \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -38071,61 +34782,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-14",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-34",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-42",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tHR Screening \t1st Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -38276,39 +34932,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Basically, I'm him",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-23",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Amanda \tPA Tech \tyes (future leaders program)",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -38478,17 +35101,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-612",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "2. Why tech?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-613",
     "firm": "Other",
     "group": "unknown",
@@ -38551,17 +35163,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "FLP gives auto superday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-619",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle Stepczyk \tPA Tech \tno",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -38753,28 +35354,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Jesse Waller \tConsumer / LA \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-6",
     "firm": "Other",
     "group": "unknown",
@@ -38852,17 +35431,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-13",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Grant Hyun \tConsumer / LA \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-14",
     "firm": "Other",
     "group": "unknown",
@@ -38914,17 +35482,6 @@
     "questionType": "lbo",
     "difficulty": 3,
     "prompt": "Techs: Walk me through a DCF, walk me through an LBO",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-19",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Jesse Waller \tBusiness Services / LA \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -39127,28 +35684,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSecond Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ethan Kim \tTech / SF \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -39215,39 +35750,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-9",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle Stepczyk \tTech / SF \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-637",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "4. Why not LA?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-638",
     "firm": "Other",
     "group": "unknown",
@@ -39255,17 +35757,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "5. Spoke about upcoming internship in San Diego",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-639",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "6. Why Aeris?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -39343,17 +35834,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "13. Two companies have the exact same financials. Why would one be valued higher than",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-647",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "the other?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -39446,17 +35926,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-656",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Jesse Waller \tTech / SF \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-657",
     "firm": "Other",
     "group": "unknown",
@@ -39545,28 +36014,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tCoffee Chat \tFirst Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tashi Gotlieb \tTech / SF \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-3",
     "firm": "Other",
     "group": "unknown",
@@ -39607,17 +36054,6 @@
     "questionType": "lbo",
     "difficulty": 3,
     "prompt": "4. Walk through an LBO?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-668",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "lbo",
-    "difficulty": 3,
-    "prompt": "5. LBO Levers?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -39684,28 +36120,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "11. What is the typical IRR return % from PE?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDIversity? \tFirst Round \tSecond Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-17",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Anya \tI have no idea what I applied to \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -39798,17 +36212,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-26",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle Stepczyk \tECM / NY or LA \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-27",
     "firm": "Other",
     "group": "unknown",
@@ -39897,17 +36300,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-35",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "adil \tcibm sf tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-36",
     "firm": "Other",
     "group": "unknown",
@@ -39963,17 +36355,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-41",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Clement \tCIBM SF Tech \tno",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-42",
     "firm": "Other",
     "group": "unknown",
@@ -40025,28 +36406,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "4. Pretty much same as Adil",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "lazard-30",
-    "firm": "Lazard",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tFirst Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "lazard-31",
-    "firm": "Lazard",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle Stepczyk \tSF/HC \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -40681,17 +37040,6 @@
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tFirst Round \tSecond Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
     "stage": "unknown",
     "questionType": "other",
     "difficulty": 1,
@@ -40799,28 +37147,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \tHirevue \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Jesse Waller \tSF/LA/Prep Program \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-4",
     "firm": "Other",
     "group": "unknown",
@@ -40861,28 +37187,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "4. Fostered a relationship with someone who wasn't initially interested",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kyle Stepczyk \tSF/LA \tNo \tSame as Jesse",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tZoom Interview \t1st Round (In-person) \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -41151,28 +37455,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "citi-4",
-    "firm": "Citi",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity \tScreen? I think? They called it 'technical interview'",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "citi-5",
-    "firm": "Citi",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Tori \tSF/tech \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "citi-6",
     "firm": "Citi",
     "group": "unknown",
@@ -41338,28 +37620,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "pjt-partners-4",
-    "firm": "PJT Partners",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "pjt-partners-5",
-    "firm": "PJT Partners",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ethan \tSF/tech \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "pjt-partners-6",
     "firm": "PJT Partners",
     "group": "unknown",
@@ -41488,39 +37748,6 @@
     "questionType": "lbo",
     "difficulty": 3,
     "prompt": "LBO questions, drivers, candidates of good LBO's,",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round - Hirevue \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Adil \tSF/Commercial Banking \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "1. Why HSBC?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -41767,17 +37994,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-770",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Kylie \tHK/Commercial Banking \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-771",
     "firm": "Other",
     "group": "unknown",
@@ -41998,17 +38214,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "centerview-8",
-    "firm": "Centerview",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "centerview-9",
     "firm": "Centerview",
     "group": "unknown",
@@ -42086,17 +38291,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Wakato \tTech/Menlo \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-17",
     "firm": "Other",
     "group": "unknown",
@@ -42148,17 +38342,6 @@
     "questionType": "valuation",
     "difficulty": 2,
     "prompt": "Walk me through DCF",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-22",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "SaaS metric?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -42273,17 +38456,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "saying)?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-11",
     "firm": "Other",
     "group": "unknown",
@@ -42291,17 +38463,6 @@
     "questionType": "valuation",
     "difficulty": 2,
     "prompt": "What type of discount rate do you use for a DCF?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-12",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "What is WACC?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -42394,17 +38555,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-21",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why CVP SF?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-22",
     "firm": "Other",
     "group": "unknown",
@@ -42412,28 +38562,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "They didn't accelerate my interview :(",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "evercore-17",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "evercore-18",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Wakato \tTech/Menlo \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -42669,17 +38797,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why Evercore?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-2",
     "firm": "Other",
     "group": "unknown",
@@ -42764,17 +38881,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Company A and Company B have an EV of 100. Company A is financed 50% by debt and 50% by equity. Company B is 100% equity. Assuming both companies triple in value over night, which would you rather invest in for the best return.",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Hassan \tGeneralist/NY \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -43153,28 +39259,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "goldman-sachs-79",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-80",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Wakato \tTMT/SF \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "goldman-sachs-81",
     "firm": "Goldman Sachs",
     "group": "unknown",
@@ -43351,17 +39435,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "j-p-morgan-15",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round (Hirevue) \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -43472,17 +39545,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Anup \tTech/SF \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-5",
     "firm": "Other",
     "group": "unknown",
@@ -43501,17 +39563,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "What happens if coworker has wrong numbers but says it's fine to present to client",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-7",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Wakato \tTech/SF \tNo \tWhat are synergies?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -43633,17 +39684,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "make 25 out of 2468",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "morgan-stanley-21",
-    "firm": "Morgan Stanley",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \tHirevue \t1st Round \t2nd Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -44121,28 +40161,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "valuation",
-    "difficulty": 2,
-    "prompt": "Hassan \tLife Sciences/SF \t3 rounds before superday - 1 on 1 with analyst then 2-1, 2-1 with associates – all biotech valuation/healthcare technicals",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-6",
     "firm": "Other",
     "group": "unknown",
@@ -44161,28 +40179,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "the industry, deals, etc",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Joyce \tGeneralist/LA \t1 phone screen (15 mins), maybe first round on zoom (30 mins) \tSuperday:",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -44319,28 +40315,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-9",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Wakato \tSF/TMT \tNo",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -44392,17 +40366,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "one of the most frustrating interview experiences I've had unfortunately",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-15",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -44594,28 +40557,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Bridget \tSF/Tech \tYes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -44759,39 +40700,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-14",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why Cal?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-15",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why tech?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why Cyber?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-17",
     "firm": "Other",
     "group": "unknown",
@@ -44847,28 +40755,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-22",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why cyber?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-23",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why DBO?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-24",
     "firm": "Other",
     "group": "unknown",
@@ -44876,28 +40762,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Don't think I was asked a single tech...very interesting process",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Hassan \tBoston/Buyout \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -45019,17 +40883,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Question about banking experiences",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-300",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why PE?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -45474,28 +41327,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-73",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-74",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Bridget \tNY/Generalist \tYes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -45771,17 +41602,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-17",
     "firm": "Other",
     "group": "unknown",
@@ -45822,17 +41642,6 @@
     "questionType": "lbo",
     "difficulty": 3,
     "prompt": "Walk me through an LBO",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-310",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Wakato \tBoston & SF/PE \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -45943,17 +41752,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "There is a coffee chat screening after you finish the final round",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-38",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tCoffee Chat \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -46112,17 +41910,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tRecruiter Round \tTechnical 2nd Round \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -46130,17 +41917,6 @@
     "questionType": "valuation",
     "difficulty": 2,
     "prompt": "3 valuation meths",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "valuation",
-    "difficulty": 2,
-    "prompt": "Same as Connor \tMulti-step accounting, Valuation methods - esp DCF, FinTech company \t3 rounds",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -46196,17 +41972,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Asked about why berkeley, why I had a mediocre grade or how I would still put effort in a class I p/np'd",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -46295,50 +42060,6 @@
     "questionType": "market",
     "difficulty": 1,
     "prompt": "Sales/marketing, R&D, etc.",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-5",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why banking?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why Tech?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why SF?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -46475,17 +42196,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -46541,17 +42251,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-46",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-47",
     "firm": "Other",
     "group": "unknown",
@@ -46570,28 +42269,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "with annoying ass VP. Basically the process isn't worth it",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-15",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Wakato \tNY/PE \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -46651,17 +42328,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-35",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-36",
     "firm": "Other",
     "group": "unknown",
@@ -46680,17 +42346,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "due diligence on investment oppportunity, why this program at Citadel, other processes?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-43",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -46724,28 +42379,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Choose a restaurant you like, think about the costs and revenue, how much would you value it at?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Wakato \tSF \tSame as bridget's above",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-24",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -46801,28 +42434,6 @@
     "questionType": "valuation",
     "difficulty": 2,
     "prompt": "3 valuation methods and explain",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "citi-8",
-    "firm": "Citi",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "citi-9",
-    "firm": "Citi",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Amanda \tNY/FIG \tNo",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -47201,17 +42812,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "moelis-3",
-    "firm": "Moelis",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -47230,28 +42830,6 @@
     "questionType": "valuation",
     "difficulty": 2,
     "prompt": "DCF and Wacc / Capital Structure, if 5x leverage ratio and 4x coverage ratio, what is the",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "centerview-10",
-    "firm": "Centerview",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \t1st Round \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "centerview-11",
-    "firm": "Centerview",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Jane \tPalo Alto/Tech \tN/A",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -47729,28 +43307,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-28",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why Cali?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-29",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why CVP?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-30",
     "firm": "Other",
     "group": "unknown",
@@ -47824,17 +43380,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Least and most favorite part of your last internship?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \t1st Round \tSuperday",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -47982,17 +43527,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-2",
     "firm": "Other",
     "group": "unknown",
@@ -48077,17 +43611,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "and also just know how tech industry and financials are different than other",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round (Hirevue) \tSuperday",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -48389,17 +43912,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-306",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-307",
     "firm": "Other",
     "group": "unknown",
@@ -48693,17 +44205,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "what types of multiple would Apple be valued at",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-16",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round \t2nd Round \tSuperday",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -49016,17 +44517,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-4",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round \t2nd Round",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-1",
     "firm": "Other",
     "group": "unknown",
@@ -49298,17 +44788,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "All EBITDA goes to debt paydown",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "jefferies-1",
-    "firm": "Jefferies",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round \tSuperday",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -49632,17 +45111,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-2",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-10",
     "firm": "Other",
     "group": "unknown",
@@ -49683,17 +45151,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Could you tell me about an industry trend or company you’re",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-375",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "following?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -49962,17 +45419,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-400",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round \tSuperday",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-401",
     "firm": "Other",
     "group": "unknown",
@@ -50127,17 +45573,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "evercore-40",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "evercore-41",
     "firm": "Evercore",
     "group": "unknown",
@@ -50189,17 +45624,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "How would increased financial leverage impact the cost of equity?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "evercore-46",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Where in CAPM?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -50424,17 +45848,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "much?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-7",
     "firm": "Other",
     "group": "unknown",
@@ -50442,17 +45855,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "What would the PE ratio be?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "EV/EBITDA?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -50589,17 +45991,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-1",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "what is IRR?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-2",
     "firm": "Other",
     "group": "unknown",
@@ -50684,28 +46075,6 @@
     "questionType": "market",
     "difficulty": 1,
     "prompt": "$100M Market Cap, $10 a share. 100 options, $5 strike price. Dilutive Market",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-8",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "cap?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-38",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \t1st Round \tSuperday",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -50798,28 +46167,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-47",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why CVAS?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-16",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round (Hirevue) \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "j-p-morgan-17",
     "firm": "J.P. Morgan",
     "group": "unknown",
@@ -50849,28 +46196,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "How would you value a laundromat",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-20",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-21",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Noah and some other people\tTMT/SF \tNo \tN/A \tRyan Limae:",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -51029,17 +46354,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "other-416",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why banking?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-417",
     "firm": "Other",
     "group": "unknown",
@@ -51047,17 +46361,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "What makes you feel prepared for banking?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-418",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why tech?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -51146,17 +46449,6 @@
     "questionType": "market",
     "difficulty": 1,
     "prompt": "Do you personally invest in the markets? What do you invest in? Why?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-427",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Why GS?",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -51278,17 +46570,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Any questions for us?",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-439",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "unknown",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Ruby (I think) \tHC/SF \tIdk",
     "notes": "",
     "source": "interview-question-bank.pdf"
   },
@@ -51491,105 +46772,6 @@
     "source": "interview-question-bank.pdf"
   },
   {
-    "id": "centerview-17",
-    "firm": "Centerview",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "evercore-62",
-    "firm": "Evercore",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "goldman-sachs-97",
-    "firm": "Goldman Sachs",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "j-p-morgan-25",
-    "firm": "J.P. Morgan",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round (Hirevue) \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "morgan-stanley-22",
-    "firm": "Morgan Stanley",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \tHirevue \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "morgan-stanley-23",
-    "firm": "Morgan Stanley",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-23",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-10",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tGroup/Location \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-17",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
     "id": "other-18",
     "firm": "Other",
     "group": "unknown",
@@ -51597,160 +46779,6 @@
     "questionType": "other",
     "difficulty": 1,
     "prompt": "Piper Sandler / DBO",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-19",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \t2nd Round \t3rd Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-75",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-18",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-40",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \tCoffee Chat \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-11",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-3",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-6",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-7",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-49",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-22",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-38",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-44",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
-    "notes": "",
-    "source": "interview-question-bank.pdf"
-  },
-  {
-    "id": "other-26",
-    "firm": "Other",
-    "group": "unknown",
-    "stage": "superday",
-    "questionType": "other",
-    "difficulty": 1,
-    "prompt": "Name \tLocation/Group \tDiversity? \t1st Round \tSuperday \tNotes",
     "notes": "",
     "source": "interview-question-bank.pdf"
   }

@@ -187,6 +187,13 @@ export async function POST(req: Request) {
     ? `\nInterview context:\n${modeConfig.promptContext}\n`
     : "";
 
+
+  // [AGENT] Enriched context: include question bank stats in the prompt
+  const bankStats = `Question bank stats for ${body.firm}:
+- Total available: ${seedCount} questions
+- Types available: ${[...new Set(seeds.map(s => s.questionType))].join(", ")}
+- Difficulty range: ${Math.min(...seeds.map(s => s.difficulty))}-${Math.max(...seeds.map(s => s.difficulty))}
+Ensure questions progress from easier to harder. Mix question types for a realistic interview flow.`;
   const prompt = `You are creating a mock interview plan. Use the seed questions below as grounding.
 Create a plan of ${targetCount} questions. Questions should be similar or rephrased, not invented.
 Return strict JSON with the shape: { "plan": [ ... ] }.
@@ -203,7 +210,9 @@ Stage: ${body.stage}
 Interview mode: ${modeConfig.label}
 ${modeContext}
 Seed questions:
-${seedList}`;
+${seedList}
+
+${bankStats}`;
 
   try {
     const resp = await fetch("https://api.openai.com/v1/responses", {

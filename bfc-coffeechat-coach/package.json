@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "build-question-bank": "node scripts/build-question-bank.cjs",
-    "question-bank-info": "node scripts/print-question-bank.cjs"
+    "question-bank-info": "node scripts/print-question-bank.cjs",
+    "agent": "node scripts/agent.mjs",
+    "agent:dry-run": "node scripts/agent.mjs --dry-run",
+    "agent:test": "node scripts/agent.mjs --task test"
   },
   "dependencies": {
     "@openai/agents": "^0.3.7",
