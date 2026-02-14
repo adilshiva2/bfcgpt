@@ -245,10 +245,34 @@ ${bankStats}`;
 
     const data = await resp.json();
     const outputText = extractOutputText(data);
+    if (!outputText) {
+      return NextResponse.json({ error: "Empty model response", requestId }, { status: 502 });
+    }
     const parsed = parseJsonFromText(outputText);
+    if (!parsed) {
+      return NextResponse.json(
+        { error: "Could not parse model response as JSON", requestId, raw: outputText.slice(0, 200) },
+        { status: 502 }
+      );
+    }
+
+    // Coerce unknown question types to "other" so the plan doesn't fail validation
+    const validTypes = new Set(["behavioral", "accounting", "valuation", "lbo", "merger_math", "market", "brainteaser", "other"]);
+    if (Array.isArray(parsed.plan)) {
+      for (const item of parsed.plan) {
+        if (item && typeof item.type === "string" && !validTypes.has(item.type)) {
+          item.type = "other";
+        }
+      }
+    }
+
     const validated = planResponseSchema.safeParse(parsed);
     if (!validated.success) {
-      return NextResponse.json({ error: "Invalid plan output", requestId }, { status: 502 });
+      const issues = validated.error.issues.map((i) => `${String(i.path.join("."))}: ${i.message}`).join("; ");
+      return NextResponse.json(
+        { error: `Invalid plan output: ${issues}`, requestId },
+        { status: 502 }
+      );
     }
 
     const plan = validated.data.plan
