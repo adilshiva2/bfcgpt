@@ -35,9 +35,8 @@ const planItemSchema = z.object({
   idealAnswerOutline: z.string().min(1),
 });
 
-const planResponseSchema = z.object({
-  plan: z.array(planItemSchema).min(1),
-});
+// Plan items are coerced manually from the model response instead of
+// strict schema validation, to handle model output variations gracefully.
 
 function extractOutputText(data: unknown) {
   const payload = data as {
@@ -249,39 +248,56 @@ ${bankStats}`;
       return NextResponse.json({ error: "Empty model response", requestId }, { status: 502 });
     }
     const parsed = parseJsonFromText(outputText);
-    if (!parsed) {
+    if (!parsed || typeof parsed !== "object") {
       return NextResponse.json(
-        { error: "Could not parse model response as JSON", requestId, raw: outputText.slice(0, 200) },
+        { error: "Could not parse model response as JSON", requestId },
         { status: 502 }
       );
     }
 
-    // Coerce unknown question types to "other" so the plan doesn't fail validation
+    // The model may use "plan", "questions", "interview_plan", or other keys
+    const rawPlan: unknown[] = Array.isArray(parsed.plan)
+      ? parsed.plan
+      : Array.isArray(parsed.questions)
+        ? parsed.questions
+        : Array.isArray(parsed.interview_plan)
+          ? parsed.interview_plan
+          : [];
+
+    if (rawPlan.length === 0) {
+      return NextResponse.json(
+        { error: "Model returned no plan items", requestId },
+        { status: 502 }
+      );
+    }
+
+    // Coerce each item into a valid plan item instead of strict schema validation
     const validTypes = new Set(["behavioral", "accounting", "valuation", "lbo", "merger_math", "market", "brainteaser", "other"]);
-    if (Array.isArray(parsed.plan)) {
-      for (const item of parsed.plan) {
-        if (item && typeof item.type === "string" && !validTypes.has(item.type)) {
-          item.type = "other";
-        }
-      }
+    const plan: z.infer<typeof planItemSchema>[] = [];
+    for (let i = 0; i < Math.min(rawPlan.length, targetCount); i++) {
+      const raw = rawPlan[i] as Record<string, unknown> | null;
+      if (!raw || typeof raw !== "object") continue;
+
+      const questionText = String(raw.interviewerQuestion || raw.question || raw.text || "");
+      if (!questionText) continue;
+
+      plan.push({
+        qIndex: i + 1,
+        type: (typeof raw.type === "string" && validTypes.has(raw.type)
+          ? raw.type
+          : "other") as z.infer<typeof questionTypeSchema>,
+        interviewerQuestion: capText(questionText, 280),
+        expectedRubric: String(raw.expectedRubric || raw.rubric || raw.expected_rubric || "Evaluate accuracy, structure, and depth."),
+        idealAnswerOutline: String(raw.idealAnswerOutline || raw.ideal_answer || raw.ideal_answer_outline || "Provide a structured, specific answer."),
+      });
     }
 
-    const validated = planResponseSchema.safeParse(parsed);
-    if (!validated.success) {
-      const issues = validated.error.issues.map((i) => `${String(i.path.join("."))}: ${i.message}`).join("; ");
+    if (plan.length === 0) {
       return NextResponse.json(
-        { error: `Invalid plan output: ${issues}`, requestId },
+        { error: "Could not extract valid plan items from model response", requestId },
         { status: 502 }
       );
     }
-
-    const plan = validated.data.plan
-      .slice(0, targetCount)
-      .map((item: z.infer<typeof planItemSchema>, index: number) => ({
-        ...item,
-        qIndex: index + 1,
-        interviewerQuestion: capText(item.interviewerQuestion, 280),
-      }));
 
     return NextResponse.json({
       plan,
