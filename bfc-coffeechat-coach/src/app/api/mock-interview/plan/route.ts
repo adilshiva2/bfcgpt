@@ -35,9 +35,8 @@ const planItemSchema = z.object({
   idealAnswerOutline: z.string().min(1),
 });
 
-const planResponseSchema = z.object({
-  plan: z.array(planItemSchema).min(1),
-});
+// Plan items are coerced manually from the model response instead of
+// strict schema validation, to handle model output variations gracefully.
 
 function extractOutputText(data: unknown) {
   const payload = data as {
@@ -187,6 +186,13 @@ export async function POST(req: Request) {
     ? `\nInterview context:\n${modeConfig.promptContext}\n`
     : "";
 
+
+  // [AGENT] Enriched context: include question bank stats in the prompt
+  const bankStats = `Question bank stats for ${body.firm}:
+- Total available: ${seedCount} questions
+- Types available: ${[...new Set(seeds.map(s => s.questionType))].join(", ")}
+- Difficulty range: ${Math.min(...seeds.map(s => s.difficulty))}-${Math.max(...seeds.map(s => s.difficulty))}
+Ensure questions progress from easier to harder. Mix question types for a realistic interview flow.`;
   const prompt = `You are creating a mock interview plan. Use the seed questions below as grounding.
 Create a plan of ${targetCount} questions. Questions should be similar or rephrased, not invented.
 Return strict JSON with the shape: { "plan": [ ... ] }.
@@ -203,7 +209,9 @@ Stage: ${body.stage}
 Interview mode: ${modeConfig.label}
 ${modeContext}
 Seed questions:
-${seedList}`;
+${seedList}
+
+${bankStats}`;
 
   try {
     const resp = await fetch("https://api.openai.com/v1/responses", {
@@ -236,19 +244,60 @@ ${seedList}`;
 
     const data = await resp.json();
     const outputText = extractOutputText(data);
+    if (!outputText) {
+      return NextResponse.json({ error: "Empty model response", requestId }, { status: 502 });
+    }
     const parsed = parseJsonFromText(outputText);
-    const validated = planResponseSchema.safeParse(parsed);
-    if (!validated.success) {
-      return NextResponse.json({ error: "Invalid plan output", requestId }, { status: 502 });
+    if (!parsed || typeof parsed !== "object") {
+      return NextResponse.json(
+        { error: "Could not parse model response as JSON", requestId },
+        { status: 502 }
+      );
     }
 
-    const plan = validated.data.plan
-      .slice(0, targetCount)
-      .map((item: z.infer<typeof planItemSchema>, index: number) => ({
-        ...item,
-        qIndex: index + 1,
-        interviewerQuestion: capText(item.interviewerQuestion, 280),
-      }));
+    // The model may use "plan", "questions", "interview_plan", or other keys
+    const rawPlan: unknown[] = Array.isArray(parsed.plan)
+      ? parsed.plan
+      : Array.isArray(parsed.questions)
+        ? parsed.questions
+        : Array.isArray(parsed.interview_plan)
+          ? parsed.interview_plan
+          : [];
+
+    if (rawPlan.length === 0) {
+      return NextResponse.json(
+        { error: "Model returned no plan items", requestId },
+        { status: 502 }
+      );
+    }
+
+    // Coerce each item into a valid plan item instead of strict schema validation
+    const validTypes = new Set(["behavioral", "accounting", "valuation", "lbo", "merger_math", "market", "brainteaser", "other"]);
+    const plan: z.infer<typeof planItemSchema>[] = [];
+    for (let i = 0; i < Math.min(rawPlan.length, targetCount); i++) {
+      const raw = rawPlan[i] as Record<string, unknown> | null;
+      if (!raw || typeof raw !== "object") continue;
+
+      const questionText = String(raw.interviewerQuestion || raw.question || raw.text || "");
+      if (!questionText) continue;
+
+      plan.push({
+        qIndex: i + 1,
+        type: (typeof raw.type === "string" && validTypes.has(raw.type)
+          ? raw.type
+          : "other") as z.infer<typeof questionTypeSchema>,
+        interviewerQuestion: capText(questionText, 280),
+        expectedRubric: String(raw.expectedRubric || raw.rubric || raw.expected_rubric || "Evaluate accuracy, structure, and depth."),
+        idealAnswerOutline: String(raw.idealAnswerOutline || raw.ideal_answer || raw.ideal_answer_outline || "Provide a structured, specific answer."),
+      });
+    }
+
+    if (plan.length === 0) {
+      return NextResponse.json(
+        { error: "Could not extract valid plan items from model response", requestId },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json({
       plan,

@@ -263,6 +263,10 @@ export default function MockInterviewClient({ meta }: Props) {
               setAudioNeedsClick(false);
             } catch {
               setAudioNeedsClick(true);
+              // Reset status so the UI doesn't stay stuck on "speaking"
+              setStatus((prev) =>
+                prev === "speaking" || prev === "speaking_intro" ? "listening" : prev
+              );
               resolve();
               return;
             }
@@ -272,10 +276,17 @@ export default function MockInterviewClient({ meta }: Props) {
               resolve();
             };
             audioEl.onerror = () => {
+              setStatus((prev) =>
+                prev === "speaking" || prev === "speaking_intro" ? "listening" : prev
+              );
               resolve();
             };
           } catch (err) {
             setTtsError(err instanceof Error ? err.message : "TTS failed.");
+            // Reset status so the UI doesn't stay stuck on "speaking"
+            setStatus((prev) =>
+              prev === "speaking" || prev === "speaking_intro" ? "listening" : prev
+            );
             resolve();
           }
         })();
