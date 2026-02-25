@@ -100,7 +100,7 @@ export default function PracticeClient() {
   const interviewStateRef = useRef<InterviewState>("idle");
   const startTranscriptionRef = useRef<() => void>(() => {});
   const pausedRef = useRef(false);
-  const holdToTalkRef = useRef(false);
+  const talkActiveRef = useRef(false);
   const isTranscribingRef = useRef(false);
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
@@ -113,7 +113,6 @@ export default function PracticeClient() {
   const [interviewState, setInterviewState] = useState<InterviewState>("idle");
   const [interviewError, setInterviewError] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
-  const [holdToTalk, setHoldToTalk] = useState(false);
 
   const [speechSupported, setSpeechSupported] = useState(true);
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -191,10 +190,6 @@ export default function PracticeClient() {
   useEffect(() => {
     pausedRef.current = paused;
   }, [paused]);
-
-  useEffect(() => {
-    holdToTalkRef.current = holdToTalk;
-  }, [holdToTalk]);
 
   const ensureTtsAudio = useCallback(() => {
     if (!ttsAudioRef.current) {
@@ -372,13 +367,11 @@ export default function PracticeClient() {
         setMessages((prev) => [...prev, { role: "interviewer", content: interviewerText }]);
         lastInterviewerTextRef.current = interviewerText;
         // Stop listening before TTS to prevent mic picking up speaker audio
+        talkActiveRef.current = false;
         stopTranscription();
         // speak() now resolves when audio playback finishes
         await speak(interviewerText);
-        // Only start recognition after audio ends and if not paused/idle
-        if (interviewStateRef.current !== "idle" && !pausedRef.current) {
-          startTranscriptionRef.current();
-        }
+        // User must click Talk to start speaking — no auto-start
       } catch (err) {
         setInterviewError(err instanceof Error ? err.message : "Interview request failed.");
         setInterviewState("error");
@@ -600,7 +593,7 @@ export default function PracticeClient() {
       return;
     }
 
-    recognition.continuous = !holdToTalkRef.current;
+    recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
@@ -631,14 +624,12 @@ export default function PracticeClient() {
       if (trimmedFinal) {
         currentUserTurnRef.current = `${currentUserTurnRef.current} ${trimmedFinal}`.trim();
         queueLiveCoach(trimmedFinal);
-        if (!holdToTalkRef.current) {
-          if (silenceTimerRef.current) {
-            clearTimeout(silenceTimerRef.current);
-          }
-          silenceTimerRef.current = setTimeout(() => {
-            void finalizeTurn();
-          }, 900);
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
         }
+        silenceTimerRef.current = setTimeout(() => {
+          void finalizeTurn();
+        }, 900);
       }
       setTranscriptInterim(interimText.trim());
     };
@@ -661,15 +652,13 @@ export default function PracticeClient() {
       isTranscribingRef.current = false;
       setIsTranscribing(false);
       setTranscriptInterim("");
-      if (holdToTalkRef.current && currentUserTurnRef.current.trim()) {
-        void finalizeTurn();
-      } else if (
-        !holdToTalkRef.current &&
+      if (
+        talkActiveRef.current &&
         interviewStateRef.current === "listening" &&
         !pausedRef.current
       ) {
         // Chrome kills continuous recognition periodically, or network
-        // errors cause it to stop — auto-restart in either case
+        // errors cause it to stop — auto-restart while user is actively talking
         setTimeout(() => startTranscriptionRef.current(), 300);
       }
     };
@@ -704,9 +693,6 @@ export default function PracticeClient() {
     setFinalSummary("");
     setTurnReview("");
     setPhase("opening");
-    if (!holdToTalk) {
-      startTranscription();
-    }
     if (introTimeoutRef.current) {
       clearTimeout(introTimeoutRef.current);
     }
@@ -715,12 +701,13 @@ export default function PracticeClient() {
         void callInterviewer([{ role: "user", content: "Begin the coffee chat." }]);
       }
     }, 300);
-  }, [callInterviewer, holdToTalk, startTranscription]);
+  }, [callInterviewer]);
 
   const endInterview = useCallback(async () => {
     if (introTimeoutRef.current) {
       clearTimeout(introTimeoutRef.current);
     }
+    talkActiveRef.current = false;
     stopTranscription();
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
@@ -739,6 +726,7 @@ export default function PracticeClient() {
     if (introTimeoutRef.current) {
       clearTimeout(introTimeoutRef.current);
     }
+    talkActiveRef.current = false;
     setPaused(true);
     stopTranscription();
     stopSpeaking();
@@ -746,20 +734,20 @@ export default function PracticeClient() {
 
   const resumeInterview = useCallback(() => {
     setPaused(false);
-    if (!holdToTalk) {
+  }, []);
+
+  const toggleTalk = useCallback(() => {
+    if (isTranscribingRef.current) {
+      talkActiveRef.current = false;
+      stopTranscription();
+      if (currentUserTurnRef.current.trim()) {
+        void finalizeTurn();
+      }
+    } else {
+      talkActiveRef.current = true;
       startTranscription();
     }
-  }, [holdToTalk, startTranscription]);
-
-  const handleHoldStart = () => {
-    if (!holdToTalk) return;
-    startTranscription();
-  };
-
-  const handleHoldEnd = () => {
-    if (!holdToTalk) return;
-    stopTranscription();
-  };
+  }, [finalizeTurn, startTranscription, stopTranscription]);
 
   const phaseList: { key: Phase; label: string }[] = [
     { key: "opening", label: "Opening" },
@@ -944,28 +932,6 @@ export default function PracticeClient() {
                   </Button>
                 ) : null}
               </div>
-              <div className="mt-4 flex items-center gap-3 text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={holdToTalk}
-                  onChange={(e) => setHoldToTalk(e.target.checked)}
-                />
-                <span>Hold to talk</span>
-                {holdToTalk ? (
-                  <Button
-                    variant="secondary"
-                    type="button"
-                    onMouseDown={handleHoldStart}
-                    onMouseUp={handleHoldEnd}
-                    onMouseLeave={handleHoldEnd}
-                    onTouchStart={handleHoldStart}
-                    onTouchEnd={handleHoldEnd}
-                  >
-                    Hold to Talk
-                  </Button>
-                ) : null}
-              </div>
-
               {interviewState === "listening" && !paused && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -976,7 +942,17 @@ export default function PracticeClient() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
                   </span>
-                  <span className="text-sm font-semibold text-emerald-800">Your turn — speak now</span>
+                  <span className="text-sm font-semibold text-emerald-800">
+                    {isTranscribing ? "Listening... click Done when finished" : "Your turn — click Talk to respond"}
+                  </span>
+                  <Button
+                    type="button"
+                    variant={isTranscribing ? "secondary" : "primary"}
+                    onClick={toggleTalk}
+                    className={isTranscribing ? "ml-auto bg-red-600 text-white hover:bg-red-700" : "ml-auto"}
+                  >
+                    {isTranscribing ? "Done" : "Talk"}
+                  </Button>
                 </motion.div>
               )}
               {interviewState === "speaking" && (
@@ -1176,7 +1152,6 @@ export default function PracticeClient() {
                     <div>Phase: {phase}</div>
                     <div>Turn index: {turnIndex}</div>
                     <div>Paused: {paused ? "yes" : "no"}</div>
-                    <div>Hold to talk: {holdToTalk ? "yes" : "no"}</div>
                     <div>Transcribing: {isTranscribing ? "yes" : "no"}</div>
                     <div>Messages: {messages.length}</div>
                   </div>
