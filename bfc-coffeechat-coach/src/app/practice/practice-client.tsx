@@ -100,7 +100,8 @@ export default function PracticeClient() {
   const interviewStateRef = useRef<InterviewState>("idle");
   const startTranscriptionRef = useRef<() => void>(() => {});
   const pausedRef = useRef(false);
-  const holdToTalkRef = useRef(false);
+  const holdToTalkRef = useRef(true);
+  const talkingRef = useRef(false);
   const isTranscribingRef = useRef(false);
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
@@ -113,7 +114,7 @@ export default function PracticeClient() {
   const [interviewState, setInterviewState] = useState<InterviewState>("idle");
   const [interviewError, setInterviewError] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
-  const [holdToTalk, setHoldToTalk] = useState(false);
+  const holdToTalk = true;
 
   const [speechSupported, setSpeechSupported] = useState(true);
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -192,9 +193,6 @@ export default function PracticeClient() {
     pausedRef.current = paused;
   }, [paused]);
 
-  useEffect(() => {
-    holdToTalkRef.current = holdToTalk;
-  }, [holdToTalk]);
 
   const ensureTtsAudio = useCallback(() => {
     if (!ttsAudioRef.current) {
@@ -600,7 +598,7 @@ export default function PracticeClient() {
       return;
     }
 
-    recognition.continuous = !holdToTalkRef.current;
+    recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
@@ -658,19 +656,14 @@ export default function PracticeClient() {
     };
 
     recognition.onend = () => {
-      isTranscribingRef.current = false;
-      setIsTranscribing(false);
       setTranscriptInterim("");
-      if (holdToTalkRef.current && currentUserTurnRef.current.trim()) {
-        void finalizeTurn();
-      } else if (
-        !holdToTalkRef.current &&
-        interviewStateRef.current === "listening" &&
-        !pausedRef.current
-      ) {
-        // Chrome kills continuous recognition periodically, or network
-        // errors cause it to stop — auto-restart in either case
+      if (talkingRef.current && interviewStateRef.current === "listening" && !pausedRef.current) {
+        // Chrome kills continuous recognition periodically — auto-restart
+        // without touching isTranscribing to avoid UI flicker
         setTimeout(() => startTranscriptionRef.current(), 300);
+      } else {
+        isTranscribingRef.current = false;
+        setIsTranscribing(false);
       }
     };
 
@@ -721,6 +714,7 @@ export default function PracticeClient() {
     if (introTimeoutRef.current) {
       clearTimeout(introTimeoutRef.current);
     }
+    talkingRef.current = false;
     stopTranscription();
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
@@ -740,6 +734,7 @@ export default function PracticeClient() {
       clearTimeout(introTimeoutRef.current);
     }
     setPaused(true);
+    talkingRef.current = false;
     stopTranscription();
     stopSpeaking();
   }, [stopSpeaking, stopTranscription]);
@@ -751,14 +746,19 @@ export default function PracticeClient() {
     }
   }, [holdToTalk, startTranscription]);
 
-  const handleHoldStart = () => {
-    if (!holdToTalk) return;
-    startTranscription();
-  };
-
-  const handleHoldEnd = () => {
-    if (!holdToTalk) return;
-    stopTranscription();
+  const handleToggleTalk = () => {
+    if (talkingRef.current) {
+      // User clicked to stop talking
+      talkingRef.current = false;
+      stopTranscription();
+      if (currentUserTurnRef.current.trim()) {
+        void finalizeTurn();
+      }
+    } else {
+      // User clicked to start talking
+      talkingRef.current = true;
+      startTranscription();
+    }
   };
 
   const phaseList: { key: Phase; label: string }[] = [
@@ -944,27 +944,22 @@ export default function PracticeClient() {
                   </Button>
                 ) : null}
               </div>
-              <div className="mt-4 flex items-center gap-3 text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={holdToTalk}
-                  onChange={(e) => setHoldToTalk(e.target.checked)}
-                />
-                <span>Hold to talk</span>
-                {holdToTalk ? (
+              {interviewState !== "idle" && !paused && (
+                <div className="mt-4 flex items-center gap-3 text-sm text-slate-700">
                   <Button
                     variant="secondary"
                     type="button"
-                    onMouseDown={handleHoldStart}
-                    onMouseUp={handleHoldEnd}
-                    onMouseLeave={handleHoldEnd}
-                    onTouchStart={handleHoldStart}
-                    onTouchEnd={handleHoldEnd}
+                    onClick={handleToggleTalk}
+                    className={
+                      isTranscribing
+                        ? "border-red-300 bg-red-50 text-red-700 hover:border-red-400 hover:bg-red-100"
+                        : "border-emerald-300 bg-emerald-50 text-emerald-700 hover:border-emerald-400 hover:bg-emerald-100"
+                    }
                   >
-                    Hold to Talk
+                    {isTranscribing ? "Stop Talking" : "Start Talking"}
                   </Button>
-                ) : null}
-              </div>
+                </div>
+              )}
 
               {interviewState === "listening" && !paused && (
                 <motion.div
@@ -1176,7 +1171,7 @@ export default function PracticeClient() {
                     <div>Phase: {phase}</div>
                     <div>Turn index: {turnIndex}</div>
                     <div>Paused: {paused ? "yes" : "no"}</div>
-                    <div>Hold to talk: {holdToTalk ? "yes" : "no"}</div>
+                    <div>Talk toggle: {isTranscribing ? "on" : "off"}</div>
                     <div>Transcribing: {isTranscribing ? "yes" : "no"}</div>
                     <div>Messages: {messages.length}</div>
                   </div>
