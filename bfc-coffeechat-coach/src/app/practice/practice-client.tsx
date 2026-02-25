@@ -99,6 +99,9 @@ export default function PracticeClient() {
   const turnIndexRef = useRef(0);
   const interviewStateRef = useRef<InterviewState>("idle");
   const startTranscriptionRef = useRef<() => void>(() => {});
+  const pausedRef = useRef(false);
+  const holdToTalkRef = useRef(false);
+  const isTranscribingRef = useRef(false);
 
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [difficulty, setDifficulty] = useState<Difficulty>("Standard");
@@ -185,6 +188,14 @@ export default function PracticeClient() {
     interviewStateRef.current = interviewState;
   }, [interviewState]);
 
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
+
+  useEffect(() => {
+    holdToTalkRef.current = holdToTalk;
+  }, [holdToTalk]);
+
   const ensureTtsAudio = useCallback(() => {
     if (!ttsAudioRef.current) {
       const audioEl = document.createElement("audio");
@@ -202,61 +213,77 @@ export default function PracticeClient() {
       ttsAudioRef.current.pause();
       ttsAudioRef.current.currentTime = 0;
     }
-    setInterviewState("listening");
   }, []);
 
+  /**
+   * speak() returns a Promise that resolves when audio playback ENDS (not when
+   * it starts). This ensures callers can sequence: speak → then start listening,
+   * preventing the microphone from picking up TTS audio output.
+   */
   const speak = useCallback(
-    async (text: string) => {
+    (text: string): Promise<void> => {
       const trimmed = text.trim();
-      if (!trimmed) return;
+      if (!trimmed) return Promise.resolve();
       setTtsError(null);
 
       const speakText = trimmed.length > 280 ? `${trimmed.slice(0, 277)}...` : trimmed;
 
-      try {
-        const res = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: speakText }),
-        });
-
-        setTtsStatus(res.status);
-        setTtsContentType(res.headers.get("content-type") || "-");
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          let payload: { error?: string } = {};
+      return new Promise<void>((resolve) => {
+        void (async () => {
           try {
-            payload = errorText ? (JSON.parse(errorText) as { error?: string }) : {};
-          } catch {
-            payload = {};
-          }
-          throw new Error(payload.error || errorText || res.statusText);
-        }
+            const res = await fetch("/api/tts", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: speakText }),
+            });
 
-        const blob = await res.blob();
-        setTtsBytes(blob.size);
-        const audioUrl = URL.createObjectURL(blob);
-        const audioEl = ensureTtsAudio();
-        audioEl.pause();
-        audioEl.currentTime = 0;
-        audioEl.src = audioUrl;
-        try {
-          setInterviewState("speaking");
-          await audioEl.play();
-          setAudioNeedsClick(false);
-        } catch {
-          setAudioNeedsClick(true);
-          throw new Error("Audio playback blocked. Click to enable audio.");
-        }
-        audioEl.onended = () => {
-          URL.revokeObjectURL(audioUrl);
-          setInterviewState("listening");
-        };
-      } catch (err) {
-        setTtsError(err instanceof Error ? err.message : "TTS failed.");
-        setInterviewState("listening");
-      }
+            setTtsStatus(res.status);
+            setTtsContentType(res.headers.get("content-type") || "-");
+
+            if (!res.ok) {
+              const errorText = await res.text();
+              let payload: { error?: string } = {};
+              try {
+                payload = errorText ? (JSON.parse(errorText) as { error?: string }) : {};
+              } catch {
+                payload = {};
+              }
+              throw new Error(payload.error || errorText || res.statusText);
+            }
+
+            const blob = await res.blob();
+            setTtsBytes(blob.size);
+            const audioUrl = URL.createObjectURL(blob);
+            const audioEl = ensureTtsAudio();
+            audioEl.pause();
+            audioEl.currentTime = 0;
+            audioEl.src = audioUrl;
+            setInterviewState("speaking");
+            try {
+              await audioEl.play();
+              setAudioNeedsClick(false);
+            } catch {
+              setAudioNeedsClick(true);
+              setInterviewState("listening");
+              resolve();
+              return;
+            }
+            audioEl.onended = () => {
+              URL.revokeObjectURL(audioUrl);
+              setInterviewState("listening");
+              resolve();
+            };
+            audioEl.onerror = () => {
+              setInterviewState("listening");
+              resolve();
+            };
+          } catch (err) {
+            setTtsError(err instanceof Error ? err.message : "TTS failed.");
+            setInterviewState("listening");
+            resolve();
+          }
+        })();
+      });
     },
     [ensureTtsAudio]
   );
@@ -269,6 +296,18 @@ export default function PracticeClient() {
     } catch {
       setAudioNeedsClick(true);
     }
+  }, []);
+
+  const stopTranscription = useCallback(() => {
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+    isTranscribingRef.current = false;
+    setIsTranscribing(false);
+    setTranscriptInterim("");
   }, []);
 
   const scenarioPayload: ScenarioPayload = useMemo(
@@ -332,7 +371,14 @@ export default function PracticeClient() {
 
         setMessages((prev) => [...prev, { role: "interviewer", content: interviewerText }]);
         lastInterviewerTextRef.current = interviewerText;
+        // Stop listening before TTS to prevent mic picking up speaker audio
+        stopTranscription();
+        // speak() now resolves when audio playback finishes
         await speak(interviewerText);
+        // Only start recognition after audio ends and if not paused/idle
+        if (interviewStateRef.current !== "idle" && !pausedRef.current) {
+          startTranscriptionRef.current();
+        }
       } catch (err) {
         setInterviewError(err instanceof Error ? err.message : "Interview request failed.");
         setInterviewState("error");
@@ -340,7 +386,7 @@ export default function PracticeClient() {
         inFlightRef.current = false;
       }
     },
-    [scenarioPayload, speak]
+    [scenarioPayload, speak, stopTranscription]
   );
 
   const callLiveCoach = useCallback(
@@ -546,7 +592,7 @@ export default function PracticeClient() {
       setSpeechError("Speech recognition not supported—use Chrome or enable fallback.");
       return;
     }
-    if (isTranscribing) return;
+    if (isTranscribingRef.current) return;
 
     const recognition = getSpeechRecognition();
     if (!recognition) {
@@ -554,7 +600,7 @@ export default function PracticeClient() {
       return;
     }
 
-    recognition.continuous = !holdToTalk;
+    recognition.continuous = !holdToTalkRef.current;
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
@@ -575,15 +621,17 @@ export default function PracticeClient() {
         }
       }
 
+      // Use ref to avoid stale closure — state may be outdated
       if (interviewStateRef.current === "speaking") {
         stopSpeaking();
+        setInterviewState("listening");
       }
 
       const trimmedFinal = finalText.trim();
       if (trimmedFinal) {
         currentUserTurnRef.current = `${currentUserTurnRef.current} ${trimmedFinal}`.trim();
         queueLiveCoach(trimmedFinal);
-        if (!holdToTalk) {
+        if (!holdToTalkRef.current) {
           if (silenceTimerRef.current) {
             clearTimeout(silenceTimerRef.current);
           }
@@ -598,42 +646,44 @@ export default function PracticeClient() {
     recognition.onerror = (event) => {
       if (event.error === "not-allowed" || event.error === "service-not-allowed") {
         setSpeechError("Microphone blocked. Click the lock icon → allow microphone → reload.");
-      } else {
+        isTranscribingRef.current = false;
+        setIsTranscribing(false);
+      } else if (event.error === "network" || event.error === "no-speech") {
+        // Transient errors — let onend auto-restart without showing a permanent error
+      } else if (event.error !== "aborted") {
         setSpeechError(`Speech recognition error: ${event.error}`);
+        isTranscribingRef.current = false;
+        setIsTranscribing(false);
       }
-      setIsTranscribing(false);
     };
 
     recognition.onend = () => {
+      isTranscribingRef.current = false;
       setIsTranscribing(false);
       setTranscriptInterim("");
-      if (holdToTalk && currentUserTurnRef.current.trim()) {
+      if (holdToTalkRef.current && currentUserTurnRef.current.trim()) {
         void finalizeTurn();
       } else if (
-        !holdToTalk &&
-        interviewStateRef.current === "listening"
+        !holdToTalkRef.current &&
+        interviewStateRef.current === "listening" &&
+        !pausedRef.current
       ) {
+        // Chrome kills continuous recognition periodically, or network
+        // errors cause it to stop — auto-restart in either case
         setTimeout(() => startTranscriptionRef.current(), 300);
       }
     };
 
     recognitionRef.current = recognition;
     recognition.start();
+    isTranscribingRef.current = true;
     setIsTranscribing(true);
     setInterviewState("listening");
-  }, [finalizeTurn, holdToTalk, isTranscribing, queueLiveCoach, speechSupported, stopSpeaking]);
+  }, [finalizeTurn, queueLiveCoach, speechSupported, stopSpeaking]);
 
   useEffect(() => {
     startTranscriptionRef.current = startTranscription;
   }, [startTranscription]);
-
-  const stopTranscription = useCallback(() => {
-    recognitionRef.current?.stop();
-    recognitionRef.current = null;
-    setIsTranscribing(false);
-    setTranscriptInterim("");
-    setInterviewState("idle");
-  }, []);
 
   const rerollScenarioOnly = useCallback(() => {
     const sc = generateScenario(scenario.track);

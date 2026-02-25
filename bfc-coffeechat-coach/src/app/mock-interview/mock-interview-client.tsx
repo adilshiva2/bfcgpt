@@ -86,6 +86,7 @@ export default function MockInterviewClient({ meta }: Props) {
   const startTranscriptionRef = useRef<() => void>(() => {});
   const statusRef = useRef<InterviewStatus>("idle");
   const holdToTalkRef = useRef(false);
+  const isTranscribingRef = useRef(false);
 
   const [status, setStatus] = useState<InterviewStatus>("idle");
   const [speechSupported, setSpeechSupported] = useState(true);
@@ -317,6 +318,7 @@ export default function MockInterviewClient({ meta }: Props) {
     }
     recognitionRef.current?.stop();
     recognitionRef.current = null;
+    isTranscribingRef.current = false;
     setIsTranscribing(false);
     setInterimTranscript("");
   }, []);
@@ -327,7 +329,7 @@ export default function MockInterviewClient({ meta }: Props) {
       setSpeechError("Speech recognition not supported — use Chrome or enable fallback.");
       return;
     }
-    if (isTranscribing) return;
+    if (isTranscribingRef.current) return;
 
     const recognition = getSpeechRecognition();
     if (!recognition) {
@@ -376,13 +378,19 @@ export default function MockInterviewClient({ meta }: Props) {
     recognition.onerror = (event) => {
       if (event.error === "not-allowed" || event.error === "service-not-allowed") {
         setSpeechError("Microphone blocked. Click the lock icon → allow microphone → reload.");
+        isTranscribingRef.current = false;
+        setIsTranscribing(false);
+      } else if (event.error === "network" || event.error === "no-speech") {
+        // Transient errors — let onend auto-restart without showing a permanent error
       } else if (event.error !== "aborted") {
         setSpeechError(`Speech recognition error: ${event.error}`);
+        isTranscribingRef.current = false;
+        setIsTranscribing(false);
       }
-      setIsTranscribing(false);
     };
 
     recognition.onend = () => {
+      isTranscribingRef.current = false;
       setIsTranscribing(false);
       setInterimTranscript("");
       if (holdToTalkRef.current && currentUserTurnRef.current.trim()) {
@@ -391,16 +399,18 @@ export default function MockInterviewClient({ meta }: Props) {
         !holdToTalkRef.current &&
         statusRef.current === "listening"
       ) {
-        // Chrome kills continuous recognition periodically — auto-restart
+        // Chrome kills continuous recognition periodically, or network
+        // errors cause it to stop — auto-restart in either case
         setTimeout(() => startTranscriptionRef.current(), 300);
       }
     };
 
     recognitionRef.current = recognition;
     recognition.start();
+    isTranscribingRef.current = true;
     setIsTranscribing(true);
     setStatus("listening");
-  }, [isTranscribing, speechSupported, stopSpeaking]);
+  }, [speechSupported, stopSpeaking]);
 
   useEffect(() => {
     startTranscriptionRef.current = startTranscription;
